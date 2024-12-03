@@ -1,7 +1,7 @@
 package azari.amirhossein.filmora.utils.di
 
 import azari.amirhossein.filmora.BuildConfig
-import azari.amirhossein.filmora.data.network.ApiService
+import azari.amirhossein.filmora.data.network.ApiServices
 import azari.amirhossein.filmora.utils.Constants
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -61,13 +61,13 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideRetrofit(baseUrl: String, okHttpClient: OkHttpClient, gson: Gson): ApiService {
+    fun provideRetrofit(baseUrl: String, okHttpClient: OkHttpClient, gson: Gson): ApiServices {
         return Retrofit.Builder()
             .baseUrl(baseUrl)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .client(okHttpClient)
             .build()
-            .create(ApiService::class.java)
+            .create(ApiServices::class.java)
     }
 
 }
