@@ -22,4 +22,9 @@ object Constants {
         const val CONTENT_TYPE_JSON = "application/json"
     }
 
+    object DataStore{
+        const val SESSION_ID = "session_id"
+        const val PROFILE = "profile"
+    }
+
 }
