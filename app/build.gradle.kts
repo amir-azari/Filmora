@@ -91,6 +91,9 @@ dependencies {
     implementation(libs.coil.network.okhttp)
     //DynamicSizes
     implementation(libs.dynamicSizes)
+    //Lottie
+    implementation(libs.lottie)
+
 
 
 

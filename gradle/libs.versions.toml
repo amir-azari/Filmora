@@ -40,8 +40,11 @@ dataStore = "1.1.1"
 # Coil
 coil = "3.0.4"
 
-#DynamicSizes
+# DynamicSizes
 dynamicSizes = "1.0"
+
+# Lottie
+lottie = "6.0.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -84,6 +87,8 @@ coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref 
 coil-network-okhttp = { group = "io.coil-kt.coil3", name = "coil-network-okhttp", version.ref = "coil" }
 # DynamicSizes
 dynamicSizes = { group = "com.github.MrNouri", name = "DynamicSizes", version.ref = "dynamicSizes" }
+# Lottie
+lottie = { group = "com.airbnb.android", name = "lottie", version.ref = "lottie" }
 
 
 
