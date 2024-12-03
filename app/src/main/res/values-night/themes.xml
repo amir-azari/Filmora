@@ -13,5 +13,20 @@
 
     <style name="Theme.Filmora" parent="Base.Theme.Filmora" />
 
+    <!-- Image -->
+    <style name="ShapeAppearanceOverlay.App.Corner.Rounded" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">@dimen/_12mdp</item>
+    </style>
+
+    <!-- TextInputLayout -->
+    <style name="CustomTextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeColor">@color/text_input_box_stroke</item>
+        <item name="hintTextColor">@color/md_theme_colorOnSurface</item>
+        <item name="cursorColor">@color/md_theme_colorOnSurface</item>
+        <item name="android:textColorHint">@color/md_theme_colorOnSurface</item>
+
+    </style>
+
 
 </resources>
