@@ -7,4 +7,7 @@
     <string name="don_t_have_an_account">Don\'t have an account?</string>
     <string name="app_logo">App Logo</string>
     <string name="username">Username</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="name_app">Ｆｉｌｍｏｒａ</string>
 </resources>

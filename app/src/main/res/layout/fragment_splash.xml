@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.splash.SplashFragment">
+
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/lottieAnimationView"
+        android:layout_width="@dimen/_130mdp"
+        android:src="@drawable/tmdb_dark"
+        android:scaleType="centerCrop"
+        android:elevation="@dimen/_8mdp"
+        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.Corner.Rounded"
+        android:contentDescription="@string/app_logo"
+        android:layout_height="@dimen/_130mdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <com.google.android.material.textview.MaterialTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/name_app"
+        android:textStyle="bold"
+        android:layout_marginTop="@dimen/_8mdp"
+        android:textSize="@dimen/_20font_mdp"
+        android:textColor="?attr/colorOnBackground"
+        app:layout_constraintEnd_toEndOf="@+id/lottieAnimationView"
+        app:layout_constraintStart_toStartOf="@+id/lottieAnimationView"
+        app:layout_constraintTop_toBottomOf="@+id/lottieAnimationView" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
