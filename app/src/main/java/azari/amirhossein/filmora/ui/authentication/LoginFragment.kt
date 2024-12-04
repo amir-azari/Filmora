@@ -66,6 +66,7 @@ class LoginFragment : Fragment() {
 
                         is NetworkRequest.Error -> {
                             progressbar.visibility = View.GONE
+                            btnLogin.visibility = View.VISIBLE
                             Toast.makeText(requireContext(), result.message, Toast.LENGTH_LONG)
                                 .show()
                         }

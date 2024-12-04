@@ -3,9 +3,9 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <color name="md_theme_background">#F7FEFEFE</color>
+    <color name="md_theme_background">#F6F6F6</color>
     <color name="md_theme_primary">#38B4BC</color>
-    <color name="md_theme_onPrimary">#F7FEFEFE</color>
+    <color name="md_theme_onPrimary">#F6F6F6</color>
     <color name="md_theme_colorOnSurface">#021729</color>
     <color name="md_theme_outline">#084C5E</color>
     <color name="md_theme_primary2">#5DC09F</color>
