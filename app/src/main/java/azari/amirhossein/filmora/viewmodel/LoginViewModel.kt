@@ -1,12 +1,8 @@
 package azari.amirhossein.filmora.viewmodel
 
-import android.content.Context
-import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import azari.amirhossein.filmora.data.repository.LoginRepository
 import azari.amirhossein.filmora.models.authentication.RequestLogin
@@ -15,9 +11,7 @@ import azari.amirhossein.filmora.models.authentication.ResponseSession
 import azari.amirhossein.filmora.models.authentication.ResponseToken
 import azari.amirhossein.filmora.utils.NetworkRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.firstOrNull
-
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
