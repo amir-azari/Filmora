@@ -54,7 +54,7 @@ class LoginRepository @Inject constructor(
                 throw Exception((tokenNetworkResponse as NetworkRequest.Error).message)
             }
         } catch (e: Exception) {
-            emit(NetworkRequest.Error("An error occurred: ${e.message}"))
+            emit(NetworkRequest.Error(e.message.toString()))
         }
     }.flowOn(Dispatchers.IO)
 
