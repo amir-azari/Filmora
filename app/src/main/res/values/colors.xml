@@ -11,4 +11,10 @@
     <color name="md_theme_primary2">#5DC09F</color>
 
 
+    <color name="error">#e74c3c</color>
+    <color name="warning">#ffa630</color>
+    <color name="success">#27ae60</color>
+    <color name="info">#3498db</color>
+
+
 </resources>
