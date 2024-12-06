@@ -56,6 +56,7 @@ object NetworkModule {
             .connectTimeout(Constants.Network.CONNECT_TIMEOUT, TimeUnit.SECONDS)
             .readTimeout(Constants.Network.READ_TIMEOUT, TimeUnit.SECONDS)
             .writeTimeout(Constants.Network.WRITE_TIMEOUT, TimeUnit.SECONDS)
+            .retryOnConnectionFailure(true)
             .build()
     }
 
