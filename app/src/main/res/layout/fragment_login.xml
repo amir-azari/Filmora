@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.motion.widget.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="@dimen/_16mdp"
-
+    app:layoutDescription="@xml/fragment_login_scene"
     tools:context=".ui.authentication.LoginFragment">
 
 
@@ -71,7 +71,7 @@
         android:id="@+id/tv_forgot_password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_8mdp"
+        android:layout_marginTop="@dimen/_10mdp"
         android:text="@string/forgot_password"
         android:textColor="@color/md_theme_primary"
         android:textSize="@dimen/_10font_mdp"
@@ -82,7 +82,7 @@
         android:id="@+id/btn_login"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_12mdp"
+        android:layout_marginTop="@dimen/_16mdp"
         android:background="@drawable/btn_gradient"
         android:paddingTop="@dimen/_8mdp"
         android:paddingBottom="@dimen/_8mdp"
@@ -126,7 +126,7 @@
     </LinearLayout>
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn"
+        android:id="@+id/btn_continue"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_16mdp"
@@ -152,6 +152,7 @@
         tools:layout_editor_absoluteX="21dp" />
 
     <TextView
+        android:id="@+id/tv_or"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@color/md_theme_background"
@@ -175,4 +176,4 @@
         app:layout_constraintStart_toStartOf="@+id/btn_login"
         app:layout_constraintTop_toTopOf="@+id/btn_login" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.motion.widget.MotionLayout>
