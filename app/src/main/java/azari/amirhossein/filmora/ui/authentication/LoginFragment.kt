@@ -6,13 +6,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.Navigation.findNavController
 import azari.amirhossein.filmora.R
 import azari.amirhossein.filmora.databinding.FragmentLoginBinding
+import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.NetworkRequest
 import azari.amirhossein.filmora.utils.customize
 import azari.amirhossein.filmora.viewmodel.LoginViewModel
@@ -24,7 +25,7 @@ class LoginFragment : Fragment() {
     //Binding
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
-
+    //View Model
     private val viewModel: LoginViewModel by viewModels()
 
 
@@ -46,6 +47,7 @@ class LoginFragment : Fragment() {
             etUsername.doAfterTextChanged { validateUsername(it.toString()) }
             etPassword.doAfterTextChanged { validatePassword(it.toString()) }
 
+            // Handle "next" action in the keyboard
             etUsername.setOnEditorActionListener { _, actionId, _ ->
                 handleEditorAction(actionId, etPassword)
             }
@@ -63,52 +65,60 @@ class LoginFragment : Fragment() {
                 val username = etUsername.text.toString()
                 val password = etPassword.text.toString()
 
+                // Validate inputs
                 if (username.isNotEmpty() && password.isNotEmpty()) {
                     if (validateUsername(username) && validatePassword(password)) {
                         viewModel.authenticateUser(username, password)
                     }
                 }else {
                     // Show an error if any field is empty
-                    Snackbar.make(root,R.string.fillRequiredFields , Snackbar.LENGTH_SHORT).customize(
-                        R.color.error,
-                        R.color.white,
-                        Gravity.TOP,
-                    ).show()
+                    showErrorSnackbar(root,ContextCompat.getString(requireContext(),R.string.fillRequiredFields))
+                }
+            }
+            // navigates to reset password screen
+            tvForgotPassword.setOnClickListener { view ->
+                val url = Constants.WebView.RESET_PASSWORD_URL
+                val bundle = Bundle().apply {
+                    putString(Constants.BundleKey.URL_BUNDLE_KEY, url)
+                }
+                findNavController(view).navigate(R.id.actionToWebView, bundle)
+            }
+            // navigates to sign-up screen
+            tvSignup.setOnClickListener { view ->
+                val url = Constants.WebView.SIGNUP_URL
+                val bundle = Bundle().apply {
+                    putString(Constants.BundleKey.URL_BUNDLE_KEY, url)
                 }
 
-
-
+                findNavController(view).navigate(R.id.actionToWebView, bundle)
             }
-
+            // authentication result
             viewModel.authResult.observe(viewLifecycleOwner) { result ->
-                when (result) {
-                    is NetworkRequest.Loading -> {
-                        root.transitionToEnd()
-                    }
-
-                    is NetworkRequest.Success -> {
-                        root.transitionToStart()
-
-                        val sessionId = result.data
-                        if (!sessionId.isNullOrEmpty()) {
-                            //TODO Navigate to Home Fragment
-                        } else {
-                            Toast.makeText(
-                                requireContext(),
-                                "Session ID is empty",
-                                Toast.LENGTH_SHORT
-                            ).show()
+                result?.let {
+                    when (result) {
+                        is NetworkRequest.Loading -> {
+                            root.transitionToEnd()
                         }
-                    }
 
-                    is NetworkRequest.Error -> {
-                        root.transitionToStart()
-                        Snackbar.make(root,result.message.toString() , Snackbar.LENGTH_SHORT).customize(
-                            R.color.error,
-                            R.color.white,
-                            Gravity.TOP,
-                        ).show()
+                        is NetworkRequest.Success -> {
+                            root.transitionToStart()
 
+                            val sessionId = result.data
+                            if (!sessionId.isNullOrEmpty()) {
+                                //TODO Navigate to Home Fragment
+                            } else {
+                                showErrorSnackbar(root, "Session ID is empty")
+
+                            }
+                        }
+
+                        is NetworkRequest.Error -> {
+                            root.transitionToStart()
+                            showErrorSnackbar(root, result.message.toString())
+                            // Clear result after showing error
+                            viewModel.clearAuthResult()
+
+                        }
                     }
                 }
             }
@@ -145,6 +155,7 @@ class LoginFragment : Fragment() {
             false
         }
     }
+
     private fun handleEditorAction(actionId: Int, nextField: View): Boolean {
         return when (actionId) {
             EditorInfo.IME_ACTION_NEXT -> {
@@ -155,7 +166,16 @@ class LoginFragment : Fragment() {
             else -> false
         }
     }
-
+    fun showErrorSnackbar(root: View, errorMessage: String) {
+        Snackbar.make(root, errorMessage, Snackbar.LENGTH_SHORT).apply {
+            customize(
+                R.color.error,
+                R.color.white,
+                Gravity.TOP,
+            )
+            show()
+        }
+    }
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

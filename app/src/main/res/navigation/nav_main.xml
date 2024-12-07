@@ -18,6 +18,20 @@
         android:id="@+id/loginFragment"
         android:name="azari.amirhossein.filmora.ui.authentication.LoginFragment"
         android:label="fragment_login"
-        tools:layout="@layout/fragment_login" />
+        tools:layout="@layout/fragment_login" >
+
+    </fragment>
+    <action
+        android:id="@+id/actionToWebView"
+        app:destination="@id/webViewFragment" />
+    <fragment
+        android:id="@+id/webViewFragment"
+        android:name="azari.amirhossein.filmora.ui.webview.WebViewFragment"
+        android:label="fragment_web_view"
+        tools:layout="@layout/fragment_web_view" >
+        <argument
+            android:name="url"
+            app:argType="string" />
+    </fragment>
 
 </navigation>

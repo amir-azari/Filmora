@@ -1,6 +1,5 @@
 package azari.amirhossein.filmora.viewmodel
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -14,8 +13,8 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(private val repository: LoginRepository) : ViewModel() {
 
-    private val _authResult = MutableLiveData<NetworkRequest<String>>()
-    val authResult: LiveData<NetworkRequest<String>> get() = _authResult
+    private val _authResult = MutableLiveData<NetworkRequest<String>?>()
+    val authResult: MutableLiveData<NetworkRequest<String>?> get() = _authResult
 
     // Authenticate user
     fun authenticateUser(username: String, password: String) {
@@ -26,7 +25,9 @@ class LoginViewModel @Inject constructor(private val repository: LoginRepository
                 }
         }
     }
-
+    fun clearAuthResult() {
+        _authResult.value = null
+    }
     suspend fun getSessionId(): String? {
         return repository.getSessionId().firstOrNull()
     }
