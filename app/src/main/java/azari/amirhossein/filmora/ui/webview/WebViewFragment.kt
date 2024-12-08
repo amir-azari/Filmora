@@ -14,12 +14,17 @@ import android.webkit.WebViewClient
 import androidx.activity.OnBackPressedCallback
 import androidx.compose.ui.unit.Constraints
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import azari.amirhossein.filmora.R
 import azari.amirhossein.filmora.databinding.FragmentWebViewBinding
 import azari.amirhossein.filmora.utils.Constants
+import azari.amirhossein.filmora.utils.NetworkChecker
 import azari.amirhossein.filmora.utils.customize
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class WebViewFragment : Fragment() {
@@ -29,6 +34,9 @@ class WebViewFragment : Fragment() {
 
     // Other
     private lateinit var args: String
+    @Inject
+    lateinit var networkChecker: NetworkChecker
+    private var networkJob: Job? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -80,13 +88,11 @@ class WebViewFragment : Fragment() {
                     super.onReceivedError(view, request, error)
                     progressBar.visibility = View.GONE
                     val errorMessage = error?.description?.toString() ?: "An unknown error occurred"
-
                     showErrorSnackbar(root,errorMessage)
 
                 }
             }
-            // Load URL
-            webView.loadUrl(args)
+            monitorNetworkState()
 
             // Handle Back Button in webView
             val callback = object : OnBackPressedCallback(true) {
@@ -104,7 +110,28 @@ class WebViewFragment : Fragment() {
 
 
     }
+    private fun monitorNetworkState() {
+        binding.apply {
+            networkJob = lifecycleScope.launch {
+                networkChecker.startMonitoring().collect { isConnected ->
+                    if (isConnected) {
+                        internetLay.visibility = View.GONE
+                        webView.visibility = View.VISIBLE
+                        progressBar.visibility = View.VISIBLE
+                        // Load URL
+                        webView.loadUrl(args)
 
+                    } else {
+                        internetLay.visibility = View.VISIBLE
+                        webView.visibility = View.GONE
+                        progressBar.visibility = View.GONE
+
+                    }
+                }
+            }
+        }
+
+    }
     fun showErrorSnackbar(root: View, errorMessage: String) {
         Snackbar.make(root, errorMessage, Snackbar.LENGTH_SHORT).apply {
             customize(
@@ -118,6 +145,8 @@ class WebViewFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        networkJob?.cancel()
+        networkChecker.stopMonitoring()
     }
 
 }
