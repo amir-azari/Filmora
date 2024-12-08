@@ -14,5 +14,6 @@
     <string name="usernameEmpty">Username cannot be empty.</string>
     <string name="passwordTooShort">The password is short (at least 4 characters).</string>
     <string name="fillRequiredFields">Please fill in all the required fields correctly before proceeding.</string>
+    <string name="check_your_connection">Check your connection</string>
 
 </resources>

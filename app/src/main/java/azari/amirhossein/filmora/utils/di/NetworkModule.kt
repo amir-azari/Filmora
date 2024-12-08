@@ -1,6 +1,5 @@
 package azari.amirhossein.filmora.utils.di
 
-import azari.amirhossein.filmora.BuildConfig
 import azari.amirhossein.filmora.data.network.ApiServices
 import azari.amirhossein.filmora.utils.Constants
 import com.google.gson.Gson
@@ -9,6 +8,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import `in`.nouri.dynamicsizeslib.BuildConfig
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
