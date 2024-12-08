@@ -73,6 +73,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_10mdp"
         android:text="@string/forgot_password"
+        android:fontFamily="@font/funnelsans_semibold"
         android:textColor="@color/md_theme_primary"
         android:textSize="@dimen/_10font_mdp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -122,7 +123,8 @@
             android:text="@string/sign_up"
             android:textColor="@color/md_theme_primary"
             android:textSize="@dimen/_10font_mdp"
-            android:textStyle="bold" />
+            android:fontFamily="@font/funnelsans_bold"
+            />
     </LinearLayout>
 
     <com.google.android.material.button.MaterialButton

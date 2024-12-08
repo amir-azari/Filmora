@@ -8,6 +8,8 @@
         <item name="colorOnSurface">@color/md_theme_colorOnSurface</item>
         <item name="colorOnBackground">@color/md_theme_colorOnSurface</item>
         <item name="colorOutline">@color/md_theme_outline</item>
+        <item name="android:fontFamily">@font/funnelsans_regular</item>
+
 
     </style>
 
