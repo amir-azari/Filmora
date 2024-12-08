@@ -1,4 +1,4 @@
-package azari.amirhossein.filmora.ui
+package azari.amirhossein.filmora.utils
 
 import android.net.ConnectivityManager
 import android.net.Network
