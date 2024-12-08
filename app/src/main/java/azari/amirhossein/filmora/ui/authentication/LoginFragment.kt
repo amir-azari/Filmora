@@ -10,6 +10,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation.findNavController
 import azari.amirhossein.filmora.R
 import azari.amirhossein.filmora.databinding.FragmentLoginBinding
@@ -19,6 +20,7 @@ import azari.amirhossein.filmora.utils.customize
 import azari.amirhossein.filmora.viewmodel.LoginViewModel
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class LoginFragment : Fragment() {
@@ -68,7 +70,16 @@ class LoginFragment : Fragment() {
                 // Validate inputs
                 if (username.isNotEmpty() && password.isNotEmpty()) {
                     if (validateUsername(username) && validatePassword(password)) {
-                        viewModel.authenticateUser(username, password)
+                        lifecycleScope.launch {
+                            viewModel.isNetworkAvailable.collect { isConnected->
+                                if (isConnected) {
+                                    viewModel.authenticateUser(username, password)
+                                }else{
+                                    showErrorSnackbar(root, "No internet connection")
+
+                                }
+                            }
+                        }
                     }
                 }else {
                     // Show an error if any field is empty
@@ -92,6 +103,7 @@ class LoginFragment : Fragment() {
 
                 findNavController(view).navigate(R.id.actionToWebView, bundle)
             }
+
             // authentication result
             viewModel.authResult.observe(viewLifecycleOwner) { result ->
                 result?.let {
@@ -166,7 +178,7 @@ class LoginFragment : Fragment() {
             else -> false
         }
     }
-    fun showErrorSnackbar(root: View, errorMessage: String) {
+    private fun showErrorSnackbar(root: View, errorMessage: String) {
         Snackbar.make(root, errorMessage, Snackbar.LENGTH_SHORT).apply {
             customize(
                 R.color.error,
