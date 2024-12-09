@@ -10,6 +10,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class LoginRepository @Inject constructor(
@@ -45,7 +46,7 @@ class LoginRepository @Inject constructor(
                 if (sessionNetworkResponse is NetworkRequest.Success) {
                     val sessionId = sessionNetworkResponse.data?.sessionId ?: throw Exception("Session ID is null")
                     // Save session ID
-                    sessionManager.saveSessionId(sessionId)
+                    sessionManager.saveSessionId(sessionId,false)
                     emit(NetworkRequest.Success(sessionId))
                 } else {
                     throw Exception((sessionNetworkResponse as NetworkRequest.Error).message)
@@ -59,6 +60,30 @@ class LoginRepository @Inject constructor(
     }.flowOn(Dispatchers.IO)
 
 
+    fun authenticateGuest(): Flow<NetworkRequest<String>> = flow {
+        emit(NetworkRequest.Loading())
+
+        try {
+            val response = remote.createGuestSession()
+            val networkResponse = NetworkResponse(response).handleNetworkResponse()
+
+            if (networkResponse is NetworkRequest.Success) {
+                val guestSessionId = networkResponse.data?.guestSessionId ?: throw Exception("Guest Session ID is null")
+                sessionManager.saveSessionId(guestSessionId , true)
+                emit(NetworkRequest.Success(guestSessionId))
+            } else {
+                throw Exception((networkResponse as NetworkRequest.Error).message)
+            }
+        } catch (e: Exception) {
+            emit(NetworkRequest.Error(e.message.toString()))
+        }
+    }.flowOn(Dispatchers.IO)
+
+    fun checkSessionStatus(): Flow<Boolean> {
+        return sessionManager.getSessionId().map { sessionId ->
+            sessionId?.isNotEmpty() == true
+        }
+    }
     fun getSessionId(): Flow<String?> = sessionManager.getSessionId()
 
 }
