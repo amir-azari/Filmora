@@ -24,6 +24,7 @@ object Constants {
 
     object DataStore{
         const val SESSION_ID = "session_id"
+        const val IS_GUEST = "is_guest"
         const val PROFILE = "profile"
     }
 
