@@ -62,7 +62,7 @@ class LoginFragment : Fragment() {
                     false
                 }
             }
-
+            // Authenticate as user TMDB
             btnLogin.setOnClickListener {
                 val username = etUsername.text.toString()
                 val password = etPassword.text.toString()
@@ -84,6 +84,18 @@ class LoginFragment : Fragment() {
                 }else {
                     // Show an error if any field is empty
                     showErrorSnackbar(root,ContextCompat.getString(requireContext(),R.string.fillRequiredFields))
+                }
+            }
+            // Authenticate as guest
+            btnContinue.setOnClickListener {
+                lifecycleScope.launch {
+                    viewModel.isNetworkAvailable.collect { isConnected ->
+                        if (isConnected) {
+                            viewModel.authenticateGuest()
+                        } else {
+                            showErrorSnackbar(root, "No internet connection")
+                        }
+                    }
                 }
             }
             // navigates to reset password screen
