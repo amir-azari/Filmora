@@ -3,6 +3,7 @@ package azari.amirhossein.filmora.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import azari.amirhossein.filmora.data.SessionManager
 import azari.amirhossein.filmora.data.repository.LoginRepository
 import azari.amirhossein.filmora.utils.NetworkChecker
 import azari.amirhossein.filmora.utils.NetworkRequest
@@ -14,7 +15,9 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val repository: LoginRepository,
-    private val networkChecker: NetworkChecker
+    private val networkChecker: NetworkChecker,
+    private val sessionManager: SessionManager
+
 ) : ViewModel() {
 
     private val _authResult = MutableLiveData<NetworkRequest<String>?>()
@@ -26,6 +29,16 @@ class LoginViewModel @Inject constructor(
     fun authenticateUser(username: String, password: String) {
         viewModelScope.launch {
             repository.authenticateUser(username, password)
+                .collect { result ->
+                    _authResult.postValue(result)
+                }
+        }
+    }
+
+    // Authenticate guest
+    fun authenticateGuest() {
+        viewModelScope.launch {
+            repository.authenticateGuest()
                 .collect { result ->
                     _authResult.postValue(result)
                 }
