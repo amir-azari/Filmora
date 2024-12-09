@@ -2,6 +2,7 @@ package azari.amirhossein.filmora.data.network
 
 import azari.amirhossein.filmora.models.authentication.RequestLogin
 import azari.amirhossein.filmora.models.authentication.RequestSession
+import azari.amirhossein.filmora.models.authentication.ResponseGuestSession
 import azari.amirhossein.filmora.models.authentication.ResponseToken
 import azari.amirhossein.filmora.models.authentication.ResponseSession
 import retrofit2.Response
@@ -23,4 +24,8 @@ interface ApiServices {
     suspend fun createSession(
         @Body request: RequestSession
     ): Response<ResponseSession>
+
+    @GET("authentication/guest_session/new")
+    suspend fun createGuestSession(): Response<ResponseGuestSession>
+
 }
