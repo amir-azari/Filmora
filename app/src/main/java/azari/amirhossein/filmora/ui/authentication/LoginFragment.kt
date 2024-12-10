@@ -27,9 +27,14 @@ class LoginFragment : Fragment() {
     //Binding
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
+
     //View Model
     private val viewModel: LoginViewModel by viewModels()
+    private var currentAuthType: AuthType = AuthType.LOGIN
 
+    private enum class AuthType {
+        LOGIN, CONTINUE
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -64,6 +69,8 @@ class LoginFragment : Fragment() {
             }
             // Authenticate as user TMDB
             btnLogin.setOnClickListener {
+                currentAuthType = AuthType.LOGIN
+
                 val username = etUsername.text.toString()
                 val password = etPassword.text.toString()
 
@@ -71,23 +78,28 @@ class LoginFragment : Fragment() {
                 if (username.isNotEmpty() && password.isNotEmpty()) {
                     if (validateUsername(username) && validatePassword(password)) {
                         lifecycleScope.launch {
-                            viewModel.isNetworkAvailable.collect { isConnected->
+                            viewModel.isNetworkAvailable.collect { isConnected ->
                                 if (isConnected) {
                                     viewModel.authenticateUser(username, password)
-                                }else{
+                                } else {
                                     showErrorSnackbar(root, "No internet connection")
 
                                 }
                             }
                         }
                     }
-                }else {
+                } else {
                     // Show an error if any field is empty
-                    showErrorSnackbar(root,ContextCompat.getString(requireContext(),R.string.fillRequiredFields))
+                    showErrorSnackbar(
+                        root,
+                        ContextCompat.getString(requireContext(), R.string.fillRequiredFields)
+                    )
                 }
             }
             // Authenticate as guest
             btnContinue.setOnClickListener {
+                currentAuthType = AuthType.CONTINUE
+
                 lifecycleScope.launch {
                     viewModel.isNetworkAvailable.collect { isConnected ->
                         if (isConnected) {
@@ -121,11 +133,11 @@ class LoginFragment : Fragment() {
                 result?.let {
                     when (result) {
                         is NetworkRequest.Loading -> {
-                            root.transitionToEnd()
+                            toggleLoadingState(true)
                         }
 
                         is NetworkRequest.Success -> {
-                            root.transitionToStart()
+                            toggleLoadingState(false)
 
                             val sessionId = result.data
                             if (!sessionId.isNullOrEmpty()) {
@@ -137,7 +149,7 @@ class LoginFragment : Fragment() {
                         }
 
                         is NetworkRequest.Error -> {
-                            root.transitionToStart()
+                            toggleLoadingState(false)
                             showErrorSnackbar(root, result.message.toString())
                             // Clear result after showing error
                             viewModel.clearAuthResult()
@@ -146,11 +158,9 @@ class LoginFragment : Fragment() {
                     }
                 }
             }
-
         }
-
-
     }
+
     private fun validateUsername(username: String): Boolean {
         return if (!username.contains(" ")) {
             binding.tilUsername.isErrorEnabled = false
@@ -190,6 +200,22 @@ class LoginFragment : Fragment() {
             else -> false
         }
     }
+    private fun toggleLoadingState(isLoading: Boolean) {
+        binding.apply {
+            when (currentAuthType) {
+                AuthType.LOGIN -> {
+                    root.transitionToState(if (isLoading) R.id.login_end else R.id.login_start)
+                    btnContinue.isEnabled = !isLoading
+                }
+
+                AuthType.CONTINUE -> {
+                    root.transitionToState(if (isLoading) R.id.continue_end else R.id.login_start)
+                    btnLogin.isEnabled = !isLoading
+                }
+            }
+        }
+    }
+
     private fun showErrorSnackbar(root: View, errorMessage: String) {
         Snackbar.make(root, errorMessage, Snackbar.LENGTH_SHORT).apply {
             customize(
@@ -200,6 +226,7 @@ class LoginFragment : Fragment() {
             show()
         }
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
