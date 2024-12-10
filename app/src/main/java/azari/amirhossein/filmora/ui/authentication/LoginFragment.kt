@@ -77,15 +77,10 @@ class LoginFragment : Fragment() {
                 // Validate inputs
                 if (username.isNotEmpty() && password.isNotEmpty()) {
                     if (validateUsername(username) && validatePassword(password)) {
-                        lifecycleScope.launch {
-                            viewModel.isNetworkAvailable.collect { isConnected ->
-                                if (isConnected) {
-                                    viewModel.authenticateUser(username, password)
-                                } else {
-                                    showErrorSnackbar(root, "No internet connection")
-
-                                }
-                            }
+                        if (viewModel.isNetworkAvailable.value) {
+                            viewModel.authenticateUser(username, password)
+                        } else {
+                            showErrorSnackbar(root, "No internet connection")
                         }
                     }
                 } else {
@@ -100,14 +95,10 @@ class LoginFragment : Fragment() {
             btnContinue.setOnClickListener {
                 currentAuthType = AuthType.CONTINUE
 
-                lifecycleScope.launch {
-                    viewModel.isNetworkAvailable.collect { isConnected ->
-                        if (isConnected) {
-                            viewModel.authenticateGuest()
-                        } else {
-                            showErrorSnackbar(root, "No internet connection")
-                        }
-                    }
+                if (viewModel.isNetworkAvailable.value) {
+                    viewModel.authenticateGuest()
+                } else {
+                    showErrorSnackbar(root, "No internet connection")
                 }
             }
             // navigates to reset password screen
