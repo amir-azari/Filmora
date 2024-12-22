@@ -35,6 +35,15 @@
             motion:layout_constraintEnd_toEndOf="@+id/btn_login"
             motion:layout_constraintStart_toStartOf="@+id/btn_login"
             motion:layout_constraintTop_toTopOf="@+id/btn_login" />
+        <Constraint
+            android:layout_height="wrap_content"
+            motion:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="20dp"
+            motion:layout_constraintHorizontal_bias="0.487"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="0dp"
+            motion:layout_constraintTop_toBottomOf="@+id/viewOr"
+            android:id="@+id/btn_continue" />
     </ConstraintSet>
 
     <ConstraintSet android:id="@+id/login_end">
