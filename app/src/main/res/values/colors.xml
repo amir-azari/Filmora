@@ -4,12 +4,25 @@
     <color name="white">#FFFFFFFF</color>
 
     <color name="md_theme_background">#F6F6F6</color>
+    <color name="md_theme_onBackground">#021729</color>
+
     <color name="md_theme_primary">#38B4BC</color>
     <color name="md_theme_onPrimary">#F6F6F6</color>
-    <color name="md_theme_colorOnSurface">#021729</color>
-    <color name="md_theme_outline">#084C5E</color>
-    <color name="md_theme_primary2">#5DC09F</color>
 
+    <color name="md_theme_primaryContainer">#38B4BC</color>
+    <color name="md_theme_onPrimaryContainer">#F6F6F6</color>
+
+    <color name="md_theme_colorSurface">#A1DEE3</color>
+    <color name="md_theme_colorOnSurface">#021729</color>
+    <color name="md_theme_colorSurfaceContainer">#021729</color>
+
+    <color name="md_theme_primary2">#5DC09F</color>
+    <color name="md_theme_outline">#084C5E</color>
+
+    <color name="cardBackgroundColor">#EFFAFB</color>
+    <color name="cardTextColor">#032B4E</color>
+    <color name="cardTextColorAlpha">#054176</color>
+    <color name="iconColor">#05243F</color>
 
     <color name="error">#e74c3c</color>
     <color name="warning">#ffa630</color>
