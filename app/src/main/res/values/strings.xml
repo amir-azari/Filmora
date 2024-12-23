@@ -15,5 +15,21 @@
     <string name="passwordTooShort">The password is short (at least 4 characters).</string>
     <string name="fillRequiredFields">Please fill in all the required fields correctly before proceeding.</string>
     <string name="check_your_connection">Check your connection</string>
+    <string name="search_movies">Search movies...</string>
+    <string name="search_series">Search series...</string>
+    <string name="poster_image">Poster Image</string>
+    <string name="next">Next</string>
+    <string name="what_genres_do_you_dislike">What genres do you dislike?</string>
+    <string name="what_genres_do_you_love">What genres do you love?</string>
+    <string name="selected_movies">Selected Movies</string>
+    <string name="choose_your_favorite_movies">Choose your favorite movies</string>
+    <string name="choose_your_favorite_series">Choose your favorite series</string>
+    <string name="your_movie_taste">Your Movie Taste</string>
+    <string name="your_series_taste">Your Series Taste</string>
+    <string name="empty_text">- - - -</string>
+    <string name="no_rate">0.0</string>
+    <string name="title">Title</string>
+    <string name="confirmed">Confirmed</string>
+    <string name="back_button">back button</string>
 
 </resources>

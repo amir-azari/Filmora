@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/_16mdp"
+        tools:context=".ui.preferences.MoviePreferencesFragment">
+
+        <!-- Back Button -->
+        <ImageView
+            android:id="@+id/btn_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_8mdp"
+            android:layout_marginTop="@dimen/_8mdp"
+            android:contentDescription="@string/back_button"
+            android:rotation="180"
+            app:tint="@color/md_theme_primary"
+            android:src="@drawable/arrow_right"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- Header -->
+        <TextView
+            android:id="@+id/txt_seriesPref"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_12mdp"
+            android:alpha="0.9"
+            android:elevation="@dimen/_4mdp"
+            android:text="@string/your_series_taste"
+            android:textSize="@dimen/_22font_mdp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- Line -->
+        <View
+            android:id="@+id/gradient_line"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_2mdp"
+            android:layout_marginTop="@dimen/_8mdp"
+            android:background="@drawable/btn_gradient"
+            app:layout_constraintTop_toBottomOf="@+id/txt_seriesPref" />
+
+        <TextView
+            android:id="@+id/txt_seriesChoice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_16mdp"
+            android:alpha="0.8"
+            android:text="@string/choose_your_favorite_series"
+            android:textSize="@dimen/_12font_mdp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/gradient_line" />
+
+        <!-- Search series -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_search"
+            style="@style/CustomTextInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_8mdp"
+            android:hint="@string/search_series"
+            app:boxCornerRadiusTopEnd="12dp"
+            app:boxCornerRadiusTopStart="12dp"
+            app:endIconMode="clear_text"
+            app:layout_constraintTop_toBottomOf="@+id/txt_seriesChoice"
+            app:startIconDrawable="@drawable/magnifying_glass">
+
+            <AutoCompleteTextView
+                android:id="@+id/actv_search"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_45mdp"
+                android:completionThreshold="1"
+                android:dropDownWidth="match_parent"
+                android:dropDownHeight="wrap_content"
+                android:imeOptions="actionSearch"
+                android:inputType="text"
+                android:maxLines="1"
+                android:textSize="@dimen/_12mdp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Selected Series Section -->
+        <TextView
+            android:id="@+id/txt_selectedMovies"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_16mdp"
+            android:alpha="0.8"
+            android:text="@string/selected_movies"
+            android:textSize="@dimen/_12font_mdp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/til_search" />
+
+        <!-- Series list selected-->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_selectedMovies"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_8mdp"
+            android:clipToPadding="false"
+            android:orientation="horizontal"
+            android:paddingStart="@dimen/_4mdp"
+            android:paddingEnd="@dimen/_4mdp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintTop_toBottomOf="@+id/txt_selectedMovies"
+            tools:itemCount="5"
+            tools:listitem="@layout/movie_series_selected_item" />
+
+
+        <!-- Favorite Genres Section -->
+        <TextView
+            android:id="@+id/txt_favoriteGenres"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_16mdp"
+            android:alpha="0.8"
+            android:text="@string/what_genres_do_you_love"
+            android:textSize="@dimen/_12font_mdp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rv_selectedMovies" />
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/cg_favoriteGenres"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_8mdp"
+            app:chipSpacingHorizontal="@dimen/_8mdp"
+            app:chipSpacingVertical="@dimen/_8mdp"
+            app:layout_constraintTop_toBottomOf="@+id/txt_favoriteGenres">
+
+        </com.google.android.material.chip.ChipGroup>
+
+        <!-- Disliked Genres Section -->
+        <TextView
+            android:id="@+id/txt_dislikedGenres"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_16mdp"
+            android:alpha="0.8"
+            android:text="@string/what_genres_do_you_dislike"
+            android:textSize="@dimen/_12font_mdp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cg_favoriteGenres" />
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/cg_dislikedGenres"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_8mdp"
+            app:chipSpacingHorizontal="@dimen/_8mdp"
+            app:chipSpacingVertical="@dimen/_8mdp"
+            app:layout_constraintTop_toBottomOf="@+id/txt_dislikedGenres">
+
+        </com.google.android.material.chip.ChipGroup>
+
+        <!-- Confirm Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_Confirmed"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_16mdp"
+            android:background="@drawable/btn_gradient"
+            android:paddingTop="@dimen/_8mdp"
+            android:paddingBottom="@dimen/_8mdp"
+            android:text="@string/confirmed"
+            android:textAllCaps="false"
+            android:textSize="@dimen/_12font_mdp"
+            app:backgroundTint="@null"
+            app:cornerRadius="@dimen/_8mdp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cg_dislikedGenres" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

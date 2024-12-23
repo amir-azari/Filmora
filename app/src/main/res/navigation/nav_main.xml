@@ -20,6 +20,9 @@
         android:label="fragment_login"
         tools:layout="@layout/fragment_login" >
 
+        <action
+            android:id="@+id/action_loginFragment_to_moviePreferencesFragment"
+            app:destination="@id/moviePreferencesFragment" />
     </fragment>
     <action
         android:id="@+id/actionToWebView"
@@ -33,5 +36,22 @@
             android:name="url"
             app:argType="string" />
     </fragment>
+    <fragment
+        android:id="@+id/moviePreferencesFragment"
+        android:name="azari.amirhossein.filmora.ui.preferences.MoviePreferencesFragment"
+        android:label="MoviePreferencesFragment"
+        tools:layout="@layout/fragment_movie_preferences"
+        >
+        <action
+            android:id="@+id/action_moviePreferencesFragment_to_tvPreferencesFragment"
+            app:destination="@id/tvPreferencesFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/tvPreferencesFragment"
+        android:name="azari.amirhossein.filmora.ui.preferences.TvPreferencesFragment"
+        android:label="TvPreferencesFragment"
+        tools:layout="@layout/fragment_tv_preferences"
+
+        />
 
 </navigation>
