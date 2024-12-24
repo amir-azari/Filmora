@@ -54,9 +54,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_8mdp"
-            app:boxCornerRadiusTopStart="12dp"
-            app:boxCornerRadiusTopEnd="12dp"
             android:hint="@string/search_movies"
+            app:boxCornerRadiusTopEnd="12dp"
+            app:boxCornerRadiusTopStart="12dp"
             app:endIconMode="clear_text"
             app:layout_constraintTop_toBottomOf="@+id/txt_movieChoice"
             app:startIconDrawable="@drawable/magnifying_glass">
@@ -71,6 +71,7 @@
                 android:imeOptions="actionSearch"
                 android:inputType="text"
                 android:maxLines="1"
+                android:paddingStart="@dimen/_8mdp"
                 android:textSize="@dimen/_12mdp" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -91,7 +92,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_selectedMovies"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_marginTop="@dimen/_8mdp"
             android:clipToPadding="false"
             android:orientation="horizontal"
@@ -100,7 +101,7 @@
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintTop_toBottomOf="@+id/txt_selectedMovies"
             tools:itemCount="5"
-            tools:listitem="@layout/movie_series_selected_item" />
+            tools:listitem="@layout/item_preferences" />
 
         <!-- Favorite Genres Section -->
         <TextView
@@ -169,5 +170,35 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/chipGroup_dislikedGenres" />
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_search_result"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_8mdp"
+            android:background="@color/md_theme_background"
+            app:layout_constraintTop_toBottomOf="@+id/til_search">
+
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:id="@+id/progressBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:indeterminateTint="@color/md_theme_primary"
+                android:layout_gravity="top"
+                app:layout_constraintTop_toTopOf="parent"
+                android:indeterminate="true"
+                android:visibility="gone" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_searchResults"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_250mdp"
+                android:visibility="gone"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintTop_toBottomOf="@id/progressBar"
+                tools:listitem="@layout/item_search_preferences" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </androidx.core.widget.NestedScrollView>
