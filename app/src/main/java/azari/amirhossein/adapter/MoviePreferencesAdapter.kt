@@ -25,15 +25,16 @@ class MoviePreferencesAdapter @Inject constructor() : RecyclerView.Adapter<Movie
                         txtYear.text = "--"
                         txtRating.text = "-.-"
                         imgPoster.scaleType = ImageView.ScaleType.FIT_CENTER
-                    }else
-                     {
+                    }else {
                          val baseUrl = "https://image.tmdb.org/t/p/w500"
                          val fullPosterPath = baseUrl + item.posterPath
                          imgPoster.load(fullPosterPath) {
                              crossfade(true)
                              crossfade(400)
                          }
-                         txtTitle.text = item.title
+                        imgPoster.scaleType = ImageView.ScaleType.CENTER_CROP
+
+                        txtTitle.text = item.title
                          txtYear.text = item.releaseDate?.split("-")?.get(0) ?: "N/A"
                          txtRating.text = String.format("%.1f", item.voteAverage)
                     }
