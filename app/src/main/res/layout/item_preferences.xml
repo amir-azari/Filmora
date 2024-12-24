@@ -26,7 +26,7 @@
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/img_poster"
                 android:layout_width="@dimen/_80mdp"
-                android:layout_height="@dimen/_70mdp"
+                android:layout_height="@dimen/_105mdp"
                 android:contentDescription="@string/poster_image"
                 android:scaleType="centerCrop"
                 android:src="@drawable/image"
@@ -34,7 +34,6 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:shapeAppearanceOverlay="@style/RoundedCorners" />
 
-            <!-- Title -->
             <TextView
                 android:id="@+id/txt_title"
                 android:layout_width="0dp"
