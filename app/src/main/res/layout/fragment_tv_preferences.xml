@@ -114,7 +114,7 @@
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintTop_toBottomOf="@+id/txt_selectedMovies"
             tools:itemCount="5"
-            tools:listitem="@layout/movie_series_selected_item" />
+            tools:listitem="@layout/item_preferences" />
 
 
         <!-- Favorite Genres Section -->

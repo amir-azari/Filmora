@@ -49,7 +49,7 @@ class SplashFragment : Fragment() {
                     if (sessionId.isNullOrEmpty()) {
                         findNavController().navigate(R.id.splashToLogin)
                     } else {
-                        //TODO Navigate to home screen
+                        findNavController().navigate(R.id.moviePreferencesFragment)
                     }
                 }
             }

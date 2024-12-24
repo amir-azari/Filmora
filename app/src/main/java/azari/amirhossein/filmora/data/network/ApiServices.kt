@@ -7,7 +7,6 @@ import azari.amirhossein.filmora.models.authentication.ResponseToken
 import azari.amirhossein.filmora.models.authentication.ResponseSession
 import azari.amirhossein.filmora.models.prefences.ResponseGenresList
 import azari.amirhossein.filmora.models.prefences.movie.ResponseMoviesList
-import azari.amirhossein.filmora.models.prefences.tv.ResponseTvsList
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET

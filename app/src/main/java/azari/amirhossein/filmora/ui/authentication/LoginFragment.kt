@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import azari.amirhossein.filmora.R
 import azari.amirhossein.filmora.databinding.FragmentLoginBinding
 import azari.amirhossein.filmora.utils.Constants
@@ -137,6 +138,7 @@ class LoginFragment : Fragment() {
                                 showErrorSnackbar(root, "Session ID is empty")
 
                             }
+                            findNavController().navigate(R.id.moviePreferencesFragment)
                         }
 
                         is NetworkRequest.Error -> {
