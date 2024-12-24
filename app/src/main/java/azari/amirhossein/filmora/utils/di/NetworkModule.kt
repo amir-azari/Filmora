@@ -47,11 +47,7 @@ object NetworkModule {
                     .addHeader(Constants.Network.HEADER_CONTENT_TYPE, Constants.Network.CONTENT_TYPE_JSON)
                     .addHeader(Constants.Network.HEADER_AUTHORIZATION, "Bearer ${Constants.Network.API_KEY}")
                     .build()
-                try {
-                    chain.proceed(requestWithHeaders)
-                } catch (e: Exception) {
-                    throw Exception("Network error: ${e.localizedMessage}", e)
-                }
+                chain.proceed(requestWithHeaders)
             }
             .connectTimeout(Constants.Network.CONNECT_TIMEOUT, TimeUnit.SECONDS)
             .readTimeout(Constants.Network.READ_TIMEOUT, TimeUnit.SECONDS)
