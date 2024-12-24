@@ -5,13 +5,18 @@ import azari.amirhossein.filmora.models.authentication.RequestSession
 import azari.amirhossein.filmora.models.authentication.ResponseGuestSession
 import azari.amirhossein.filmora.models.authentication.ResponseToken
 import azari.amirhossein.filmora.models.authentication.ResponseSession
+import azari.amirhossein.filmora.models.prefences.ResponseGenresList
+import azari.amirhossein.filmora.models.prefences.movie.ResponseMoviesList
+import azari.amirhossein.filmora.models.prefences.tv.ResponseTvsList
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Query
 
 interface ApiServices {
 
+    // Authentication
     @GET("authentication/token/new")
     suspend fun requestToken(): Response<ResponseToken>
 
@@ -28,4 +33,12 @@ interface ApiServices {
     @GET("authentication/guest_session/new")
     suspend fun createGuestSession(): Response<ResponseGuestSession>
 
+    // Search Movie
+    @GET("search/movie")
+    suspend fun searchMovie( @Query("query") query: String) : Response<ResponseMoviesList>
+
+    // Movie genres
+    @GET("genre/movie/list")
+    suspend fun getMovieGenres() : Response<ResponseGenresList>
+    
 }
