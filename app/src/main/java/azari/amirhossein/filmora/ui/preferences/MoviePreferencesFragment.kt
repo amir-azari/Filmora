@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import azari.amirhossein.adapter.MoviePreferencesAdapter
 import azari.amirhossein.adapter.SearchMoviePreferencesAdapter
 import azari.amirhossein.filmora.R
 import azari.amirhossein.filmora.databinding.FragmentMoviePreferencesBinding
@@ -28,6 +29,9 @@ class MoviePreferencesFragment : Fragment() {
 
     private var _binding: FragmentMoviePreferencesBinding? = null
     private val binding get() = _binding!!
+
+    @Inject
+    lateinit var moviePreferencesAdapter: MoviePreferencesAdapter
 
     @Inject
     lateinit var searchMovieAdapter: SearchMoviePreferencesAdapter
@@ -52,9 +56,14 @@ class MoviePreferencesFragment : Fragment() {
     private fun setupUI() {
         setupSearchView()
         setupRecyclerViews()
+        setupSearchItemClickListener()
     }
 
     private fun setupRecyclerViews() {
+        binding.rvSelectedMovies.apply {
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            adapter = moviePreferencesAdapter
+        }
 
         binding.rvSearchResults.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
@@ -92,8 +101,19 @@ class MoviePreferencesFragment : Fragment() {
         }
     }
 
+    private fun setupSearchItemClickListener() {
+        searchMovieAdapter.onItemClick = { selectedMovie ->
+            val currentEmptyPosition = viewModel.selectedMovies.value?.indexOfFirst { it.id == -1 } ?: 0
+            viewModel.updateSelectedMovie(selectedMovie, currentEmptyPosition)
+            binding.actvSearch.setText("")
+            binding.rvSearchResults.visibility = View.GONE
+        }
+    }
+
     private fun observeViewModel() {
         observeSearchResults()
+        observeSelectedMovies()
+        observeErrorMessage()
     }
 
     private fun observeSearchResults() {
@@ -101,7 +121,7 @@ class MoviePreferencesFragment : Fragment() {
             viewModel.searchResult.observe(viewLifecycleOwner) { response ->
                 when (response) {
                     is NetworkRequest.Success -> {
-                        binding.progressBar.visibility = View.GONE
+                        binding.progressBar.visibility = View.INVISIBLE
                         val movieList = response.data?.results ?: emptyList()
                         searchMovieAdapter.differ.submitList(movieList)
                         binding.rvSearchResults.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
@@ -112,12 +132,24 @@ class MoviePreferencesFragment : Fragment() {
                         binding.progressBar.visibility = View.VISIBLE
                     }
                     is NetworkRequest.Error -> {
-                        binding.progressBar.visibility = View.GONE
+                        binding.progressBar.visibility = View.INVISIBLE
 
                         showErrorSnackbar(binding.root, response.message.toString())
                     }
                 }
             }
+        }
+    }
+
+    private fun observeSelectedMovies() {
+        viewModel.selectedMovies.observe(viewLifecycleOwner) { movies ->
+            moviePreferencesAdapter.differ.submitList(movies)
+        }
+    }
+
+    private fun observeErrorMessage() {
+        viewModel.errorMessage.observe(viewLifecycleOwner) { message ->
+            message?.let { showWarningSnackbar(binding.root, it) }
         }
     }
 
@@ -128,6 +160,12 @@ class MoviePreferencesFragment : Fragment() {
         }
     }
 
+    private fun showWarningSnackbar(root: View, message: String) {
+        Snackbar.make(root, message, Snackbar.LENGTH_SHORT).apply {
+            customize(R.color.warning, R.color.cardBackgroundColor, Gravity.TOP)
+            show()
+        }
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
