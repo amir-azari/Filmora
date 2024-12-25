@@ -1,8 +1,10 @@
 package azari.amirhossein.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.PopupMenu
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -13,33 +15,47 @@ import coil3.load
 import coil3.request.crossfade
 import javax.inject.Inject
 
-class MoviePreferencesAdapter @Inject constructor() : RecyclerView.Adapter<MoviePreferencesAdapter.ViewHolder>() {
+class MoviePreferencesAdapter @Inject constructor() :
+    RecyclerView.Adapter<MoviePreferencesAdapter.ViewHolder>() {
+    var onRemoveClick: ((Int) -> Unit)? = null
 
     inner class ViewHolder(private val binding: ItemPreferencesBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: ResponseMoviesList.Result) {
             binding.apply {
-                    if (item.id == -1){
-                        imgPoster.setImageResource(R.drawable.image) // Add a placeholder image
-                        txtTitle.text = "Movie name"
-                        txtYear.text = "--"
-                        txtRating.text = "-.-"
-                        imgPoster.scaleType = ImageView.ScaleType.FIT_CENTER
-                    }else {
-                         val baseUrl = "https://image.tmdb.org/t/p/w500"
-                         val fullPosterPath = baseUrl + item.posterPath
-                         imgPoster.load(fullPosterPath) {
-                             crossfade(true)
-                             crossfade(400)
-                         }
-                        imgPoster.scaleType = ImageView.ScaleType.CENTER_CROP
+                val baseUrl = "https://image.tmdb.org/t/p/w500"
+                val fullPosterPath = baseUrl + item.posterPath
+                imgPoster.load(fullPosterPath) {
+                    crossfade(true)
+                    crossfade(400)
+                }
+                imgPoster.scaleType = ImageView.ScaleType.CENTER_CROP
 
-                        txtTitle.text = item.title
-                         txtYear.text = item.releaseDate?.split("-")?.get(0) ?: "N/A"
-                         txtRating.text = String.format("%.1f", item.voteAverage)
+                txtTitle.text = item.title
+                txtYear.text = item.releaseDate?.split("-")?.get(0) ?: "N/A"
+                txtRating.text = String.format("%.1f", item.voteAverage)
+
+                imgPopupMenu.setOnClickListener { view ->
+                    showPopupMenu(view, adapterPosition)
+                }
+            }
+        }
+    }
+
+    private fun showPopupMenu(view: View, position: Int) {
+        PopupMenu(view.context, view).apply {
+            inflate(R.menu.menu_selected_preferences)
+            setOnMenuItemClickListener { menuItem ->
+                when (menuItem.itemId) {
+                    R.id.action_remove -> {
+                        onRemoveClick?.invoke(position)
+                        true
                     }
 
+                    else -> false
+                }
             }
+            show()
         }
     }
 
@@ -50,7 +66,7 @@ class MoviePreferencesAdapter @Inject constructor() : RecyclerView.Adapter<Movie
     }
 
     override fun getItemCount(): Int {
-        return 5
+        return differ.currentList.size
     }
 
 

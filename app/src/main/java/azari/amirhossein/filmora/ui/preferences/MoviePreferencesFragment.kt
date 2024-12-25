@@ -7,8 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.AutoCompleteTextView
-import android.widget.Toast
-import androidx.core.content.ContextCompat
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -60,18 +58,27 @@ class MoviePreferencesFragment : Fragment() {
     private fun setupUI() {
         setupSearchView()
         setupRecyclerViews()
-        setupSearchItemClickListener()
     }
 
     private fun setupRecyclerViews() {
         binding.rvSelectedMovies.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-            adapter = moviePreferencesAdapter
+            adapter = moviePreferencesAdapter.apply {
+                onRemoveClick = { position ->
+                    viewModel.removeSelectedMovie(position)
+                }
+            }
         }
 
         binding.rvSearchResults.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-            adapter = searchMovieAdapter
+            adapter = searchMovieAdapter.apply {
+                onItemClick = { movie ->
+                    viewModel.addSelectedMovie(movie)
+                    binding.actvSearch.setText("")
+                    binding.rvSearchResults.visibility = View.GONE
+                }
+            }
         }
     }
 
@@ -105,14 +112,7 @@ class MoviePreferencesFragment : Fragment() {
         }
     }
 
-    private fun setupSearchItemClickListener() {
-        searchMovieAdapter.onItemClick = { selectedMovie ->
-            val currentEmptyPosition = viewModel.selectedMovies.value?.indexOfFirst { it.id == -1 } ?: 0
-            viewModel.updateSelectedMovie(selectedMovie, currentEmptyPosition)
-            binding.actvSearch.setText("")
-            binding.rvSearchResults.visibility = View.GONE
-        }
-    }
+
 
     private fun observeViewModel() {
         observeSearchResults()

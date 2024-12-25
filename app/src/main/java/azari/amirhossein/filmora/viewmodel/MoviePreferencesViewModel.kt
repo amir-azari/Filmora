@@ -1,5 +1,6 @@
 package azari.amirhossein.filmora.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
@@ -20,8 +21,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MoviePreferencesViewModel @Inject constructor(
-    private val repository: MoviePreferencesRepository,
-    private val savedStateHandle: SavedStateHandle
+    private val repository: MoviePreferencesRepository
 ) : ViewModel() {
 
     private val _searchQuery = MutableStateFlow("")
@@ -42,14 +42,23 @@ class MoviePreferencesViewModel @Inject constructor(
 
     private val _selectedDislikedGenres = MutableLiveData<Set<Int>>(setOf())
     val selectedDislikedGenres: LiveData<Set<Int>> = _selectedDislikedGenres
+
     init {
-        initializeSelectedMovies()
         setupSearchQueryFlow()
         fetchMovieGenres()
+
     }
 
-    private fun initializeSelectedMovies() {
-        _selectedMovies.value = List(5) { createEmptyMovie() }
+    fun addSelectedMovie(movie: ResponseMoviesList.Result) {
+        val currentList = _selectedMovies.value?.toMutableList() ?: mutableListOf()
+        if (currentList.size < 5 && !currentList.contains(movie)) {
+            currentList.add(movie)
+            _selectedMovies.value = currentList
+        } else if (currentList.size >= 5) {
+            _errorMessage.value = "You can only select up to 5 movies"
+        } else {
+            _errorMessage.value = "This movie has already been selected"
+        }
     }
 
     private fun setupSearchQueryFlow() {
@@ -67,31 +76,6 @@ class MoviePreferencesViewModel @Inject constructor(
         _searchQuery.value = query
     }
 
-    fun updateSelectedMovie(movie: ResponseMoviesList.Result, position: Int) {
-        if (!isValidMovieSelection(movie, position)) return
-
-        val currentList = _selectedMovies.value?.toMutableList() ?: MutableList(5) { createEmptyMovie() }
-        currentList[position] = movie
-        _selectedMovies.postValue(currentList)
-    }
-
-    private fun isValidMovieSelection(movie: ResponseMoviesList.Result, position: Int): Boolean {
-        val currentList = _selectedMovies.value.orEmpty()
-
-        when {
-            currentList.none { it.id == -1 } -> {
-                _errorMessage.postValue("Maximum selection limit reached (5 movies)")
-                return false
-            }
-            currentList.any { it.id == movie.id && movie.id != -1 } -> {
-                _errorMessage.postValue("This movie has already been selected")
-                return false
-            }
-            position !in 0..4 -> return false
-        }
-
-        return true
-    }
 
     private fun fetchMovieGenres() {
         viewModelScope.launch {
@@ -99,6 +83,13 @@ class MoviePreferencesViewModel @Inject constructor(
                 .collect { result ->
                     _genres.postValue(result)
                 }
+        }
+    }
+    fun removeSelectedMovie(position: Int) {
+        val currentList = _selectedMovies.value?.toMutableList() ?: mutableListOf()
+        if (position in currentList.indices) {
+            currentList.removeAt(position)
+            _selectedMovies.value = currentList
         }
     }
     fun updateFavoriteGenre(genreId: Int, isSelected: Boolean) {
@@ -131,21 +122,4 @@ class MoviePreferencesViewModel @Inject constructor(
         _selectedDislikedGenres.value = currentDislikes
     }
 
-
-    private fun createEmptyMovie() = ResponseMoviesList.Result(
-        adult = false,
-        backdropPath = null,
-        genreIds = emptyList(),
-        id = -1,
-        originalLanguage = "",
-        originalTitle = "",
-        overview = "",
-        popularity = 0.0,
-        posterPath = null,
-        releaseDate = "",
-        title = "",
-        video = false,
-        voteAverage = 0.0,
-        voteCount = 0
-    )
 }
