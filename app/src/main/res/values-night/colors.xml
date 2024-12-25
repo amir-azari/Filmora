@@ -12,6 +12,8 @@
     <color name="md_theme_primaryContainer">#40BEC6</color>
     <color name="md_theme_onPrimaryContainer">#021729</color>
 
+    <color name="md_theme_secondaryContainer">#34A5AD</color>
+
     <color name="md_theme_colorSurface">#21696E</color>
     <color name="md_theme_colorOnSurface">#CCEBE8</color>
     <color name="md_theme_colorSurfaceContainer">#021729</color>

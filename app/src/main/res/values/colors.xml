@@ -12,12 +12,14 @@
     <color name="md_theme_primaryContainer">#38B4BC</color>
     <color name="md_theme_onPrimaryContainer">#F6F6F6</color>
 
+    <color name="md_theme_secondaryContainer">#4AC3D3</color>
+
     <color name="md_theme_colorSurface">#A1DEE3</color>
     <color name="md_theme_colorOnSurface">#021729</color>
     <color name="md_theme_colorSurfaceContainer">#021729</color>
 
     <color name="md_theme_primary2">#5DC09F</color>
-    <color name="md_theme_outline">#084C5E</color>
+    <color name="md_theme_outline">#0C7997</color>
 
     <color name="cardBackgroundColor">#EFFAFB</color>
     <color name="cardTextColor">#032B4E</color>

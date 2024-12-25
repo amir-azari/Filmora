@@ -15,6 +15,8 @@
         <item name="colorOnSurface">@color/md_theme_colorOnSurface</item>
         <item name="colorSurfaceContainer">@color/md_theme_colorSurfaceContainer</item>
 
+        <item name="colorSecondaryContainer">@color/md_theme_secondaryContainer</item>
+
         <item name="colorOutline">@color/md_theme_outline</item>
         <item name="android:fontFamily">@font/funnelsans_regular</item>
 
