@@ -165,32 +165,36 @@ class MoviePreferencesFragment : Fragment() {
         binding.chipGroupDislikedGenres.removeAllViews()
 
         genres.forEach { genre ->
-            genre?.let { addGenreChips(it) }
+            genre?.let {
+                val favoriteChip = createChip(it.name.toString(), it.id)
+                val dislikeChip = createChip(it.name.toString(), it.id)
+
+                favoriteChip.isChecked = viewModel.selectedFavoriteGenres.value?.contains(it.id) == true
+                dislikeChip.isChecked = viewModel.selectedDislikedGenres.value?.contains(it.id) == true
+
+                binding.chipGroupFavoriteGenres.addView(favoriteChip)
+                binding.chipGroupDislikedGenres.addView(dislikeChip)
+
+                setupChipListeners(favoriteChip, dislikeChip, it.id)
+            }
         }
     }
 
-    private fun addGenreChips(genre: ResponseGenresList.Genre) {
-        val favoriteChip = createChip(genre.name.toString())
-        val dislikeChip = createChip(genre.name.toString())
-
-        binding.chipGroupFavoriteGenres.addView(favoriteChip)
-        binding.chipGroupDislikedGenres.addView(dislikeChip)
-
-        setupChipListeners(favoriteChip, dislikeChip)
-    }
-
-    private fun createChip(text: String) = Chip(requireContext()).apply {
+    private fun createChip(text: String, id: Int) = Chip(requireContext()).apply {
         this.text = text
+        this.id = id
         isCheckable = true
     }
 
-    private fun setupChipListeners(favoriteChip: Chip, dislikeChip: Chip) {
+    private fun setupChipListeners(favoriteChip: Chip, dislikeChip: Chip, genreId: Int) {
         favoriteChip.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) dislikeChip.isChecked = false
+            viewModel.updateFavoriteGenre(genreId, isChecked)
         }
 
         dislikeChip.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) favoriteChip.isChecked = false
+            viewModel.updateDislikedGenre(genreId, isChecked)
         }
     }
 

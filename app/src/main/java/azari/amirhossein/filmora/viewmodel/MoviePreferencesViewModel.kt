@@ -2,6 +2,7 @@ package azari.amirhossein.filmora.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import azari.amirhossein.filmora.data.repository.MoviePreferencesRepository
@@ -19,7 +20,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MoviePreferencesViewModel @Inject constructor(
-    private val repository: MoviePreferencesRepository
+    private val repository: MoviePreferencesRepository,
+    private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private val _searchQuery = MutableStateFlow("")
@@ -35,11 +37,15 @@ class MoviePreferencesViewModel @Inject constructor(
     private val _genres = MutableLiveData<NetworkRequest<ResponseGenresList>>()
     val genres: LiveData<NetworkRequest<ResponseGenresList>> = _genres
 
+    private val _selectedFavoriteGenres = MutableLiveData<Set<Int>>(setOf())
+    val selectedFavoriteGenres: LiveData<Set<Int>> = _selectedFavoriteGenres
+
+    private val _selectedDislikedGenres = MutableLiveData<Set<Int>>(setOf())
+    val selectedDislikedGenres: LiveData<Set<Int>> = _selectedDislikedGenres
     init {
         initializeSelectedMovies()
         setupSearchQueryFlow()
         fetchMovieGenres()
-
     }
 
     private fun initializeSelectedMovies() {
@@ -95,6 +101,37 @@ class MoviePreferencesViewModel @Inject constructor(
                 }
         }
     }
+    fun updateFavoriteGenre(genreId: Int, isSelected: Boolean) {
+        val currentFavorites = _selectedFavoriteGenres.value?.toMutableSet() ?: mutableSetOf()
+        val currentDislikes = _selectedDislikedGenres.value?.toMutableSet() ?: mutableSetOf()
+
+        if (isSelected) {
+            currentFavorites.add(genreId)
+            currentDislikes.remove(genreId)
+        } else {
+            currentFavorites.remove(genreId)
+        }
+
+        _selectedFavoriteGenres.value = currentFavorites
+        _selectedDislikedGenres.value = currentDislikes
+    }
+
+    fun updateDislikedGenre(genreId: Int, isSelected: Boolean) {
+        val currentFavorites = _selectedFavoriteGenres.value?.toMutableSet() ?: mutableSetOf()
+        val currentDislikes = _selectedDislikedGenres.value?.toMutableSet() ?: mutableSetOf()
+
+        if (isSelected) {
+            currentDislikes.add(genreId)
+            currentFavorites.remove(genreId)
+        } else {
+            currentDislikes.remove(genreId)
+        }
+
+        _selectedFavoriteGenres.value = currentFavorites
+        _selectedDislikedGenres.value = currentDislikes
+    }
+
+
     private fun createEmptyMovie() = ResponseMoviesList.Result(
         adult = false,
         backdropPath = null,
