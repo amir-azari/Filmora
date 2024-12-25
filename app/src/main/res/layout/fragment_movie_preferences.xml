@@ -116,16 +116,22 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/rv_selectedMovies" />
 
-        <com.google.android.material.chip.ChipGroup
-            android:id="@+id/chipGroup_favoriteGenres"
+        <HorizontalScrollView
+            android:id="@+id/scroll_favoriteGenres"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_8mdp"
-            app:chipSpacingHorizontal="@dimen/_8mdp"
-            app:chipSpacingVertical="@dimen/_8mdp"
-            app:layout_constraintTop_toBottomOf="@+id/txt_favoriteGenres">
+            android:scrollbars="none"
+            app:layout_constraintTop_toBottomOf="@id/txt_favoriteGenres">
 
-        </com.google.android.material.chip.ChipGroup>
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chipGroup_favoriteGenres"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:singleLine="true"
+                app:chipSpacingHorizontal="@dimen/_8mdp" />
+
+        </HorizontalScrollView>
 
         <!-- Disliked Genres Section -->
         <TextView
@@ -138,18 +144,24 @@
             android:textSize="@dimen/_12font_mdp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/chipGroup_favoriteGenres" />
+            app:layout_constraintTop_toBottomOf="@+id/scroll_favoriteGenres" />
 
-        <com.google.android.material.chip.ChipGroup
-            android:id="@+id/chipGroup_dislikedGenres"
+        <HorizontalScrollView
+            android:id="@+id/scroll_dislikedGenres"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_8mdp"
-            app:chipSpacingHorizontal="@dimen/_8mdp"
-            app:chipSpacingVertical="@dimen/_8mdp"
-            app:layout_constraintTop_toBottomOf="@+id/txt_dislikedGenres">
+            android:scrollbars="none"
+            app:layout_constraintTop_toBottomOf="@id/txt_dislikedGenres">
 
-        </com.google.android.material.chip.ChipGroup>
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chipGroup_dislikedGenres"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:singleLine="true"
+                app:chipSpacingHorizontal="@dimen/_8mdp" />
+
+        </HorizontalScrollView>
 
         <!-- Next Button -->
         <com.google.android.material.button.MaterialButton
@@ -168,7 +180,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/chipGroup_dislikedGenres" />
+            app:layout_constraintTop_toBottomOf="@+id/scroll_dislikedGenres" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_search_result"
