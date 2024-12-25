@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import azari.amirhossein.filmora.data.repository.MoviePreferencesRepository
+import azari.amirhossein.filmora.models.prefences.ResponseGenresList
 import azari.amirhossein.filmora.models.prefences.movie.ResponseMoviesList
 import azari.amirhossein.filmora.utils.NetworkRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -31,9 +32,14 @@ class MoviePreferencesViewModel @Inject constructor(
     private val _errorMessage = MutableLiveData<String>()
     val errorMessage: LiveData<String> = _errorMessage
 
+    private val _genres = MutableLiveData<NetworkRequest<ResponseGenresList>>()
+    val genres: LiveData<NetworkRequest<ResponseGenresList>> = _genres
+
     init {
         initializeSelectedMovies()
         setupSearchQueryFlow()
+        fetchMovieGenres()
+
     }
 
     private fun initializeSelectedMovies() {
@@ -81,6 +87,14 @@ class MoviePreferencesViewModel @Inject constructor(
         return true
     }
 
+    private fun fetchMovieGenres() {
+        viewModelScope.launch {
+            repository.getMovieGenres()
+                .collect { result ->
+                    _genres.postValue(result)
+                }
+        }
+    }
     private fun createEmptyMovie() = ResponseMoviesList.Result(
         adult = false,
         backdropPath = null,
