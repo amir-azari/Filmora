@@ -30,4 +30,22 @@ class MoviePreferencesRepository @Inject constructor(private val remote: RemoteD
         }
     }.flowOn(Dispatchers.IO)
 
+    fun getMovieGenres(): Flow<NetworkRequest<ResponseGenresList>> = flow {
+        emit(NetworkRequest.Loading())
+        try {
+            val response = remote.getMovieGenres()
+            val networkResponse = NetworkResponse(response).handleNetworkResponse()
+            if (networkResponse is NetworkRequest.Success) {
+                val genres = networkResponse.data
+                genres?.let {
+                    emit(NetworkRequest.Success(it))
+                } ?: emit(NetworkRequest.Error("Empty data received"))
+            } else {
+                throw Exception((networkResponse as NetworkRequest.Error).message)
+            }
+        } catch (e: Exception) {
+            emit(NetworkRequest.Error(e.message.toString()))
+        }
+    }.flowOn(Dispatchers.IO)
+
 }
