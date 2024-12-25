@@ -31,5 +31,6 @@
     <string name="title">Title</string>
     <string name="confirmed">Confirmed</string>
     <string name="back_button">back button</string>
+    <string name="remove">Remove</string>
 
 </resources>

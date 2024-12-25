@@ -92,7 +92,8 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_selectedMovies"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
+            android:minHeight="@dimen/_194mdp"
             android:paddingVertical="@dimen/_4mdp"
             android:layout_marginTop="@dimen/_8mdp"
             android:clipToPadding="false"
@@ -102,7 +103,8 @@
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintTop_toBottomOf="@+id/txt_selectedMovies"
             tools:itemCount="5"
-            tools:listitem="@layout/item_preferences" />
+            tools:listitem="@layout/item_preferences"
+            android:background="@drawable/empty_state_background"/>
 
         <!-- Favorite Genres Section -->
         <TextView
