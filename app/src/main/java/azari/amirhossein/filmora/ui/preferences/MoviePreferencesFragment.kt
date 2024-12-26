@@ -83,11 +83,10 @@ class MoviePreferencesFragment : Fragment() {
     }
 
     private fun setupSearchView() {
-        binding.tilSearch.findViewById<AutoCompleteTextView>(R.id.actv_search).apply {
+        binding.actvSearch.apply {
             setOnEditorActionListener { textView, actionId, _ ->
                 handleSearchAction(textView.text.toString(), actionId)
             }
-
             doOnTextChanged { text, _, _, _ ->
                 handleSearchTextChange(text?.toString())
             }
