@@ -130,8 +130,7 @@ class MoviePreferencesFragment : Fragment() {
                         binding.progressBar.visibility = View.INVISIBLE
                         val movieList = response.data?.results ?: emptyList()
                         searchMovieAdapter.differ.submitList(movieList)
-                        binding.rvSearchResults.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-                        binding.rvSearchResults.adapter = searchMovieAdapter
+
 
                     }
                     is NetworkRequest.Loading -> {
