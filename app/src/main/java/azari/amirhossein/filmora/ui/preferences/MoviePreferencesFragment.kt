@@ -205,10 +205,13 @@ class MoviePreferencesFragment : Fragment() {
     }
 
     private fun observeErrorMessage() {
-        viewModel.errorMessage.observe(viewLifecycleOwner) { message ->
-            message?.let { showWarningSnackbar(binding.root, it) }
+        viewModel.errorMessage.observe(viewLifecycleOwner) { event ->
+            event?.getContentIfNotHandled()?.let { message ->
+                showWarningSnackbar(binding.root, message)
+            }
         }
     }
+
 
     private fun showErrorSnackbar(root: View, message: String) {
         Snackbar.make(root, message, Snackbar.LENGTH_SHORT).apply {

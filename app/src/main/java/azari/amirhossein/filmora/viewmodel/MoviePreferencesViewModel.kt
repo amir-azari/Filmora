@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import azari.amirhossein.filmora.data.repository.MoviePreferencesRepository
 import azari.amirhossein.filmora.models.prefences.ResponseGenresList
 import azari.amirhossein.filmora.models.prefences.movie.ResponseMoviesList
+import azari.amirhossein.filmora.utils.Event
 import azari.amirhossein.filmora.utils.NetworkRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,8 +32,8 @@ class MoviePreferencesViewModel @Inject constructor(
     private val _selectedMovies = MutableLiveData<List<ResponseMoviesList.Result>>()
     val selectedMovies: LiveData<List<ResponseMoviesList.Result>> = _selectedMovies
 
-    private val _errorMessage = MutableLiveData<String>()
-    val errorMessage: LiveData<String> = _errorMessage
+    private val _errorMessage = MutableLiveData<Event<String>>()
+    val errorMessage: LiveData<Event<String>> = _errorMessage
 
     private val _genres = MutableLiveData<NetworkRequest<ResponseGenresList>>()
     val genres: LiveData<NetworkRequest<ResponseGenresList>> = _genres
@@ -55,9 +56,9 @@ class MoviePreferencesViewModel @Inject constructor(
             currentList.add(movie)
             _selectedMovies.value = currentList
         } else if (currentList.size >= 5) {
-            _errorMessage.value = "You can only select up to 5 movies"
+            _errorMessage.value = Event("You can only select up to 5 movies")
         } else {
-            _errorMessage.value = "This movie has already been selected"
+            _errorMessage.value = Event("This movie has already been selected")
         }
     }
 
@@ -121,5 +122,7 @@ class MoviePreferencesViewModel @Inject constructor(
         _selectedFavoriteGenres.value = currentFavorites
         _selectedDislikedGenres.value = currentDislikes
     }
-
+    fun showError(message: String) {
+        _errorMessage.value = Event(message)
+    }
 }
