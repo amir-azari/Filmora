@@ -12,8 +12,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import azari.amirhossein.adapter.MoviePreferencesAdapter
-import azari.amirhossein.adapter.SearchMoviePreferencesAdapter
+import azari.amirhossein.filmora.adapter.MoviePreferencesAdapter
+import azari.amirhossein.filmora.adapter.SearchMoviePreferencesAdapter
 import azari.amirhossein.filmora.R
 import azari.amirhossein.filmora.databinding.FragmentMoviePreferencesBinding
 import azari.amirhossein.filmora.models.prefences.ResponseGenresList

@@ -1,4 +1,4 @@
-package azari.amirhossein.adapter
+package azari.amirhossein.filmora.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
