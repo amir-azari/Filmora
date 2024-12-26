@@ -94,13 +94,15 @@ class MoviePreferencesFragment : Fragment() {
     }
 
     private fun handleSearchAction(query: String, actionId: Int): Boolean {
-        return if (actionId == EditorInfo.IME_ACTION_SEARCH && query.isNotEmpty()) {
+        val isSearchValid = actionId == EditorInfo.IME_ACTION_SEARCH && query.isNotEmpty()
+        binding.rvSearchResults.visibility = if (isSearchValid) View.VISIBLE else View.GONE
+
+        if (isSearchValid) {
             viewModel.searchMovie(query)
-            true
-        } else {
-            false
         }
+        return isSearchValid
     }
+
 
     private fun handleSearchTextChange(query: String?) {
         if (!query.isNullOrBlank() && query.length >= 2) {
