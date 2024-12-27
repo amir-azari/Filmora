@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import android.widget.AutoCompleteTextView
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -15,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import azari.amirhossein.filmora.adapter.MoviePreferencesAdapter
 import azari.amirhossein.filmora.adapter.SearchMoviePreferencesAdapter
 import azari.amirhossein.filmora.R
+import azari.amirhossein.filmora.data.SessionManager
 import azari.amirhossein.filmora.databinding.FragmentMoviePreferencesBinding
 import azari.amirhossein.filmora.models.prefences.ResponseGenresList
 import azari.amirhossein.filmora.utils.NetworkRequest
@@ -38,6 +38,9 @@ class MoviePreferencesFragment : Fragment() {
     @Inject
     lateinit var searchMovieAdapter: SearchMoviePreferencesAdapter
 
+    @Inject
+    lateinit var sessionManager: SessionManager
+
     private val viewModel: MoviePreferencesViewModel by viewModels()
 
     override fun onCreateView(
@@ -58,6 +61,7 @@ class MoviePreferencesFragment : Fragment() {
     private fun setupUI() {
         setupSearchView()
         setupRecyclerViews()
+        setupNextButton()
     }
 
     private fun setupRecyclerViews() {
@@ -197,7 +201,14 @@ class MoviePreferencesFragment : Fragment() {
             viewModel.updateDislikedGenre(genreId, isChecked)
         }
     }
-
+    private fun setupNextButton() {
+        binding.btnNext.setOnClickListener {
+            if (viewModel.validatePreferences()) {
+                viewModel.savePreferences()
+                // TODO (Navigate to tv preferences fragment)
+            }
+        }
+    }
     private fun observeSelectedMovies() {
         viewModel.selectedMovies.observe(viewLifecycleOwner) { movies ->
             moviePreferencesAdapter.differ.submitList(movies)
