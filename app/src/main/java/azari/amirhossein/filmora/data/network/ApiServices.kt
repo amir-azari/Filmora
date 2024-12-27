@@ -6,11 +6,13 @@ import azari.amirhossein.filmora.models.authentication.ResponseGuestSession
 import azari.amirhossein.filmora.models.authentication.ResponseToken
 import azari.amirhossein.filmora.models.authentication.ResponseSession
 import azari.amirhossein.filmora.models.prefences.ResponseGenresList
+import azari.amirhossein.filmora.models.prefences.movie.ResponseMovieKeywordList
 import azari.amirhossein.filmora.models.prefences.movie.ResponseMoviesList
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface ApiServices {
@@ -39,5 +41,9 @@ interface ApiServices {
     // Movie genres
     @GET("genre/movie/list")
     suspend fun getMovieGenres() : Response<ResponseGenresList>
+
+    // Movie keywords
+    @GET("movie/{movie_id}/keywords")
+    suspend fun getMovieKeywords( @Path("movie_id") movieId: String): Response<ResponseMovieKeywordList>
     
 }
