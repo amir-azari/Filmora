@@ -12,4 +12,5 @@ class RemoteDataSource @Inject constructor(private val api : ApiServices) {
     suspend fun createGuestSession() = api.createGuestSession()
     suspend fun searchMovie(query:String) = api.searchMovie(query)
     suspend fun getMovieGenres() = api.getMovieGenres()
+    suspend fun getMovieKeywords(movieId:String) = api.getMovieKeywords(movieId)
 }
