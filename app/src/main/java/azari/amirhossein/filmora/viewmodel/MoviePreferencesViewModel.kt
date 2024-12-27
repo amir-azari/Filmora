@@ -6,8 +6,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import azari.amirhossein.filmora.data.SessionManager
 import azari.amirhossein.filmora.data.repository.MoviePreferencesRepository
 import azari.amirhossein.filmora.models.prefences.ResponseGenresList
+import azari.amirhossein.filmora.models.prefences.movie.MoviePreferences
 import azari.amirhossein.filmora.models.prefences.movie.ResponseMoviesList
 import azari.amirhossein.filmora.utils.Event
 import azari.amirhossein.filmora.utils.NetworkRequest
@@ -22,7 +24,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MoviePreferencesViewModel @Inject constructor(
-    private val repository: MoviePreferencesRepository
+    private val repository: MoviePreferencesRepository,
+    private val sessionManager: SessionManager
 ) : ViewModel() {
 
     private val _searchQuery = MutableStateFlow("")
@@ -122,7 +125,60 @@ class MoviePreferencesViewModel @Inject constructor(
         _selectedFavoriteGenres.value = currentFavorites
         _selectedDislikedGenres.value = currentDislikes
     }
-    fun showError(message: String) {
-        _errorMessage.value = Event(message)
+    private suspend fun fetchMovieKeywords(movieId: String): Set<Int> {
+        var keywordIds = emptySet<Int>()
+        repository.getMovieKeywords(movieId).collect { result ->
+            when (result) {
+                is NetworkRequest.Success -> {
+                    keywordIds = result.data?.keywords?.mapNotNull { it?.id }?.toSet() ?: emptySet()
+                }
+                else -> {}
+            }
+        }
+        return keywordIds
+    }
+
+    fun savePreferences() = viewModelScope.launch {
+        try {
+            val selectedMovies = _selectedMovies.value ?: emptyList()
+
+            val allKeywords = mutableSetOf<Int>()
+            selectedMovies.forEach { movie ->
+                movie.id?.let { movieId ->
+                    val movieKeywords = fetchMovieKeywords(movieId.toString())
+                    allKeywords.addAll(movieKeywords)
+                }
+            }
+
+            val preferences = MoviePreferences(
+                selectedMovieIds = selectedMovies.mapNotNull { it.id },
+                favoriteGenres = _selectedFavoriteGenres.value ?: emptySet(),
+                dislikedGenres = _selectedDislikedGenres.value ?: emptySet(),
+                selectedMovieKeywords = allKeywords,
+                selectedMovieGenres = selectedMovies.flatMap { it.genreIds ?: emptyList() }.filterNotNull().toSet()
+            )
+
+            sessionManager.saveMoviePreferences(preferences)
+        } catch (e: Exception) {
+            Log.e("Keywords", "Error saving preferences: ${e.message}")
+        }
+    }
+
+    fun validatePreferences(): Boolean {
+        val selectedMovies = _selectedMovies.value ?: emptyList()
+        val favoriteGenres = _selectedFavoriteGenres.value ?: emptySet()
+        val dislikedGenres = _selectedDislikedGenres.value ?: emptySet()
+
+        if (selectedMovies.size < 5) {
+            _errorMessage.value = Event("Please select exactly 5 movies")
+            return false
+        }
+
+        if (favoriteGenres.isEmpty() && dislikedGenres.isEmpty()) {
+            _errorMessage.value = Event("Please select at least one genre preference")
+            return false
+        }
+
+        return true
     }
 }
