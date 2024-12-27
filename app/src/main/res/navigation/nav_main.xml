@@ -21,7 +21,7 @@
         tools:layout="@layout/fragment_login" >
 
         <action
-            android:id="@+id/action_loginFragment_to_moviePreferencesFragment"
+            android:id="@+id/actionLoginToMoviePreferences"
             app:destination="@id/moviePreferencesFragment" />
     </fragment>
     <action
@@ -43,7 +43,7 @@
         tools:layout="@layout/fragment_movie_preferences"
         >
         <action
-            android:id="@+id/action_moviePreferencesFragment_to_tvPreferencesFragment"
+            android:id="@+id/actionMoviePreferencesToTvPreferences"
             app:destination="@id/tvPreferencesFragment" />
     </fragment>
     <fragment
