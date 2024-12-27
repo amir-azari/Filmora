@@ -26,6 +26,13 @@ object Constants {
         const val SESSION_ID = "session_id"
         const val IS_GUEST = "is_guest"
         const val PROFILE = "profile"
+
+        // Movie preferences
+        const val SELECTED_MOVIE_IDS = "selected_movie_ids"
+        const val FAVORITE_GENRES = "favorite_genres"
+        const val DISLIKED_GENRES = "disliked_genres"
+        const val SELECTED_MOVIE_KEYWORDS = "selected_movie_keywords"
+        const val SELECTED_MOVIE_GENRES = "selected_movie_genres"
     }
 
     object WebView{
