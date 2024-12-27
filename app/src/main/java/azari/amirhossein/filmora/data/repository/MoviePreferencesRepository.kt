@@ -2,6 +2,7 @@ package azari.amirhossein.filmora.data.repository
 
 import azari.amirhossein.filmora.data.source.RemoteDataSource
 import azari.amirhossein.filmora.models.prefences.ResponseGenresList
+import azari.amirhossein.filmora.models.prefences.movie.ResponseMovieKeywordList
 import azari.amirhossein.filmora.models.prefences.movie.ResponseMoviesList
 import azari.amirhossein.filmora.utils.NetworkRequest
 import azari.amirhossein.filmora.utils.NetworkResponse
@@ -48,4 +49,21 @@ class MoviePreferencesRepository @Inject constructor(private val remote: RemoteD
         }
     }.flowOn(Dispatchers.IO)
 
+    fun getMovieKeywords(movieId: String): Flow<NetworkRequest<ResponseMovieKeywordList>> = flow {
+        emit(NetworkRequest.Loading())
+        try {
+            val response = remote.getMovieKeywords(movieId)
+            when (val networkResponse = NetworkResponse(response).handleNetworkResponse()) {
+                is NetworkRequest.Success -> {
+                    emit(networkResponse)
+                }
+                is NetworkRequest.Error -> {
+                    emit(networkResponse)
+                }
+                else -> emit(NetworkRequest.Error("Unknown error"))
+            }
+        } catch (e: Exception) {
+            emit(NetworkRequest.Error(e.message.toString()))
+        }
+    }.flowOn(Dispatchers.IO)
 }
