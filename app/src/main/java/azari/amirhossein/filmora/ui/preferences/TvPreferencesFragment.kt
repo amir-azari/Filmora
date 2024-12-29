@@ -10,6 +10,7 @@ import android.view.inputmethod.EditorInfo
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import azari.amirhossein.filmora.R
 import azari.amirhossein.filmora.adapter.MoviePreferencesAdapter
@@ -59,6 +60,7 @@ class TvPreferencesFragment : Fragment() {
     private fun setupUI() {
         setupSearchView()
         setupRecyclerViews()
+        setupConfirmButton()
     }
 
     private fun setupRecyclerViews() {
@@ -121,7 +123,14 @@ class TvPreferencesFragment : Fragment() {
         setupGenresObserver()
 
     }
-
+    private fun setupConfirmButton() {
+        binding.btnConfirmed.setOnClickListener {
+            if (viewModel.validatePreferences()) {
+                viewModel.savePreferences()
+                //TODO Navigate Fragment
+            }
+        }
+    }
     private fun observeSearchResults() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.searchResult.observe(viewLifecycleOwner) { response ->
