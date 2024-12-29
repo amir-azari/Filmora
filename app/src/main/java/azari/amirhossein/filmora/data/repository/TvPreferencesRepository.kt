@@ -52,7 +52,7 @@ class TvPreferencesRepository @Inject constructor(private val remote: RemoteData
         }
     }.flowOn(Dispatchers.IO)
 
-    fun getTvKeywords(tvId: String): Flow<NetworkRequest<ResponseTvKeywordList>> = flow {
+    fun getTvKeywords(tvId: Int): Flow<NetworkRequest<ResponseTvKeywordList>> = flow {
         emit(NetworkRequest.Loading())
         try {
             val response = remote.getTvKeywords(tvId)

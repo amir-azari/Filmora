@@ -123,7 +123,7 @@ class TvPreferencesViewModel @Inject constructor(
         _selectedDislikedGenres.value = currentDislikes
     }
 
-    private suspend fun fetchTvKeywords(tvId: String): Set<Int> {
+    private suspend fun fetchTvKeywords(tvId: Int): Set<Int> {
         var keywordIds = emptySet<Int>()
         repository.getTvKeywords(tvId).collect { result ->
             when (result) {
@@ -142,7 +142,7 @@ class TvPreferencesViewModel @Inject constructor(
             val allKeywords = mutableSetOf<Int>()
             selectedTvs.forEach { tv ->
                 tv.id?.let { tvId ->
-                    val tvKeywords = fetchTvKeywords(tvId.toString())
+                    val tvKeywords = fetchTvKeywords(tvId)
                     allKeywords.addAll(tvKeywords)
                 }
             }

@@ -60,8 +60,8 @@ interface ApiServices {
     @GET("genre/tv/list")
     suspend fun getTvGenres() : Response<ResponseGenresList>
 
-    // Movie keywords
-    @GET("movie/{series_id}/keywords")
-    suspend fun getTvKeywords( @Path("series_id") tvId: String): Response<ResponseTvKeywordList>
+    // Tv keywords
+    @GET("tv/{series_id}/keywords")
+    suspend fun getTvKeywords( @Path("series_id") tvId: Int): Response<ResponseTvKeywordList>
 
 }
