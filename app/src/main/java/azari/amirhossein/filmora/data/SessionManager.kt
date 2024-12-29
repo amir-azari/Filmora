@@ -21,11 +21,19 @@ class SessionManager @Inject constructor(@ApplicationContext private val context
         val SESSION_ID = stringPreferencesKey(Constants.DataStore.SESSION_ID)
         val IS_GUEST = booleanPreferencesKey(Constants.DataStore.IS_GUEST)
 
+        //Movie
         val SELECTED_MOVIE_IDS = stringPreferencesKey(Constants.DataStore.SELECTED_MOVIE_IDS)
-        val FAVORITE_GENRES = stringPreferencesKey(Constants.DataStore.FAVORITE_GENRES)
-        val DISLIKED_GENRES = stringPreferencesKey(Constants.DataStore.DISLIKED_GENRES)
+        val FAVORITE_GENRES = stringPreferencesKey(Constants.DataStore.FAVORITE_MOVIE_GENRES)
+        val DISLIKED_GENRES = stringPreferencesKey(Constants.DataStore.DISLIKED_MOVIE_GENRES)
         val SELECTED_MOVIE_KEYWORDS = stringPreferencesKey(Constants.DataStore.SELECTED_MOVIE_KEYWORDS)
         val SELECTED_MOVIE_GENRES = stringPreferencesKey(Constants.DataStore.SELECTED_MOVIE_GENRES)
+
+        //TV
+        val SELECTED_TV_IDS = stringPreferencesKey(Constants.DataStore.SELECTED_TV_IDS)
+        val FAVORITE_TV_GENRES = stringPreferencesKey(Constants.DataStore.FAVORITE_TV_GENRES)
+        val DISLIKED_TV_GENRES = stringPreferencesKey(Constants.DataStore.DISLIKED_TV_GENRES)
+        val SELECTED_TV_KEYWORDS = stringPreferencesKey(Constants.DataStore.SELECTED_TV_KEYWORDS)
+        val SELECTED_TV_GENRES = stringPreferencesKey(Constants.DataStore.SELECTED_TV_GENRES)
 
     }
 
@@ -62,6 +70,25 @@ class SessionManager @Inject constructor(@ApplicationContext private val context
             dislikedGenres = preferences[StoredKey.DISLIKED_GENRES]?.split(",")?.mapNotNull { it.toIntOrNull() }?.toSet() ?: emptySet(),
             selectedKeywords = preferences[StoredKey.SELECTED_MOVIE_KEYWORDS]?.split(",")?.mapNotNull { it.toIntOrNull() }?.toSet() ?: emptySet(),
             selectedGenres = preferences[StoredKey.SELECTED_MOVIE_GENRES]?.split(",")?.mapNotNull { it.toIntOrNull() }?.toSet() ?: emptySet()
+        )
+    }
+
+    suspend fun saveTvPreferences(preferences: TvAndMoviePreferences) {
+        context.dataStore.edit { prefs ->
+            prefs[StoredKey.SELECTED_TV_IDS] = preferences.selectedIds.joinToString(",")
+            prefs[StoredKey.FAVORITE_TV_GENRES] = preferences.favoriteGenres.joinToString(",")
+            prefs[StoredKey.DISLIKED_TV_GENRES] = preferences.dislikedGenres.joinToString(",")
+            prefs[StoredKey.SELECTED_TV_KEYWORDS] = preferences.selectedKeywords.joinToString(",")
+            prefs[StoredKey.SELECTED_TV_GENRES] = preferences.selectedGenres.joinToString(",")
+        }
+    }
+    fun getTvPreferences(): Flow<TvAndMoviePreferences> = context.dataStore.data.map { preferences ->
+        TvAndMoviePreferences(
+            selectedIds = preferences[StoredKey.SELECTED_TV_IDS]?.split(",")?.mapNotNull { it.toIntOrNull() } ?: emptyList(),
+            favoriteGenres = preferences[StoredKey.FAVORITE_TV_GENRES]?.split(",")?.mapNotNull { it.toIntOrNull() }?.toSet() ?: emptySet(),
+            dislikedGenres = preferences[StoredKey.DISLIKED_TV_GENRES]?.split(",")?.mapNotNull { it.toIntOrNull() }?.toSet() ?: emptySet(),
+            selectedKeywords = preferences[StoredKey.SELECTED_TV_KEYWORDS]?.split(",")?.mapNotNull { it.toIntOrNull() }?.toSet() ?: emptySet(),
+            selectedGenres = preferences[StoredKey.SELECTED_TV_GENRES]?.split(",")?.mapNotNull { it.toIntOrNull() }?.toSet() ?: emptySet()
         )
     }
     suspend fun clearSession() {

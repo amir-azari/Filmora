@@ -29,10 +29,16 @@ object Constants {
 
         // Movie preferences
         const val SELECTED_MOVIE_IDS = "selected_movie_ids"
-        const val FAVORITE_GENRES = "favorite_genres"
-        const val DISLIKED_GENRES = "disliked_genres"
+        const val FAVORITE_MOVIE_GENRES = "favorite_movie_genres"
+        const val DISLIKED_MOVIE_GENRES = "disliked_movie_genres"
         const val SELECTED_MOVIE_KEYWORDS = "selected_movie_keywords"
         const val SELECTED_MOVIE_GENRES = "selected_movie_genres"
+
+        const val SELECTED_TV_IDS = "selected_tv_ids"
+        const val FAVORITE_TV_GENRES = "favorite_tv_genres"
+        const val DISLIKED_TV_GENRES = "disliked_tv_genres"
+        const val SELECTED_TV_KEYWORDS = "selected_tv_keywords"
+        const val SELECTED_TV_GENRES = "selected_tv_genres"
     }
 
     object WebView{
