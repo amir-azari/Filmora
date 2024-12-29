@@ -53,4 +53,9 @@ interface ApiServices {
     // Search TV
     @GET("search/tv")
     suspend fun searchTv( @Query("query") query: String) : Response<ResponseTvsList>
+
+    // Tv genres
+    @GET("genre/tv/list")
+    suspend fun getTvGenres() : Response<ResponseGenresList>
+
 }
