@@ -32,6 +32,8 @@ class TvPreferencesFragment : Fragment() {
     private var _binding: FragmentTvPreferencesBinding? = null
     private val binding get() = _binding!!
 
+    @Inject
+    lateinit var tvPreferencesAdapter: TvPreferencesAdapter
 
     @Inject
     lateinit var searchTvAdapter: SearchTvPreferencesAdapter
@@ -58,10 +60,20 @@ class TvPreferencesFragment : Fragment() {
     }
 
     private fun setupRecyclerViews() {
+        binding.rvSelectedSeries.apply {
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            adapter = tvPreferencesAdapter.apply {
+                onRemoveClick = { position ->
+                    viewModel.removeSelectedSerial(position)
+                }
+            }
+        }
+
         binding.rvSearchResults.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
             adapter = searchTvAdapter.apply {
                 onItemClick = { movie ->
+                    viewModel.addSelectedSerial(movie)
                     binding.actvSearch.setText("")
                     binding.rvSearchResults.visibility = View.GONE
                 }
@@ -102,7 +114,8 @@ class TvPreferencesFragment : Fragment() {
 
     private fun observeViewModel() {
         observeSearchResults()
-
+        observeSelectedSeries()
+        observeErrorMessage()
     }
 
     private fun observeSearchResults() {
@@ -130,7 +143,19 @@ class TvPreferencesFragment : Fragment() {
             }
         }
     }
+    private fun observeSelectedSeries() {
+        viewModel.selectedSeries.observe(viewLifecycleOwner) { movies ->
+            tvPreferencesAdapter.differ.submitList(movies)
+        }
+    }
 
+    private fun observeErrorMessage() {
+        viewModel.errorMessage.observe(viewLifecycleOwner) { event ->
+            event?.getContentIfNotHandled()?.let { message ->
+                showWarningSnackbar(binding.root, message)
+            }
+        }
+    }
 
     private fun showErrorSnackbar(root: View, message: String) {
         Snackbar.make(root, message, Snackbar.LENGTH_SHORT).apply {
