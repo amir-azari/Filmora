@@ -1,5 +1,6 @@
 package azari.amirhossein.filmora.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -7,7 +8,7 @@ import androidx.lifecycle.viewModelScope
 import azari.amirhossein.filmora.data.SessionManager
 import azari.amirhossein.filmora.data.repository.TvPreferencesRepository
 import azari.amirhossein.filmora.models.prefences.ResponseGenresList
-import azari.amirhossein.filmora.models.prefences.movie.ResponseMoviesList
+import azari.amirhossein.filmora.models.prefences.TvAndMoviePreferences
 import azari.amirhossein.filmora.models.prefences.tv.ResponseTvsList
 import azari.amirhossein.filmora.utils.Event
 import azari.amirhossein.filmora.utils.NetworkRequest
@@ -71,9 +72,9 @@ class TvPreferencesViewModel @Inject constructor(
             currentList.add(movie)
             _selectedSeries.value = currentList
         } else if (currentList.size >= 5) {
-            _errorMessage.value = Event("You can only select up to 5 movies")
+            _errorMessage.value = Event("You can only select up to 5 series")
         } else {
-            _errorMessage.value = Event("This movie has already been selected")
+            _errorMessage.value = Event("This serial has already been selected")
         }
     }
     fun removeSelectedSerial(position: Int) {
@@ -120,5 +121,61 @@ class TvPreferencesViewModel @Inject constructor(
 
         _selectedFavoriteGenres.value = currentFavorites
         _selectedDislikedGenres.value = currentDislikes
+    }
+
+    private suspend fun fetchTvKeywords(tvId: String): Set<Int> {
+        var keywordIds = emptySet<Int>()
+        repository.getTvKeywords(tvId).collect { result ->
+            when (result) {
+                is NetworkRequest.Success -> {
+                    keywordIds = result.data?.results?.mapNotNull { it?.id }?.toSet() ?: emptySet()
+                }
+                else -> {}
+            }
+        }
+        return keywordIds
+    }
+    fun savePreferences() = viewModelScope.launch {
+        try {
+            val selectedTvs = _selectedSeries.value ?: emptyList()
+
+            val allKeywords = mutableSetOf<Int>()
+            selectedTvs.forEach { tv ->
+                tv.id?.let { tvId ->
+                    val tvKeywords = fetchTvKeywords(tvId.toString())
+                    allKeywords.addAll(tvKeywords)
+                }
+            }
+
+            val preferences = TvAndMoviePreferences(
+                selectedIds = selectedTvs.mapNotNull { it.id },
+                favoriteGenres = _selectedFavoriteGenres.value ?: emptySet(),
+                dislikedGenres = _selectedDislikedGenres.value ?: emptySet(),
+                selectedKeywords = allKeywords,
+                selectedGenres = selectedTvs.flatMap { it.genreIds ?: emptyList() }.filterNotNull().toSet()
+            )
+
+            sessionManager.saveTvPreferences(preferences)
+        } catch (e: Exception) {
+            Log.e("Keywords", "Error saving preferences: ${e.message}")
+        }
+    }
+
+    fun validatePreferences(): Boolean {
+        val selectedTvs = _selectedSeries.value ?: emptyList()
+        val favoriteGenres = _selectedFavoriteGenres.value ?: emptySet()
+        val dislikedGenres = _selectedDislikedGenres.value ?: emptySet()
+
+        if (selectedTvs.size < 5) {
+            _errorMessage.value = Event("Please select exactly 5 series")
+            return false
+        }
+
+        if (favoriteGenres.isEmpty() && dislikedGenres.isEmpty()) {
+            _errorMessage.value = Event("Please select at least one genre preference")
+            return false
+        }
+
+        return true
     }
 }
