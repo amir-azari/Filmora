@@ -8,6 +8,7 @@ import azari.amirhossein.filmora.models.authentication.ResponseSession
 import azari.amirhossein.filmora.models.prefences.ResponseGenresList
 import azari.amirhossein.filmora.models.prefences.movie.ResponseMovieKeywordList
 import azari.amirhossein.filmora.models.prefences.movie.ResponseMoviesList
+import azari.amirhossein.filmora.models.prefences.tv.ResponseTvKeywordList
 import azari.amirhossein.filmora.models.prefences.tv.ResponseTvsList
 import retrofit2.Response
 import retrofit2.http.Body
@@ -50,6 +51,7 @@ interface ApiServices {
     suspend fun getMovieKeywords( @Path("movie_id") movieId: String): Response<ResponseMovieKeywordList>
 
     //---------TVs---------
+
     // Search TV
     @GET("search/tv")
     suspend fun searchTv( @Query("query") query: String) : Response<ResponseTvsList>
@@ -57,5 +59,9 @@ interface ApiServices {
     // Tv genres
     @GET("genre/tv/list")
     suspend fun getTvGenres() : Response<ResponseGenresList>
+
+    // Movie keywords
+    @GET("movie/{series_id}/keywords")
+    suspend fun getTvKeywords( @Path("series_id") tvId: String): Response<ResponseTvKeywordList>
 
 }
