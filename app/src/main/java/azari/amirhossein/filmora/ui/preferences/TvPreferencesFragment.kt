@@ -17,10 +17,12 @@ import azari.amirhossein.filmora.adapter.SearchMoviePreferencesAdapter
 import azari.amirhossein.filmora.adapter.SearchTvPreferencesAdapter
 import azari.amirhossein.filmora.adapter.TvPreferencesAdapter
 import azari.amirhossein.filmora.databinding.FragmentTvPreferencesBinding
+import azari.amirhossein.filmora.models.prefences.ResponseGenresList
 import azari.amirhossein.filmora.utils.NetworkRequest
 import azari.amirhossein.filmora.utils.customize
 import azari.amirhossein.filmora.viewmodel.MoviePreferencesViewModel
 import azari.amirhossein.filmora.viewmodel.TvPreferencesViewModel
+import com.google.android.material.chip.Chip
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -116,6 +118,8 @@ class TvPreferencesFragment : Fragment() {
         observeSearchResults()
         observeSelectedSeries()
         observeErrorMessage()
+        setupGenresObserver()
+
     }
 
     private fun observeSearchResults() {
@@ -143,6 +147,7 @@ class TvPreferencesFragment : Fragment() {
             }
         }
     }
+
     private fun observeSelectedSeries() {
         viewModel.selectedSeries.observe(viewLifecycleOwner) { movies ->
             tvPreferencesAdapter.differ.submitList(movies)
@@ -154,6 +159,63 @@ class TvPreferencesFragment : Fragment() {
             event?.getContentIfNotHandled()?.let { message ->
                 showWarningSnackbar(binding.root, message)
             }
+        }
+    }
+
+    private fun setupGenresObserver() {
+        viewModel.genres.observe(viewLifecycleOwner) { result ->
+            when (result) {
+                is NetworkRequest.Loading -> {
+                }
+
+                is NetworkRequest.Success -> {
+                    setupGenresChipGroups(result.data?.genres.orEmpty())
+                }
+
+                is NetworkRequest.Error -> {
+                    showErrorSnackbar(binding.root, result.message.toString())
+                }
+            }
+        }
+    }
+
+    private fun setupGenresChipGroups(genres: List<ResponseGenresList.Genre?>) {
+        binding.chipGroupFavoriteGenres.removeAllViews()
+        binding.chipGroupDislikedGenres.removeAllViews()
+
+        genres.forEach { genre ->
+            genre?.let {
+                val favoriteChip = createChip(it.name.toString(), it.id)
+                val dislikeChip = createChip(it.name.toString(), it.id)
+
+                favoriteChip.isChecked =
+                    viewModel.selectedFavoriteGenres.value?.contains(it.id) == true
+                dislikeChip.isChecked =
+                    viewModel.selectedDislikedGenres.value?.contains(it.id) == true
+
+                binding.chipGroupFavoriteGenres.addView(favoriteChip)
+                binding.chipGroupDislikedGenres.addView(dislikeChip)
+
+                setupChipListeners(favoriteChip, dislikeChip, it.id)
+            }
+        }
+    }
+
+    private fun createChip(text: String, id: Int) = Chip(requireContext()).apply {
+        this.text = text
+        this.id = id
+        isCheckable = true
+    }
+
+    private fun setupChipListeners(favoriteChip: Chip, dislikeChip: Chip, genreId: Int) {
+        favoriteChip.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) dislikeChip.isChecked = false
+            viewModel.updateFavoriteGenre(genreId, isChecked)
+        }
+
+        dislikeChip.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) favoriteChip.isChecked = false
+            viewModel.updateDislikedGenre(genreId, isChecked)
         }
     }
 
