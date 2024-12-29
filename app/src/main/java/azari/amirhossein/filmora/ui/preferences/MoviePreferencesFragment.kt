@@ -1,6 +1,7 @@
 package azari.amirhossein.filmora.ui.preferences
 
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +11,7 @@ import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import azari.amirhossein.filmora.adapter.MoviePreferencesAdapter
 import azari.amirhossein.filmora.adapter.SearchMoviePreferencesAdapter
@@ -205,7 +207,7 @@ class MoviePreferencesFragment : Fragment() {
         binding.btnNext.setOnClickListener {
             if (viewModel.validatePreferences()) {
                 viewModel.savePreferences()
-                // TODO (Navigate to tv preferences fragment)
+                findNavController().navigate(R.id.actionMoviePreferencesToTvPreferences)
             }
         }
     }
