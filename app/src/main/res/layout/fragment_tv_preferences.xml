@@ -50,7 +50,7 @@
             app:layout_constraintTop_toBottomOf="@+id/txt_seriesPref" />
 
         <TextView
-            android:id="@+id/txt_seriesChoice"
+            android:id="@+id/txt_tvChoice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_16mdp"
@@ -61,7 +61,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/gradient_line" />
 
-        <!-- Search series -->
+        <!-- Search movies -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/til_search"
             style="@style/CustomTextInputLayout"
@@ -72,7 +72,7 @@
             app:boxCornerRadiusTopEnd="12dp"
             app:boxCornerRadiusTopStart="12dp"
             app:endIconMode="clear_text"
-            app:layout_constraintTop_toBottomOf="@+id/txt_seriesChoice"
+            app:layout_constraintTop_toBottomOf="@+id/txt_tvChoice"
             app:startIconDrawable="@drawable/magnifying_glass">
 
             <AutoCompleteTextView
@@ -85,37 +85,40 @@
                 android:imeOptions="actionSearch"
                 android:inputType="text"
                 android:maxLines="1"
+                android:paddingStart="@dimen/_8mdp"
                 android:textSize="@dimen/_12mdp" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Selected Series Section -->
+        <!-- Selected Movies Section -->
         <TextView
-            android:id="@+id/txt_selectedMovies"
+            android:id="@+id/txt_selectedSeries"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_16mdp"
             android:alpha="0.8"
-            android:text="@string/selected_movies"
+            android:text="@string/selected_series"
             android:textSize="@dimen/_12font_mdp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/til_search" />
 
-        <!-- Series list selected-->
+        <!-- Movies list selected-->
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_selectedMovies"
+            android:id="@+id/rv_selectedSeries"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:minHeight="@dimen/_194mdp"
+            android:paddingVertical="@dimen/_4mdp"
             android:layout_marginTop="@dimen/_8mdp"
             android:clipToPadding="false"
             android:orientation="horizontal"
             android:paddingStart="@dimen/_4mdp"
             android:paddingEnd="@dimen/_4mdp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintTop_toBottomOf="@+id/txt_selectedMovies"
+            app:layout_constraintTop_toBottomOf="@+id/txt_selectedSeries"
             tools:itemCount="5"
-            tools:listitem="@layout/item_preferences" />
-
+            tools:listitem="@layout/item_preferences"
+            android:background="@drawable/empty_state_background"/>
 
         <!-- Favorite Genres Section -->
         <TextView
@@ -128,18 +131,24 @@
             android:textSize="@dimen/_12font_mdp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/rv_selectedMovies" />
+            app:layout_constraintTop_toBottomOf="@+id/rv_selectedSeries" />
 
-        <com.google.android.material.chip.ChipGroup
-            android:id="@+id/cg_favoriteGenres"
+        <HorizontalScrollView
+            android:id="@+id/scroll_favoriteGenres"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_8mdp"
-            app:chipSpacingHorizontal="@dimen/_8mdp"
-            app:chipSpacingVertical="@dimen/_8mdp"
-            app:layout_constraintTop_toBottomOf="@+id/txt_favoriteGenres">
+            android:scrollbars="none"
+            app:layout_constraintTop_toBottomOf="@id/txt_favoriteGenres">
 
-        </com.google.android.material.chip.ChipGroup>
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chipGroup_favoriteGenres"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:singleLine="true"
+                app:chipSpacingHorizontal="@dimen/_8mdp" />
+
+        </HorizontalScrollView>
 
         <!-- Disliked Genres Section -->
         <TextView
@@ -152,22 +161,39 @@
             android:textSize="@dimen/_12font_mdp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cg_favoriteGenres" />
+            app:layout_constraintTop_toBottomOf="@+id/scroll_favoriteGenres" />
 
-        <com.google.android.material.chip.ChipGroup
-            android:id="@+id/cg_dislikedGenres"
+        <HorizontalScrollView
+            android:id="@+id/scroll_dislikedGenres"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_8mdp"
-            app:chipSpacingHorizontal="@dimen/_8mdp"
-            app:chipSpacingVertical="@dimen/_8mdp"
-            app:layout_constraintTop_toBottomOf="@+id/txt_dislikedGenres">
+            android:scrollbars="none"
+            app:layout_constraintTop_toBottomOf="@id/txt_dislikedGenres">
 
-        </com.google.android.material.chip.ChipGroup>
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chipGroup_dislikedGenres"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:singleLine="true"
+                app:chipSpacingHorizontal="@dimen/_8mdp" />
 
-        <!-- Confirm Button -->
+        </HorizontalScrollView>
+
+        <ProgressBar
+            android:id="@+id/confirmed_progressbar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminateTint="@color/md_theme_primary"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/btn_confirmed"
+            app:layout_constraintEnd_toEndOf="@+id/btn_confirmed"
+            app:layout_constraintStart_toStartOf="@+id/btn_confirmed"
+            app:layout_constraintTop_toTopOf="@+id/btn_confirmed" />
+
+        <!-- Next Button -->
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_Confirmed"
+            android:id="@+id/btn_confirmed"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_16mdp"
@@ -175,6 +201,7 @@
             android:paddingTop="@dimen/_8mdp"
             android:paddingBottom="@dimen/_8mdp"
             android:text="@string/confirmed"
+            android:visibility="visible"
             android:textAllCaps="false"
             android:textSize="@dimen/_12font_mdp"
             app:backgroundTint="@null"
@@ -182,7 +209,37 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cg_dislikedGenres" />
+            app:layout_constraintTop_toBottomOf="@+id/scroll_dislikedGenres" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_search_result"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_8mdp"
+            android:background="@color/md_theme_background"
+            app:layout_constraintTop_toBottomOf="@+id/til_search">
+
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:id="@+id/progressBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:indeterminateTint="@color/md_theme_primary"
+                android:layout_gravity="top"
+                app:layout_constraintTop_toTopOf="parent"
+                android:indeterminate="true"
+                android:visibility="gone" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_searchResults"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_250mdp"
+                android:visibility="gone"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintTop_toBottomOf="@id/progressBar"
+                tools:listitem="@layout/item_search_preferences" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </androidx.core.widget.NestedScrollView>
