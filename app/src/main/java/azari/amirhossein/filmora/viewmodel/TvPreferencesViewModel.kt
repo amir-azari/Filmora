@@ -8,6 +8,7 @@ import azari.amirhossein.filmora.data.SessionManager
 import azari.amirhossein.filmora.data.repository.TvPreferencesRepository
 import azari.amirhossein.filmora.models.prefences.movie.ResponseMoviesList
 import azari.amirhossein.filmora.models.prefences.tv.ResponseTvsList
+import azari.amirhossein.filmora.utils.Event
 import azari.amirhossein.filmora.utils.NetworkRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,6 +29,13 @@ class TvPreferencesViewModel @Inject constructor(
     private val _searchResult = MutableLiveData<NetworkRequest<ResponseTvsList>>()
     val searchResult: LiveData<NetworkRequest<ResponseTvsList>> = _searchResult
 
+    private val _selectedSeries = MutableLiveData<List<ResponseTvsList.Result>>()
+    val selectedSeries: LiveData<List<ResponseTvsList.Result>> = _selectedSeries
+
+    private val _errorMessage = MutableLiveData<Event<String>>()
+    val errorMessage: LiveData<Event<String>> = _errorMessage
+
+
     init {
         setupSearchQueryFlow()
 
@@ -47,4 +55,22 @@ class TvPreferencesViewModel @Inject constructor(
         _searchQuery.value = query
     }
 
+    fun addSelectedSerial(movie: ResponseTvsList.Result) {
+        val currentList = _selectedSeries.value?.toMutableList() ?: mutableListOf()
+        if (currentList.size < 5 && !currentList.contains(movie)) {
+            currentList.add(movie)
+            _selectedSeries.value = currentList
+        } else if (currentList.size >= 5) {
+            _errorMessage.value = Event("You can only select up to 5 movies")
+        } else {
+            _errorMessage.value = Event("This movie has already been selected")
+        }
+    }
+    fun removeSelectedSerial(position: Int) {
+        val currentList = _selectedSeries.value?.toMutableList() ?: mutableListOf()
+        if (position in currentList.indices) {
+            currentList.removeAt(position)
+            _selectedSeries.value = currentList
+        }
+    }
 }
