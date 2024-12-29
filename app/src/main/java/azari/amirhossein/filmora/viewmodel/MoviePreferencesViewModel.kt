@@ -3,13 +3,12 @@ package azari.amirhossein.filmora.viewmodel
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import azari.amirhossein.filmora.data.SessionManager
 import azari.amirhossein.filmora.data.repository.MoviePreferencesRepository
 import azari.amirhossein.filmora.models.prefences.ResponseGenresList
-import azari.amirhossein.filmora.models.prefences.movie.MoviePreferences
+import azari.amirhossein.filmora.models.prefences.TvAndMoviePreferences
 import azari.amirhossein.filmora.models.prefences.movie.ResponseMoviesList
 import azari.amirhossein.filmora.utils.Event
 import azari.amirhossein.filmora.utils.NetworkRequest
@@ -150,12 +149,12 @@ class MoviePreferencesViewModel @Inject constructor(
                 }
             }
 
-            val preferences = MoviePreferences(
-                selectedMovieIds = selectedMovies.mapNotNull { it.id },
+            val preferences = TvAndMoviePreferences(
+                selectedIds = selectedMovies.mapNotNull { it.id },
                 favoriteGenres = _selectedFavoriteGenres.value ?: emptySet(),
                 dislikedGenres = _selectedDislikedGenres.value ?: emptySet(),
-                selectedMovieKeywords = allKeywords,
-                selectedMovieGenres = selectedMovies.flatMap { it.genreIds ?: emptyList() }.filterNotNull().toSet()
+                selectedKeywords = allKeywords,
+                selectedGenres = selectedMovies.flatMap { it.genreIds ?: emptyList() }.filterNotNull().toSet()
             )
 
             sessionManager.saveMoviePreferences(preferences)

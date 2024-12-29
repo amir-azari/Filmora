@@ -7,7 +7,7 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
-import azari.amirhossein.filmora.models.prefences.movie.MoviePreferences
+import azari.amirhossein.filmora.models.prefences.TvAndMoviePreferences
 import azari.amirhossein.filmora.utils.Constants
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
@@ -46,22 +46,22 @@ class SessionManager @Inject constructor(@ApplicationContext private val context
         preferences[StoredKey.IS_GUEST] ?: false
     }
 
-    suspend fun saveMoviePreferences(preferences: MoviePreferences) {
+    suspend fun saveMoviePreferences(preferences: TvAndMoviePreferences) {
         context.dataStore.edit { prefs ->
-            prefs[StoredKey.SELECTED_MOVIE_IDS] = preferences.selectedMovieIds.joinToString(",")
+            prefs[StoredKey.SELECTED_MOVIE_IDS] = preferences.selectedIds.joinToString(",")
             prefs[StoredKey.FAVORITE_GENRES] = preferences.favoriteGenres.joinToString(",")
             prefs[StoredKey.DISLIKED_GENRES] = preferences.dislikedGenres.joinToString(",")
-            prefs[StoredKey.SELECTED_MOVIE_KEYWORDS] = preferences.selectedMovieKeywords.joinToString(",")
-            prefs[StoredKey.SELECTED_MOVIE_GENRES] = preferences.selectedMovieGenres.joinToString(",")
+            prefs[StoredKey.SELECTED_MOVIE_KEYWORDS] = preferences.selectedKeywords.joinToString(",")
+            prefs[StoredKey.SELECTED_MOVIE_GENRES] = preferences.selectedGenres.joinToString(",")
         }
     }
-    fun getMoviePreferences(): Flow<MoviePreferences> = context.dataStore.data.map { preferences ->
-        MoviePreferences(
-            selectedMovieIds = preferences[StoredKey.SELECTED_MOVIE_IDS]?.split(",")?.mapNotNull { it.toIntOrNull() } ?: emptyList(),
+    fun getMoviePreferences(): Flow<TvAndMoviePreferences> = context.dataStore.data.map { preferences ->
+        TvAndMoviePreferences(
+            selectedIds = preferences[StoredKey.SELECTED_MOVIE_IDS]?.split(",")?.mapNotNull { it.toIntOrNull() } ?: emptyList(),
             favoriteGenres = preferences[StoredKey.FAVORITE_GENRES]?.split(",")?.mapNotNull { it.toIntOrNull() }?.toSet() ?: emptySet(),
             dislikedGenres = preferences[StoredKey.DISLIKED_GENRES]?.split(",")?.mapNotNull { it.toIntOrNull() }?.toSet() ?: emptySet(),
-            selectedMovieKeywords = preferences[StoredKey.SELECTED_MOVIE_KEYWORDS]?.split(",")?.mapNotNull { it.toIntOrNull() }?.toSet() ?: emptySet(),
-            selectedMovieGenres = preferences[StoredKey.SELECTED_MOVIE_GENRES]?.split(",")?.mapNotNull { it.toIntOrNull() }?.toSet() ?: emptySet()
+            selectedKeywords = preferences[StoredKey.SELECTED_MOVIE_KEYWORDS]?.split(",")?.mapNotNull { it.toIntOrNull() }?.toSet() ?: emptySet(),
+            selectedGenres = preferences[StoredKey.SELECTED_MOVIE_GENRES]?.split(",")?.mapNotNull { it.toIntOrNull() }?.toSet() ?: emptySet()
         )
     }
     suspend fun clearSession() {
