@@ -1,7 +1,7 @@
 package azari.amirhossein.filmora.data.repository
 
 import azari.amirhossein.filmora.data.source.RemoteDataSource
-import azari.amirhossein.filmora.models.prefences.movie.ResponseMoviesList
+import azari.amirhossein.filmora.models.prefences.ResponseGenresList
 import azari.amirhossein.filmora.models.prefences.tv.ResponseTvsList
 import azari.amirhossein.filmora.utils.NetworkRequest
 import azari.amirhossein.filmora.utils.NetworkResponse
@@ -29,6 +29,24 @@ class TvPreferencesRepository @Inject constructor(private val remote: RemoteData
 
         } catch (e: Exception) {
             emit(NetworkRequest.Error(e.localizedMessage ?: "Unknown error"))
+        }
+    }.flowOn(Dispatchers.IO)
+
+    fun getTvGenres(): Flow<NetworkRequest<ResponseGenresList>> = flow {
+        emit(NetworkRequest.Loading())
+        try {
+            val response = remote.getTvGenres()
+            val networkResponse = NetworkResponse(response).handleNetworkResponse()
+            if (networkResponse is NetworkRequest.Success) {
+                val genres = networkResponse.data
+                genres?.let {
+                    emit(NetworkRequest.Success(it))
+                } ?: emit(NetworkRequest.Error("Empty data received"))
+            } else {
+                throw Exception((networkResponse as NetworkRequest.Error).message)
+            }
+        } catch (e: Exception) {
+            emit(NetworkRequest.Error(e.message.toString()))
         }
     }.flowOn(Dispatchers.IO)
 }
