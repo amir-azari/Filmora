@@ -166,6 +166,17 @@
 
         </HorizontalScrollView>
 
+        <ProgressBar
+            android:id="@+id/next_progressbar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminateTint="@color/md_theme_primary"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/btn_next"
+            app:layout_constraintEnd_toEndOf="@+id/btn_next"
+            app:layout_constraintStart_toStartOf="@+id/btn_next"
+            app:layout_constraintTop_toTopOf="@+id/btn_next" />
+
         <!-- Next Button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_next"
@@ -176,6 +187,7 @@
             android:paddingTop="@dimen/_8mdp"
             android:paddingBottom="@dimen/_8mdp"
             android:text="@string/next"
+            android:visibility="visible"
             android:textAllCaps="false"
             android:textSize="@dimen/_12font_mdp"
             app:backgroundTint="@null"
