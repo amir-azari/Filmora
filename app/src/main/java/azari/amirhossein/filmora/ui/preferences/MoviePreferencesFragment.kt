@@ -126,6 +126,8 @@ class MoviePreferencesFragment : Fragment() {
         observeSelectedMovies()
         observeErrorMessage()
         setupGenresObserver()
+        observeSavePreferences()
+
     }
 
     private fun observeSearchResults() {
@@ -208,6 +210,7 @@ class MoviePreferencesFragment : Fragment() {
             if (viewModel.validatePreferences()) {
                 viewModel.savePreferences()
                 findNavController().navigate(R.id.actionMoviePreferencesToTvPreferences)
+
             }
         }
     }
@@ -224,7 +227,26 @@ class MoviePreferencesFragment : Fragment() {
             }
         }
     }
-
+    private fun observeSavePreferences() {
+        viewModel.savePreferencesResult.observe(viewLifecycleOwner) { result ->
+            when (result) {
+                is NetworkRequest.Loading -> {
+                    binding.nextProgressbar.visibility = View.VISIBLE
+                    binding.btnNext.visibility = View.INVISIBLE
+                }
+                is NetworkRequest.Success -> {
+                    binding.nextProgressbar.visibility = View.GONE
+                    binding.btnNext.visibility = View.VISIBLE
+                    findNavController().navigate(R.id.actionMoviePreferencesToTvPreferences)
+                }
+                is NetworkRequest.Error -> {
+                    binding.nextProgressbar.visibility = View.GONE
+                    binding.btnNext.visibility = View.VISIBLE
+                    showErrorSnackbar(binding.root, result.message!!)
+                }
+            }
+        }
+    }
 
     private fun showErrorSnackbar(root: View, message: String) {
         Snackbar.make(root, message, Snackbar.LENGTH_SHORT).apply {
