@@ -61,6 +61,7 @@ class TvPreferencesFragment : Fragment() {
         setupSearchView()
         setupRecyclerViews()
         setupConfirmButton()
+        setupBackButton()
     }
 
     private fun setupRecyclerViews() {
@@ -129,6 +130,12 @@ class TvPreferencesFragment : Fragment() {
                 viewModel.savePreferences()
                 //TODO Navigate Fragment
             }
+        }
+    }
+
+    private fun setupBackButton() {
+        binding.btnBack.setOnClickListener {
+            findNavController().navigateUp()
         }
     }
     private fun observeSearchResults() {
