@@ -45,6 +45,10 @@ class TvPreferencesViewModel @Inject constructor(
 
     private val _selectedDislikedGenres = MutableLiveData<Set<Int>>(setOf())
     val selectedDislikedGenres: LiveData<Set<Int>> = _selectedDislikedGenres
+
+    private val _savePreferencesResult = MutableLiveData<NetworkRequest<Unit>>()
+    val savePreferencesResult: LiveData<NetworkRequest<Unit>> = _savePreferencesResult
+
     init {
         setupSearchQueryFlow()
         fetchMovieGenres()
@@ -137,9 +141,12 @@ class TvPreferencesViewModel @Inject constructor(
     }
     fun savePreferences() = viewModelScope.launch {
         try {
-            val selectedTvs = _selectedSeries.value ?: emptyList()
+            _savePreferencesResult.value = NetworkRequest.Loading()
 
+
+            val selectedTvs = _selectedSeries.value ?: emptyList()
             val allKeywords = mutableSetOf<Int>()
+
             selectedTvs.forEach { tv ->
                 tv.id?.let { tvId ->
                     val tvKeywords = fetchTvKeywords(tvId)
@@ -156,7 +163,10 @@ class TvPreferencesViewModel @Inject constructor(
             )
 
             sessionManager.saveTvPreferences(preferences)
+            _savePreferencesResult.value = NetworkRequest.Success(Unit)
+
         } catch (e: Exception) {
+            _savePreferencesResult.value = NetworkRequest.Error(e.message ?: "Unknown error")
             Log.e("Keywords", "Error saving preferences: ${e.message}")
         }
     }

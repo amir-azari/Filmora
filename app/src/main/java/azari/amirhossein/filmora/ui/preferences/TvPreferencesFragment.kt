@@ -122,6 +122,7 @@ class TvPreferencesFragment : Fragment() {
         observeSelectedSeries()
         observeErrorMessage()
         setupGenresObserver()
+        observeSavePreferences()
 
     }
     private fun setupConfirmButton() {
@@ -234,7 +235,26 @@ class TvPreferencesFragment : Fragment() {
             viewModel.updateDislikedGenre(genreId, isChecked)
         }
     }
-
+    private fun observeSavePreferences() {
+        viewModel.savePreferencesResult.observe(viewLifecycleOwner) { result ->
+            when (result) {
+                is NetworkRequest.Loading -> {
+                    binding.confirmedProgressbar.visibility = View.VISIBLE
+                    binding.btnConfirmed.visibility = View.INVISIBLE
+                }
+                is NetworkRequest.Success -> {
+                    binding.confirmedProgressbar.visibility = View.GONE
+                    binding.btnConfirmed.visibility = View.VISIBLE
+                    findNavController().navigate(R.id.actionMoviePreferencesToTvPreferences)
+                }
+                is NetworkRequest.Error -> {
+                    binding.confirmedProgressbar.visibility = View.GONE
+                    binding.btnConfirmed.visibility = View.VISIBLE
+                    showErrorSnackbar(binding.root, result.message!!)
+                }
+            }
+        }
+    }
     private fun showErrorSnackbar(root: View, message: String) {
         Snackbar.make(root, message, Snackbar.LENGTH_SHORT).apply {
             customize(R.color.error, R.color.white, Gravity.TOP)
