@@ -173,7 +173,7 @@ class MoviePreferencesViewModel @Inject constructor(
             return false
         }
 
-        if (favoriteGenres.isEmpty() && dislikedGenres.isEmpty()) {
+        if (favoriteGenres.isEmpty() || dislikedGenres.isEmpty()) {
             _errorMessage.value = Event("Please select at least one genre preference")
             return false
         }
