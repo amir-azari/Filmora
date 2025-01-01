@@ -25,9 +25,24 @@ class TvPreferencesAdapter  @Inject constructor() : RecyclerView.Adapter<TvPrefe
             binding.apply {
                 val baseUrl = "https://image.tmdb.org/t/p/w500"
                 val fullPosterPath = baseUrl + item.posterPath
+
+                imgShimmerContainer.visibility = View.VISIBLE
+                imgPoster.visibility = View.INVISIBLE
                 imgPoster.load(fullPosterPath) {
                     crossfade(true)
                     crossfade(400)
+                    listener(
+                        onSuccess = { _, _ ->
+                            imgShimmerContainer.stopShimmer()
+                            imgShimmerContainer.visibility = View.GONE
+                            imgPoster.visibility = View.VISIBLE
+                        },
+                        onError = { _, _ ->
+                            imgShimmerContainer.stopShimmer()
+                            imgShimmerContainer.visibility = View.GONE
+                            imgPoster.visibility = View.VISIBLE
+                        }
+                    )
                 }
                 imgPoster.scaleType = ImageView.ScaleType.CENTER_CROP
 
