@@ -1,6 +1,7 @@
 package azari.amirhossein.filmora.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
@@ -19,12 +20,30 @@ class SearchMoviePreferencesAdapter @Inject constructor() :
     inner class ViewHolder(private val binding: ItemSearchPreferencesBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: ResponseMoviesList.Result) {
+
             binding.apply {
+                imgShimmerContainer.startShimmer()
+
                 val baseUrl = "https://image.tmdb.org/t/p/w500"
                 val fullPosterPath = baseUrl + item.posterPath
+
+                imgShimmerContainer.visibility = View.VISIBLE
+                imgPoster.visibility = View.INVISIBLE
                 imgPoster.load(fullPosterPath) {
                     crossfade(true)
                     crossfade(400)
+                    listener(
+                        onSuccess = { _, _ ->
+                            imgShimmerContainer.stopShimmer()
+                            imgShimmerContainer.visibility = View.GONE
+                            imgPoster.visibility = View.VISIBLE
+                        },
+                        onError = { _, _ ->
+                            imgShimmerContainer.stopShimmer()
+                            imgShimmerContainer.visibility = View.GONE
+                            imgPoster.visibility = View.VISIBLE
+                        }
+                    )
                 }
                 txtTitle.text = item.title
                 txtYear.text = item.releaseDate?.split("-")?.get(0) ?: "N/A"
