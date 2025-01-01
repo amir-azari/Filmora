@@ -22,6 +22,26 @@
             android:layout_height="wrap_content"
             android:padding="@dimen/_4mdp">
 
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:id="@+id/img_shimmer_container"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:shimmer_duration="1000"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:shimmer_auto_start="true">
+                <View
+                    android:layout_width="@dimen/_80mdp"
+                    android:layout_height="@dimen/_105mdp"
+                    android:contentDescription="@string/poster_image"
+                    android:background="@drawable/bg_shimmer_rounded_corners"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    />
+
+            </com.facebook.shimmer.ShimmerFrameLayout>
+
+
             <!-- Poster Image -->
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/img_poster"
@@ -29,6 +49,7 @@
                 android:layout_height="@dimen/_105mdp"
                 android:contentDescription="@string/poster_image"
                 android:scaleType="centerCrop"
+                android:visibility="invisible"
                 android:src="@drawable/image"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
