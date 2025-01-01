@@ -27,5 +27,6 @@
     <color name="cardTextColorAlpha">#81D4D9</color>
     <color name="iconColor">#A4A5C6C3</color>
 
+    <color name="shimmerColor">#dddddd</color>
 
 </resources>
