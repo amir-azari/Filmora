@@ -2,6 +2,7 @@ package azari.amirhossein.filmora.utils
 
 import android.net.ConnectivityManager
 import android.net.Network
+import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,15 +18,12 @@ class NetworkChecker @Inject constructor(
 
 
     fun startMonitoring(): StateFlow<Boolean> {
-        // Register the callback
+        val capabilities = connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+        _isNetworkAvailable.value = capabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) == true
         connectivityManager.registerNetworkCallback(request, this)
-
-        // Initial check for active network
-        val activeNetwork = connectivityManager.activeNetwork
-        _isNetworkAvailable.value = activeNetwork != null
-
         return isNetworkAvailable
     }
+
     // Stop monitoring
     fun stopMonitoring() {
         connectivityManager.unregisterNetworkCallback(this)
