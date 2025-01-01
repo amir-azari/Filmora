@@ -93,10 +93,8 @@ dependencies {
     implementation(libs.dynamicSizes)
     //Lottie
     implementation(libs.lottie)
-
-
-
-
+    //Shimmer
+    implementation(libs.shimmer)
 
 }
 kapt {
