@@ -62,7 +62,10 @@ object Constants {
             )
         }
     }
-
+    object Message{
+        const val NO_INTERNET_CONNECTION = "No internet connection"
+        const val UNKNOWN_ERROR = "Unknown error"
+    }
     object BundleKey{
         const val URL_BUNDLE_KEY = "url"
     }
