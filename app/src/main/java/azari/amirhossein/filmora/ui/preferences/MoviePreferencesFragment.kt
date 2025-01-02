@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import androidx.core.content.ContextCompat
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -19,6 +20,7 @@ import azari.amirhossein.filmora.R
 import azari.amirhossein.filmora.data.SessionManager
 import azari.amirhossein.filmora.databinding.FragmentMoviePreferencesBinding
 import azari.amirhossein.filmora.models.prefences.ResponseGenresList
+import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.NetworkRequest
 import azari.amirhossein.filmora.utils.customize
 import azari.amirhossein.filmora.viewmodel.MoviePreferencesViewModel
@@ -207,13 +209,19 @@ class MoviePreferencesFragment : Fragment() {
     }
     private fun setupNextButton() {
         binding.btnNext.setOnClickListener {
-            if (viewModel.validatePreferences()) {
-                viewModel.savePreferences()
-                findNavController().navigate(R.id.actionMoviePreferencesToTvPreferences)
+            if (!viewModel.isNetworkAvailable.value) {
+                showErrorSnackbar(binding.root, Constants.Message.NO_INTERNET_CONNECTION)
+                return@setOnClickListener
+            }
 
+            if (viewModel.validatePreferences()) {
+                binding.btnNext.isEnabled = false
+                binding.nextProgressbar.visibility = View.VISIBLE
+                viewModel.savePreferences()
             }
         }
     }
+
     private fun observeSelectedMovies() {
         viewModel.selectedMovies.observe(viewLifecycleOwner) { movies ->
             moviePreferencesAdapter.differ.submitList(movies)
@@ -223,7 +231,11 @@ class MoviePreferencesFragment : Fragment() {
     private fun observeErrorMessage() {
         viewModel.errorMessage.observe(viewLifecycleOwner) { event ->
             event?.getContentIfNotHandled()?.let { message ->
-                showWarningSnackbar(binding.root, message)
+                if (message.contains(Constants.Message.NO_INTERNET_CONNECTION)){
+                    showErrorSnackbar(binding.root, message)
+                }else {
+                    showWarningSnackbar(binding.root, message)
+                }
             }
         }
     }
@@ -249,10 +261,22 @@ class MoviePreferencesFragment : Fragment() {
     }
 
     private fun showErrorSnackbar(root: View, message: String) {
-        Snackbar.make(root, message, Snackbar.LENGTH_SHORT).apply {
-            customize(R.color.error, R.color.white, Gravity.TOP)
-            show()
+        if (message == Constants.Message.NO_INTERNET_CONNECTION) {
+            Snackbar.make(root, message, Snackbar.LENGTH_INDEFINITE).apply {
+                setActionTextColor(ContextCompat.getColor(root.context, R.color.white))
+                setAction("Retry") {
+                    viewModel.fetchRetry()
+                }
+                customize(R.color.error, R.color.white, Gravity.TOP)
+                show()
+            }
+        }else {
+            Snackbar.make(root, message, Snackbar.LENGTH_SHORT).apply {
+                customize(R.color.error, R.color.white, Gravity.TOP)
+                show()
+            }
         }
+
     }
 
     private fun showWarningSnackbar(root: View, message: String) {

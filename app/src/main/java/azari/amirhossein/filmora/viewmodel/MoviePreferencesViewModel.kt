@@ -10,7 +10,9 @@ import azari.amirhossein.filmora.data.repository.MoviePreferencesRepository
 import azari.amirhossein.filmora.models.prefences.ResponseGenresList
 import azari.amirhossein.filmora.models.prefences.TvAndMoviePreferences
 import azari.amirhossein.filmora.models.prefences.movie.ResponseMoviesList
+import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.Event
+import azari.amirhossein.filmora.utils.NetworkChecker
 import azari.amirhossein.filmora.utils.NetworkRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,7 +26,9 @@ import javax.inject.Inject
 @HiltViewModel
 class MoviePreferencesViewModel @Inject constructor(
     private val repository: MoviePreferencesRepository,
-    private val sessionManager: SessionManager
+    private val sessionManager: SessionManager,
+    private val networkChecker: NetworkChecker
+
 ) : ViewModel() {
 
     private val _searchQuery = MutableStateFlow("")
@@ -49,8 +53,10 @@ class MoviePreferencesViewModel @Inject constructor(
     private val _savePreferencesResult = MutableLiveData<NetworkRequest<Unit>>()
     val savePreferencesResult: LiveData<NetworkRequest<Unit>> = _savePreferencesResult
 
+    val isNetworkAvailable = networkChecker.isNetworkAvailable
 
     init {
+        networkChecker.startMonitoring()
         setupSearchQueryFlow()
         fetchMovieGenres()
 
@@ -72,12 +78,22 @@ class MoviePreferencesViewModel @Inject constructor(
         viewModelScope.launch {
             _searchQuery
                 .debounce(300)
-                .filter { it.isNotEmpty() }
+                .filter { query ->
+                    if (query.isEmpty()) {
+                        return@filter false
+                    }
+                    if (!isNetworkAvailable.value) {
+                        _errorMessage.value = Event(Constants.Message.NO_INTERNET_CONNECTION)
+                        return@filter false
+                    }
+                    true
+                }
                 .distinctUntilChanged()
                 .flatMapLatest { query -> repository.searchMovies(query) }
                 .collect { _searchResult.postValue(it) }
         }
     }
+
 
     fun searchMovie(query: String) {
         _searchQuery.value = query
@@ -86,12 +102,17 @@ class MoviePreferencesViewModel @Inject constructor(
 
     private fun fetchMovieGenres() {
         viewModelScope.launch {
+            if (!isNetworkAvailable.value) {
+                _errorMessage.value = Event(Constants.Message.NO_INTERNET_CONNECTION)
+                return@launch
+            }
             repository.getMovieGenres()
                 .collect { result ->
                     _genres.postValue(result)
                 }
         }
     }
+
     fun removeSelectedMovie(position: Int) {
         val currentList = _selectedMovies.value?.toMutableList() ?: mutableListOf()
         if (position in currentList.indices) {
@@ -129,6 +150,9 @@ class MoviePreferencesViewModel @Inject constructor(
         _selectedDislikedGenres.value = currentDislikes
     }
     private suspend fun fetchMovieKeywords(movieId: String): Set<Int> {
+        if (!isNetworkAvailable.value) {
+            return emptySet()
+        }
         var keywordIds = emptySet<Int>()
         repository.getMovieKeywords(movieId).collect { result ->
             when (result) {
@@ -141,7 +165,12 @@ class MoviePreferencesViewModel @Inject constructor(
         return keywordIds
     }
 
+
     fun savePreferences() = viewModelScope.launch {
+        if (!isNetworkAvailable.value) {
+            _errorMessage.value = Event(Constants.Message.NO_INTERNET_CONNECTION)
+            return@launch
+        }
         try {
             _savePreferencesResult.value = NetworkRequest.Loading()
 
@@ -167,7 +196,7 @@ class MoviePreferencesViewModel @Inject constructor(
             _savePreferencesResult.value = NetworkRequest.Success(Unit)
 
         } catch (e: Exception) {
-            _savePreferencesResult.value = NetworkRequest.Error(e.message ?: "Unknown error")
+            _savePreferencesResult.value = NetworkRequest.Error(e.message ?: Constants.Message.UNKNOWN_ERROR)
             Log.e("Keywords", "Error saving preferences: ${e.message}")
         }
     }
@@ -188,5 +217,13 @@ class MoviePreferencesViewModel @Inject constructor(
         }
 
         return true
+    }
+    fun fetchRetry(){
+        fetchMovieGenres()
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        networkChecker.stopMonitoring()
     }
 }
