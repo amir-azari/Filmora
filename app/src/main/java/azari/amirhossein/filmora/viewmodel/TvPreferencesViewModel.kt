@@ -10,7 +10,9 @@ import azari.amirhossein.filmora.data.repository.TvPreferencesRepository
 import azari.amirhossein.filmora.models.prefences.ResponseGenresList
 import azari.amirhossein.filmora.models.prefences.TvAndMoviePreferences
 import azari.amirhossein.filmora.models.prefences.tv.ResponseTvsList
+import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.Event
+import azari.amirhossein.filmora.utils.NetworkChecker
 import azari.amirhossein.filmora.utils.NetworkRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,6 +27,8 @@ import javax.inject.Inject
 class TvPreferencesViewModel @Inject constructor(
     private val repository: TvPreferencesRepository,
     private val sessionManager: SessionManager,
+    private val networkChecker: NetworkChecker
+
 ) : ViewModel() {
 
     private val _searchQuery = MutableStateFlow("")
@@ -49,9 +53,13 @@ class TvPreferencesViewModel @Inject constructor(
     private val _savePreferencesResult = MutableLiveData<NetworkRequest<Unit>>()
     val savePreferencesResult: LiveData<NetworkRequest<Unit>> = _savePreferencesResult
 
+    val isNetworkAvailable = networkChecker.isNetworkAvailable
+
+
     init {
+        networkChecker.startMonitoring()
         setupSearchQueryFlow()
-        fetchMovieGenres()
+        fetchTvGenres()
 
 
     }
@@ -59,7 +67,16 @@ class TvPreferencesViewModel @Inject constructor(
         viewModelScope.launch {
             _searchQuery
                 .debounce(300)
-                .filter { it.isNotEmpty() }
+                .filter { query ->
+                    if (query.isEmpty()) {
+                        return@filter false
+                    }
+                    if (!isNetworkAvailable.value) {
+                        _errorMessage.value = Event(Constants.Message.NO_INTERNET_CONNECTION)
+                        return@filter false
+                    }
+                    true
+                }
                 .distinctUntilChanged()
                 .flatMapLatest { query -> repository.searchTv(query) }
                 .collect { _searchResult.postValue(it) }
@@ -88,12 +105,16 @@ class TvPreferencesViewModel @Inject constructor(
             _selectedSeries.value = currentList
         }
     }
-    private fun fetchMovieGenres() {
+    private fun fetchTvGenres() {
         viewModelScope.launch {
-            repository.getTvGenres()
-                .collect { result ->
+            if (!isNetworkAvailable.value) {
+                _errorMessage.value = Event(Constants.Message.NO_INTERNET_CONNECTION)
+                return@launch
+
+            }
+            repository.getTvGenres().collect { result ->
                     _genres.postValue(result)
-                }
+            }
         }
     }
 
@@ -128,6 +149,9 @@ class TvPreferencesViewModel @Inject constructor(
     }
 
     private suspend fun fetchTvKeywords(tvId: Int): Set<Int> {
+        if (!isNetworkAvailable.value) {
+            return emptySet()
+        }
         var keywordIds = emptySet<Int>()
         repository.getTvKeywords(tvId).collect { result ->
             when (result) {
@@ -140,6 +164,10 @@ class TvPreferencesViewModel @Inject constructor(
         return keywordIds
     }
     fun savePreferences() = viewModelScope.launch {
+        if (!isNetworkAvailable.value) {
+            _errorMessage.value = Event(Constants.Message.NO_INTERNET_CONNECTION)
+            return@launch
+        }
         try {
             _savePreferencesResult.value = NetworkRequest.Loading()
 
@@ -166,11 +194,13 @@ class TvPreferencesViewModel @Inject constructor(
             _savePreferencesResult.value = NetworkRequest.Success(Unit)
 
         } catch (e: Exception) {
-            _savePreferencesResult.value = NetworkRequest.Error(e.message ?: "Unknown error")
+            _savePreferencesResult.value = NetworkRequest.Error(e.message ?: Constants.Message.UNKNOWN_ERROR)
             Log.e("Keywords", "Error saving preferences: ${e.message}")
         }
     }
-
+    fun fetchRetry(){
+        fetchTvGenres()
+    }
     fun validatePreferences(): Boolean {
         val selectedTvs = _selectedSeries.value ?: emptyList()
         val favoriteGenres = _selectedFavoriteGenres.value ?: emptySet()
@@ -187,5 +217,9 @@ class TvPreferencesViewModel @Inject constructor(
         }
 
         return true
+    }
+    override fun onCleared() {
+        super.onCleared()
+        networkChecker.stopMonitoring()
     }
 }

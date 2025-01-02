@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import androidx.core.content.ContextCompat
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -19,6 +20,7 @@ import azari.amirhossein.filmora.adapter.SearchTvPreferencesAdapter
 import azari.amirhossein.filmora.adapter.TvPreferencesAdapter
 import azari.amirhossein.filmora.databinding.FragmentTvPreferencesBinding
 import azari.amirhossein.filmora.models.prefences.ResponseGenresList
+import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.NetworkRequest
 import azari.amirhossein.filmora.utils.customize
 import azari.amirhossein.filmora.viewmodel.MoviePreferencesViewModel
@@ -127,9 +129,17 @@ class TvPreferencesFragment : Fragment() {
     }
     private fun setupConfirmButton() {
         binding.btnConfirmed.setOnClickListener {
+            if (!viewModel.isNetworkAvailable.value) {
+                showErrorSnackbar(binding.root, Constants.Message.NO_INTERNET_CONNECTION)
+                return@setOnClickListener
+            }
+
             if (viewModel.validatePreferences()) {
+                binding.btnConfirmed.isEnabled = false
+                binding.confirmedProgressbar.visibility = View.VISIBLE
                 viewModel.savePreferences()
                 //TODO Navigate Fragment
+
             }
         }
     }
@@ -174,7 +184,11 @@ class TvPreferencesFragment : Fragment() {
     private fun observeErrorMessage() {
         viewModel.errorMessage.observe(viewLifecycleOwner) { event ->
             event?.getContentIfNotHandled()?.let { message ->
-                showWarningSnackbar(binding.root, message)
+                if (message.contains(Constants.Message.NO_INTERNET_CONNECTION)){
+                    showErrorSnackbar(binding.root, message)
+                }else {
+                    showWarningSnackbar(binding.root, message)
+                }
             }
         }
     }
@@ -256,10 +270,22 @@ class TvPreferencesFragment : Fragment() {
         }
     }
     private fun showErrorSnackbar(root: View, message: String) {
-        Snackbar.make(root, message, Snackbar.LENGTH_SHORT).apply {
-            customize(R.color.error, R.color.white, Gravity.TOP)
-            show()
+        if (message == Constants.Message.NO_INTERNET_CONNECTION) {
+            Snackbar.make(root, message, Snackbar.LENGTH_INDEFINITE).apply {
+                setActionTextColor(ContextCompat.getColor(root.context, R.color.white))
+                setAction("Retry") {
+                    viewModel.fetchRetry()
+                }
+                customize(R.color.error, R.color.white, Gravity.TOP)
+                show()
+            }
+        }else {
+            Snackbar.make(root, message, Snackbar.LENGTH_SHORT).apply {
+                customize(R.color.error, R.color.white, Gravity.TOP)
+                show()
+            }
         }
+
     }
 
     private fun showWarningSnackbar(root: View, message: String) {
