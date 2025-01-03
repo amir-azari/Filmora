@@ -71,10 +71,35 @@
         android:id="@+id/tvPreferencesFragment"
         android:name="azari.amirhossein.filmora.ui.preferences.TvPreferencesFragment"
         android:label="TvPreferencesFragment"
-        tools:layout="@layout/fragment_tv_preferences">
+        tools:layout="@layout/fragment_tv_preferences"
 
+        >
+        <action
+            android:id="@+id/actionTvPreferencesToHome"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/nav_main"
+            app:popUpToInclusive="true" />
 
     </fragment>
-
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="azari.amirhossein.filmora.ui.home.HomeFragment"
+        android:label="@string/home"
+        tools:layout="@layout/fragment_home" />
+    <fragment
+        android:id="@+id/movieFragment"
+        android:name="azari.amirhossein.filmora.ui.movies.MovieFragment"
+        android:label="@string/movies"
+        tools:layout="@layout/fragment_movie" />
+    <fragment
+        android:id="@+id/tvFragment"
+        android:name="azari.amirhossein.filmora.ui.tvs.TvFragment"
+        android:label="@string/tv_shows"
+        tools:layout="@layout/fragment_tv" />
+    <fragment
+        android:id="@+id/peopleFragment"
+        android:name="azari.amirhossein.filmora.ui.people.PeopleFragment"
+        android:label="@string/celebrities"
+        tools:layout="@layout/fragment_people" />
 
 </navigation>
