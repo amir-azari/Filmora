@@ -133,12 +133,11 @@ class LoginFragment : Fragment() {
 
                             val sessionId = result.data
                             if (!sessionId.isNullOrEmpty()) {
-                                //TODO Navigate to Home Fragment
+                                findNavController().navigate(R.id.actionLoginToMoviePreferences)
                             } else {
                                 showErrorSnackbar(root, "Session ID is empty")
 
                             }
-                            findNavController().navigate(R.id.moviePreferencesFragment)
                         }
 
                         is NetworkRequest.Error -> {
