@@ -217,7 +217,13 @@ class MoviePreferencesFragment : Fragment() {
             if (viewModel.validatePreferences()) {
                 binding.btnNext.isEnabled = false
                 binding.nextProgressbar.visibility = View.VISIBLE
-                viewModel.savePreferences()
+
+                lifecycleScope.launch {
+                    viewModel.savePreferences()
+                    findNavController().navigate(R.id.actionMoviePreferencesToTvPreferences)
+                    binding.btnNext.isEnabled = true
+                    binding.nextProgressbar.visibility = View.GONE
+                }
             }
         }
     }
@@ -249,7 +255,6 @@ class MoviePreferencesFragment : Fragment() {
                 is NetworkRequest.Success -> {
                     binding.nextProgressbar.visibility = View.GONE
                     binding.btnNext.visibility = View.VISIBLE
-                    findNavController().navigate(R.id.actionMoviePreferencesToTvPreferences)
                 }
                 is NetworkRequest.Error -> {
                     binding.nextProgressbar.visibility = View.GONE
