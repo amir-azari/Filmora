@@ -138,8 +138,6 @@ class TvPreferencesFragment : Fragment() {
                 binding.btnConfirmed.isEnabled = false
                 binding.confirmedProgressbar.visibility = View.VISIBLE
                 viewModel.savePreferences()
-                //TODO Navigate Fragment
-
             }
         }
     }
@@ -259,7 +257,7 @@ class TvPreferencesFragment : Fragment() {
                 is NetworkRequest.Success -> {
                     binding.confirmedProgressbar.visibility = View.GONE
                     binding.btnConfirmed.visibility = View.VISIBLE
-                    findNavController().navigate(R.id.actionMoviePreferencesToTvPreferences)
+                    findNavController().navigate(R.id.actionTvPreferencesToHome)
                 }
                 is NetworkRequest.Error -> {
                     binding.confirmedProgressbar.visibility = View.GONE
