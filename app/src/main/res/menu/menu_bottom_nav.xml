@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/homeFragment"
+        android:title="@string/home"
+        android:icon="@drawable/house"/>
+
+    <item
+        android:id="@+id/movieFragment"
+        android:title="@string/movies"
+        android:icon="@drawable/movie"/>
+
+    <item
+        android:id="@+id/tvFragment"
+        android:title="@string/tv_shows"
+        android:icon="@drawable/tv_retro"/>
+
+    <item
+        android:id="@+id/peopleFragment"
+        android:title="@string/celebrities"
+        android:icon="@drawable/people"/>
+</menu>
