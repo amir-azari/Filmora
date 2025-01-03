@@ -8,6 +8,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import azari.amirhossein.filmora.R
@@ -29,6 +30,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setSupportActionBar(binding.toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(false)
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.bottomNav) { view, insets ->
             view.setPadding(0, 0, 0, 0)
@@ -42,9 +44,16 @@ class MainActivity : AppCompatActivity() {
         }
         navHost = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHost.navController
-
+        val appBarConfiguration = AppBarConfiguration(
+            setOf(
+                R.id.homeFragment,
+                R.id.movieFragment,
+                R.id.tvFragment,
+                R.id.peopleFragment
+            )
+        )
         // Setup ActionBar with NavController
-        setupActionBarWithNavController(navController)
+        setupActionBarWithNavController(navController, appBarConfiguration)
 
         // Setup Bottom Navigation
         binding.bottomNav.setupWithNavController(navController)
