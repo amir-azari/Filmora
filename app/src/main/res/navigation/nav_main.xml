@@ -11,7 +11,22 @@
         tools:layout="@layout/fragment_splash" >
         <action
             android:id="@+id/splashToLogin"
-            app:destination="@id/loginFragment" />
+            app:destination="@id/loginFragment"
+            app:popUpTo="@id/splashFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/actionSplashToMoviePreferences"
+            app:destination="@id/moviePreferencesFragment"
+            app:popUpTo="@id/splashFragment"
+            app:popUpToInclusive="true"
+            />
+        <action
+            android:id="@+id/actionSplashToHome"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/splashFragment"
+            app:popUpToInclusive="true"
+            />
+
     </fragment>
 
     <fragment
@@ -22,7 +37,12 @@
 
         <action
             android:id="@+id/actionLoginToMoviePreferences"
-            app:destination="@id/moviePreferencesFragment" />
+            app:destination="@id/moviePreferencesFragment"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true"
+            />
+
+
     </fragment>
     <action
         android:id="@+id/actionToWebView"
@@ -45,13 +65,16 @@
         <action
             android:id="@+id/actionMoviePreferencesToTvPreferences"
             app:destination="@id/tvPreferencesFragment" />
+
     </fragment>
     <fragment
         android:id="@+id/tvPreferencesFragment"
         android:name="azari.amirhossein.filmora.ui.preferences.TvPreferencesFragment"
         android:label="TvPreferencesFragment"
-        tools:layout="@layout/fragment_tv_preferences"
+        tools:layout="@layout/fragment_tv_preferences">
 
-        />
+
+    </fragment>
+
 
 </navigation>
