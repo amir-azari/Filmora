@@ -1,6 +1,7 @@
 package azari.amirhossein.filmora.ui
 
 import android.os.Bundle
+import android.view.Menu
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -61,6 +62,20 @@ class MainActivity : AppCompatActivity() {
         // Handle destination changes
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
+                R.id.homeFragment -> {
+                    showBottomNav()
+                    showToolbar()
+                    showProfileSection()
+                    hideToolbarTitle()
+                }
+                R.id.movieFragment,
+                R.id.tvFragment,
+                R.id.peopleFragment -> {
+                    showBottomNav()
+                    showToolbar()
+                    hideProfileSection()
+                    showToolbarTitle()
+                }
                 R.id.splashFragment,
                 R.id.loginFragment,
                 R.id.moviePreferencesFragment,
@@ -69,13 +84,28 @@ class MainActivity : AppCompatActivity() {
                     hideBottomNav()
                     hideToolbar()
                 }
-                else -> {
-                    showBottomNav()
-                    showToolbar()
-                }
             }
         }
 
+    }
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.toolbar_menu, menu)
+        return true
+    }
+    private fun showProfileSection() {
+        binding.profileSection.visibility = View.VISIBLE
+    }
+
+    private fun hideProfileSection() {
+        binding.profileSection.visibility = View.GONE
+    }
+
+    private fun hideToolbarTitle() {
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+    }
+
+    private fun showToolbarTitle() {
+        supportActionBar?.setDisplayShowTitleEnabled(true)
     }
     private fun hideToolbar() {
         binding.toolbar.visibility = View.GONE
