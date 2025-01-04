@@ -37,5 +37,8 @@
     <string name="movies">Movies</string>
     <string name="tv_shows">TV Shows</string>
     <string name="celebrities">Celebrities</string>
+    <string name="profile">Profile</string>
+    <string name="setting">Setting</string>
+    <string name="search">Search</string>
 
 </resources>

@@ -10,28 +10,88 @@
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:elevation="@dimen/_4mdp"
         android:layout_height="@dimen/_42mdp"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:menu="@menu/toolbar_menu"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <!-- Profile Section -->
+        <LinearLayout
+            android:id="@+id/profile_section"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/img_profile"
+                android:layout_width="@dimen/_35mdp"
+                android:layout_height="@dimen/_35mdp"
+                app:strokeWidth="1.5dp"
+                app:strokeColor="@color/md_theme_primary"
+                android:padding="@dimen/_1mdp"
+                android:src="@drawable/profile"
+                android:contentDescription="@string/profile"
+                app:shapeAppearanceOverlay="@style/CircleImage" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginStart="@dimen/_8mdp">
+
+                <TextView
+                    android:id="@+id/tv_name"
+                    android:layout_width="@dimen/_70mdp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="@dimen/_14mdp"
+                    android:textColor="#CBCBCB"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="@dimen/_2mdp"
+                    android:text="Amir"
+                    android:maxLines="1"
+                    android:ellipsize="end" />
+
+                <TextView
+                    android:id="@+id/tv_username"
+                    android:layout_width="@dimen/_70mdp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="@dimen/_9mdp"
+                    android:textColor="#70FDFDFD"
+                    android:text="amir_az"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:layout_marginStart="@dimen/_6mdp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </com.google.android.material.appbar.MaterialToolbar>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:background="@color/line"
         app:layout_constraintTop_toBottomOf="@id/toolbar" />
+
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/nav_host_fragment"
         android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:defaultNavHost="true"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
         app:layout_constraintBottom_toTopOf="@+id/bottom_nav"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
         app:navGraph="@navigation/nav_main" />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:background="@color/line"
         app:layout_constraintBottom_toTopOf="@id/bottom_nav" />
+
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_nav"
         android:layout_width="match_parent"
