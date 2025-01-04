@@ -28,5 +28,7 @@
     <color name="iconColor">#A4A5C6C3</color>
 
     <color name="shimmerColor">#dddddd</color>
+    <color name="line">#0DFFFFFF</color>
+
 
 </resources>

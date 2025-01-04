@@ -16,7 +16,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:background="#0DFFFFFF"
+        android:background="@color/line"
         app:layout_constraintTop_toBottomOf="@id/toolbar" />
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/nav_host_fragment"
@@ -30,12 +30,13 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:background="#0DFFFFFF"
+        android:background="@color/line"
         app:layout_constraintBottom_toTopOf="@id/bottom_nav" />
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_nav"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/md_theme_background"
         android:elevation="@dimen/_8mdp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:menu="@menu/menu_bottom_nav" />
