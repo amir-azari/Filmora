@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+    <!--Poster-->
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/img_poster"
+        android:layout_width="@dimen/_220mdp"
+        android:layout_height="@dimen/_180mdp"
+        android:scaleType="fitXY"
+        app:shapeAppearanceOverlay="@style/RoundedCorners"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@tools:sample/backgrounds/scenic" />
+
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/img_shimmer_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:shimmer_auto_start="true"
+        app:shimmer_duration="1000">
+
+        <View
+            android:layout_width="@dimen/_220mdp"
+            android:layout_height="@dimen/_180mdp"
+            android:background="@drawable/bg_shimmer_rounded_corners"
+            android:contentDescription="@string/poster_image"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </com.facebook.shimmer.ShimmerFrameLayout>
+
+    <!--Shadow-->
+    <View
+        android:id="@+id/shadow"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/_80mdp"
+        android:background="@drawable/shadow"
+        app:layout_constraintBottom_toBottomOf="@id/img_poster"
+        app:layout_constraintEnd_toEndOf="@+id/img_poster"
+        app:layout_constraintStart_toStartOf="@+id/img_poster" />
+    <!--Name-->
+
+    <TextView
+        android:id="@+id/txt_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_20mdp"
+        android:layout_marginBottom="@dimen/_5mdp"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:maxLines="1"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_14font_mdp"
+        app:layout_constraintBottom_toTopOf="@id/linear_info"
+        app:layout_constraintEnd_toEndOf="@+id/img_poster"
+        app:layout_constraintStart_toStartOf="@+id/img_poster" />
+
+    <LinearLayout
+        android:id="@+id/linear_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="@dimen/_10mdp"
+        app:layout_constraintBottom_toBottomOf="@id/img_poster"
+        app:layout_constraintStart_toStartOf="@id/img_poster"
+        app:layout_constraintEnd_toEndOf="@id/img_poster">
+
+        <ImageView
+            android:id="@+id/img_star"
+            android:layout_width="@dimen/_12mdp"
+            android:layout_height="@dimen/_12mdp"
+            android:src="@drawable/star"
+            app:tint="#FFBC00" />
+
+        <TextView
+            android:id="@+id/txt_rating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_4mdp"
+            android:gravity="center_vertical"
+            android:text="@string/no_rate"
+            android:textColor="#8A8A8A"
+            android:textSize="@dimen/_9font_mdp" />
+        <Space
+            android:layout_width="@dimen/_10mdp"
+            android:layout_height="wrap_content"/>
+        <ImageView
+            android:id="@+id/img_calendar"
+            android:layout_width="@dimen/_12mdp"
+            android:layout_height="@dimen/_12mdp"
+            android:src="@drawable/calendar"
+            android:layout_marginStart="@dimen/_4mdp"
+            app:tint="#818080" />
+
+        <TextView
+            android:id="@+id/txt_year"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_4mdp"
+            android:gravity="center_vertical"
+            android:text="@string/empty_text"
+            android:textColor="#8A8A8A"
+            android:textSize="@dimen/_9font_mdp" />
+
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
