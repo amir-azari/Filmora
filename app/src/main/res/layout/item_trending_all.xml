@@ -41,7 +41,7 @@
         android:id="@+id/shadow"
         android:layout_width="0dp"
         android:layout_height="@dimen/_80mdp"
-        android:background="@drawable/shadow"
+        android:background="@drawable/bottom_rounded_shadow"
         app:layout_constraintBottom_toBottomOf="@id/img_poster"
         app:layout_constraintEnd_toEndOf="@+id/img_poster"
         app:layout_constraintStart_toStartOf="@+id/img_poster" />
