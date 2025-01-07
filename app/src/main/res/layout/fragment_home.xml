@@ -1,9 +1,248 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.home.HomeFragment">
+    <!-- Loading State -->
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:indeterminateTint="@color/md_theme_primary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!--Internet Error-->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/internetLay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_gravity="center_vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <include
+            layout="@layout/internet_error"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_editor_absoluteX="0dp" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/mainContentContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <!-- Trending Section Container -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/trendingSection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_12mdp"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <com.jackandphantom.carouselrecyclerview.CarouselRecyclerview
+                    android:id="@+id/rv_trending"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_182mdp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:listitem="@layout/item_trending_all" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <!-- Movies Section Container -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/moviesSection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_12mdp"
+                app:layout_constraintTop_toBottomOf="@id/trendingSection">
+
+                <!-- Movie Poster Image -->
+                <ImageView
+                    android:id="@+id/img_movie_poster"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="@dimen/_6mdp"
+                    android:layout_marginBottom="@dimen/_20mdp"
+                    android:scaleType="centerCrop"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:src="@tools:sample/backgrounds/scenic" />
+
+                <!-- Shadow for the movie poster -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="@dimen/_6mdp"
+                    android:layout_marginBottom="@dimen/_20mdp"
+                    android:background="@drawable/background_shadow"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <!-- Movies Header -->
+                <TextView
+                    android:id="@+id/txt_recommended_movies"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_12mdp"
+                    android:text="Movies You May Like"
+                    android:textSize="@dimen/_13mdp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <!-- Movies See All Button -->
+                <LinearLayout
+                    android:id="@+id/layoutSeeAllMovies"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/_12mdp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    app:layout_constraintBottom_toBottomOf="@id/txt_recommended_movies"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/txt_recommended_movies">
+
+                    <TextView
+                        android:id="@+id/txt_seeAll_movies"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/_4mdp"
+                        android:text="See all"
+                        android:textSize="@dimen/_10mdp" />
+
+                    <ImageView
+                        android:id="@+id/img_arrow_movies"
+                        android:layout_width="@dimen/_12mdp"
+                        android:layout_height="@dimen/_12mdp"
+                        android:src="@drawable/angle_right"
+                        app:tint="@color/white" />
+                </LinearLayout>
+
+                <!-- Movies List -->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_movies"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clipToPadding="false"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/_8mdp"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintTop_toBottomOf="@id/txt_recommended_movies"
+                    tools:listitem="@layout/item_media" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <!-- TV Series Section Container -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/tvSeriesSection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_12mdp"
+                app:layout_constraintTop_toBottomOf="@id/moviesSection">
+
+                <!-- TV Series Poster Image -->
+                <ImageView
+                    android:id="@+id/img_tv_poster"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="@dimen/_6mdp"
+                    android:scaleType="centerCrop"
+                    android:layout_marginBottom="@dimen/_20mdp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    tools:src="@tools:sample/backgrounds/scenic"
+                    />
+
+                <!-- Shadow for the TV series poster -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="@dimen/_6mdp"
+                    android:background="@drawable/background_shadow"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginBottom="@dimen/_20mdp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
 
 
-</FrameLayout>
+                <!-- TV Series Header -->
+                <TextView
+                    android:id="@+id/txt_recommended_tvs"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_12mdp"
+                    android:text="Series You May Like"
+                    android:textSize="@dimen/_13mdp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <!-- TV Series See All Button -->
+                <LinearLayout
+                    android:id="@+id/layoutSeeAllTVSeries"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/_12mdp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    app:layout_constraintBottom_toBottomOf="@id/txt_recommended_tvs"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/txt_recommended_tvs">
+
+                    <TextView
+                        android:id="@+id/txt_see_all_tvs"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/_4mdp"
+                        android:text="See all"
+                        android:textSize="@dimen/_10mdp" />
+
+                    <ImageView
+                        android:id="@+id/imgArrowTVSeries"
+                        android:layout_width="@dimen/_12mdp"
+                        android:layout_height="@dimen/_12mdp"
+                        android:src="@drawable/angle_right"
+                        app:tint="@color/white" />
+                </LinearLayout>
+
+                <!-- TV Series List -->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_tvs"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clipToPadding="false"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/_8mdp"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintTop_toBottomOf="@id/txt_recommended_tvs"
+                    tools:listitem="@layout/item_media" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
