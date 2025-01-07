@@ -15,10 +15,16 @@ class RemoteDataSource @Inject constructor(private val api : ApiServices) {
     suspend fun searchMovie(query:String) = api.searchMovie(query)
     suspend fun getMovieGenres() = api.getMovieGenres()
     suspend fun getMovieKeywords(movieId:String) = api.getMovieKeywords(movieId)
+    suspend fun discoverMovies(params: Map<String, String>) = api.discoverMovies(params)
+
     //---------TVs---------
 
     suspend fun searchTv(query:String) = api.searchTv(query)
     suspend fun getTvGenres() = api.getTvGenres()
     suspend fun getTvKeywords(tvId:Int) = api.getTvKeywords(tvId)
+    suspend fun discoverTvShows(params: Map<String, String>) = api.discoverTvShows(params)
+
+    //---------All(Movie , Tv , People)---------
+    suspend fun getTrending(timeWindow:String) = api.getTrending(timeWindow)
 
 }
