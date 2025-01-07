@@ -69,5 +69,10 @@ object Constants {
     object BundleKey{
         const val URL_BUNDLE_KEY = "url"
     }
+    object Discover{
+        const val WITH_GENRES = "with_genres"
+        const val WITHOUT_GENRES = "without_genres"
+        const val WITH_KEYWORDS = "with_keywords"
+    }
 
 }
