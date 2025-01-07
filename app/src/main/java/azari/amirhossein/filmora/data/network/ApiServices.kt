@@ -5,6 +5,7 @@ import azari.amirhossein.filmora.models.authentication.RequestSession
 import azari.amirhossein.filmora.models.authentication.ResponseGuestSession
 import azari.amirhossein.filmora.models.authentication.ResponseToken
 import azari.amirhossein.filmora.models.authentication.ResponseSession
+import azari.amirhossein.filmora.models.home.ResponseTrendingList
 import azari.amirhossein.filmora.models.prefences.ResponseGenresList
 import azari.amirhossein.filmora.models.prefences.movie.ResponseMovieKeywordList
 import azari.amirhossein.filmora.models.prefences.movie.ResponseMoviesList
@@ -16,6 +17,7 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
+import retrofit2.http.QueryMap
 
 interface ApiServices {
 
@@ -50,6 +52,10 @@ interface ApiServices {
     @GET("movie/{movie_id}/keywords")
     suspend fun getMovieKeywords( @Path("movie_id") movieId: String): Response<ResponseMovieKeywordList>
 
+    // Discover
+    @GET("discover/movie")
+    suspend fun discoverMovies(@QueryMap params: Map<String, String>): Response<ResponseMoviesList>
+
     //---------TVs---------
 
     // Search TV
@@ -64,4 +70,13 @@ interface ApiServices {
     @GET("tv/{series_id}/keywords")
     suspend fun getTvKeywords( @Path("series_id") tvId: Int): Response<ResponseTvKeywordList>
 
+    // Discover
+    @GET("discover/tv")
+    suspend fun discoverTvShows(@QueryMap params: Map<String, String>): Response<ResponseTvsList>
+
+    //---------All(Movie , Tv , People)---------
+
+    // Trending
+    @GET("trending/all/{time_window}")
+    suspend fun getTrending(@Path("time_window") timeWindow: String): Response<ResponseTrendingList>
 }
