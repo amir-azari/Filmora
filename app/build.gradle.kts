@@ -96,6 +96,7 @@ dependencies {
     //Shimmer
     implementation(libs.shimmer)
 
+    implementation(libs.carouselrecyclerview)
 }
 kapt {
     correctErrorTypes = true

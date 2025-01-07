@@ -49,6 +49,8 @@ lottie = "6.0.0"
 # Shimmer
 shimmer = "0.5.0"
 
+carouselrecyclerview= "1.2.6"
+
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -95,6 +97,7 @@ lottie = { group = "com.airbnb.android", name = "lottie", version.ref = "lottie"
 # Shimmer
 shimmer = { group = "com.facebook.shimmer", name = "shimmer", version.ref = "shimmer" }
 
+carouselrecyclerview = { module = "com.github.sparrow007:carouselrecyclerview", version.ref = "carouselrecyclerview" }
 
 
 [plugins]
