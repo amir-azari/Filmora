@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import azari.amirhossein.filmora.databinding.ItemSearchPreferencesBinding
 import azari.amirhossein.filmora.models.prefences.movie.ResponseMoviesList
+import azari.amirhossein.filmora.utils.Constants
 import coil3.load
 import coil3.request.crossfade
 import javax.inject.Inject
@@ -24,8 +25,8 @@ class SearchMoviePreferencesAdapter @Inject constructor() :
             binding.apply {
                 imgShimmerContainer.startShimmer()
 
-                val baseUrl = "https://image.tmdb.org/t/p/w500"
-                val fullPosterPath = baseUrl + item.posterPath
+                val baseUrl = Constants.Network.IMAGE_BASE_URL
+                val fullPosterPath = baseUrl + Constants.ImageSize.W500 + item.posterPath
 
                 imgShimmerContainer.visibility = View.VISIBLE
                 imgPoster.visibility = View.INVISIBLE

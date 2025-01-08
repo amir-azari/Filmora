@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import azari.amirhossein.filmora.data.repository.HomeRepository
 import azari.amirhossein.filmora.models.CombinedData
+import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.NetworkChecker
 import azari.amirhossein.filmora.utils.NetworkRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -40,21 +41,21 @@ class HomeViewModel @Inject constructor(
                         filterTrendingMovies(result.data)
                     }
                 } else {
-                    _combineData.postValue(NetworkRequest.Error("No internet connection"))
+                    _combineData.postValue(NetworkRequest.Error(Constants.Message.NO_INTERNET_CONNECTION))
                 }
             }
         }
     }
     private fun selectRandomPosters(data: CombinedData?) {
-        val baseUrl = "https://image.tmdb.org/t/p/original"
+        val baseUrl = Constants.Network.IMAGE_BASE_URL
         val movieResults = data?.recommendedMovies?.data?.results.orEmpty()
         val tvResults = data?.recommendedTvs?.data?.results.orEmpty()
 
         val randomMoviePoster = movieResults.randomOrNull()?.backdropPath
         val randomTvPoster = tvResults.randomOrNull()?.backdropPath
 
-        _randomMoviePoster.postValue(randomMoviePoster?.let { baseUrl + it })
-        _randomTvPoster.postValue(randomTvPoster?.let { baseUrl + it })
+        _randomMoviePoster.postValue(randomMoviePoster?.let { baseUrl + Constants.ImageSize.ORIGINAL+ it })
+        _randomTvPoster.postValue(randomTvPoster?.let { baseUrl + Constants.ImageSize.ORIGINAL+ it })
     }
     private fun filterTrendingMovies(data: CombinedData?) {
         val trendingMovies = data?.trendingMovies?.data?.results.orEmpty()

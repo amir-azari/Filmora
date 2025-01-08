@@ -10,8 +10,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import azari.amirhossein.filmora.R
 import azari.amirhossein.filmora.databinding.ItemPreferencesBinding
-import azari.amirhossein.filmora.models.prefences.movie.ResponseMoviesList
 import azari.amirhossein.filmora.models.prefences.tv.ResponseTvsList
+import azari.amirhossein.filmora.utils.Constants
 import coil3.load
 import coil3.request.crossfade
 import javax.inject.Inject
@@ -23,8 +23,8 @@ class TvPreferencesAdapter  @Inject constructor() : RecyclerView.Adapter<TvPrefe
     inner class ViewHolder(private val binding : ItemPreferencesBinding) : RecyclerView.ViewHolder(binding.root){
         fun bind(item: ResponseTvsList.Result) {
             binding.apply {
-                val baseUrl = "https://image.tmdb.org/t/p/w500"
-                val fullPosterPath = baseUrl + item.posterPath
+                val baseUrl = Constants.Network.IMAGE_BASE_URL
+                val fullPosterPath = baseUrl + Constants.ImageSize.W500 + item.posterPath
 
                 imgShimmerContainer.visibility = View.VISIBLE
                 imgPoster.visibility = View.INVISIBLE
