@@ -34,4 +34,8 @@
     <color name="shimmerColor">#E6E6E6</color>
     <color name="line">#0D000000</color>
 
+    <color name="shadow_background">#F6F6F6</color>
+    <color name="shadow_background_alpha">#4DF6F6F6</color>
+
+
 </resources>
