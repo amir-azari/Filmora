@@ -9,7 +9,7 @@
         android:id="@+id/img_poster"
         android:layout_width="@dimen/_220mdp"
         android:layout_height="@dimen/_180mdp"
-        android:scaleType="fitXY"
+        android:scaleType="centerCrop"
         app:shapeAppearanceOverlay="@style/RoundedCorners"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -40,7 +40,7 @@
     <View
         android:id="@+id/shadow"
         android:layout_width="0dp"
-        android:layout_height="@dimen/_80mdp"
+        android:layout_height="@dimen/_70mdp"
         android:background="@drawable/bottom_rounded_shadow"
         app:layout_constraintBottom_toBottomOf="@id/img_poster"
         app:layout_constraintEnd_toEndOf="@+id/img_poster"
