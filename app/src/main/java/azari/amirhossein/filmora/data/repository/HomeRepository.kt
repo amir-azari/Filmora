@@ -117,7 +117,7 @@ class HomeRepository @Inject constructor(
             if (cachedData != null) {
                 NetworkRequest.Success(cachedData.toCombinedData())
             } else {
-                NetworkRequest.Error(Constants.Message.NO_CACHED_DATA)
+                NetworkRequest.Error(Constants.Message.NO_INTERNET_CONNECTION)
             }
         } catch (e: Exception) {
             NetworkRequest.Error("Failed to load cached data: ${e.localizedMessage}")
