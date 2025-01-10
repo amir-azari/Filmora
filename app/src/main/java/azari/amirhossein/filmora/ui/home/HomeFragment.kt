@@ -7,8 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import azari.amirhossein.filmora.R
 import azari.amirhossein.filmora.adapter.RecommendMovieAdapter
@@ -31,7 +30,7 @@ class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: HomeViewModel by viewModels()
+    private val viewModel: HomeViewModel by activityViewModels()
 
     @Inject
     lateinit var recommendMovieAdapter: RecommendMovieAdapter
@@ -56,13 +55,8 @@ class HomeFragment : Fragment() {
         viewModel.combinedData()
         setupRecyclerViews()
         observeViewModel()
-        lifecycleScope.launchWhenStarted {
-            viewModel.isNetworkAvailable.collect { isAvailable ->
-                if (!isAvailable) {
-                    showErrorSnackbar(binding.root, Constants.Message.NO_INTERNET_CONNECTION)
-                }
-            }
-        }
+
+
     }
 
     private fun setupRecyclerViews() {
@@ -88,7 +82,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun observeViewModel() {
-        viewModel.combineData.observe(viewLifecycleOwner) { state ->
+        viewModel.homePageData.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is NetworkRequest.Loading -> {
                     showLoading()
@@ -98,7 +92,7 @@ class HomeFragment : Fragment() {
                     showSuccess()
 
                     state.data?.let {
-                        trendingAdapter.differ.submitList(it.trendingMovies.data?.results)
+                        trendingAdapter.differ.submitList(it.trending.data?.results)
                         recommendMovieAdapter.differ.submitList(it.recommendedMovies.data?.results)
                         recommendTvAdapter.differ.submitList(it.recommendedTvs.data?.results)
                         it.tvGenres.data?.genres?.let { genres ->
