@@ -79,4 +79,13 @@ object Constants {
         const val W500 = "w500"
         const val ORIGINAL = "original"
     }
+    object Database{
+        const val DATABASE_NAME = "filmora_database"
+
+        const val HOME_TABLE = "home_table"
+        const val MOVIES_TABLE = "movies_table"
+        const val DETAIL_TABLE = "detail_table"
+        const val TV_SHOW_TABLE = "tv_show_table"
+        const val CELEBRITIES_TABLE = "celebrities_table"
+    }
 }
