@@ -9,29 +9,56 @@ import azari.amirhossein.filmora.models.prefences.TvAndMoviePreferences
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.NetworkRequest
 import azari.amirhossein.filmora.utils.NetworkResponse
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
 class HomeRepository @Inject constructor(
     private val remote: RemoteDataSource,
     private val sessionManager: SessionManager,
-    private val local: LocalDataSource
+    private val local: LocalDataSource,
 ) {
     //-----Api-----
 
     fun getRemoteData(): Flow<NetworkRequest<HomePageData>> = flow {
         emit(NetworkRequest.Loading())
 
-        // Get user preferences from session
-        val moviePreferences = sessionManager.getMoviePreferences().first()
-        val tvPreferences = sessionManager.getTvPreferences().first()
-
         try {
+            // Get user preferences
+            val moviePreferencesFlow = sessionManager.getMoviePreferences().stateIn(
+                scope = CoroutineScope(Dispatchers.IO),
+                started = SharingStarted.Lazily,
+                initialValue = TvAndMoviePreferences(
+                    selectedIds = emptyList(),
+                    favoriteGenres = emptySet(),
+                    dislikedGenres = emptySet(),
+                    selectedKeywords = emptySet(),
+                    selectedGenres = emptySet()
+                )
+            )
+
+            val tvPreferencesFlow = sessionManager.getTvPreferences().stateIn(
+                scope = CoroutineScope(Dispatchers.IO),
+                started = SharingStarted.Lazily,
+                initialValue = TvAndMoviePreferences(
+                    selectedIds = emptyList(),
+                    favoriteGenres = emptySet(),
+                    dislikedGenres = emptySet(),
+                    selectedKeywords = emptySet(),
+                    selectedGenres = emptySet()
+                )
+            )
+
+            // Collect the cached preferences
+            val moviePreferences = moviePreferencesFlow.value
+            val tvPreferences = tvPreferencesFlow.value
+
             // Fetch remote data based on user preferences
             val remoteData = fetchRemoteData(moviePreferences, tvPreferences)
             // Save the fetched data locally
@@ -64,6 +91,7 @@ class HomeRepository @Inject constructor(
             recommendedTvs = NetworkResponse(recommendedTvs).handleNetworkResponse()
         )
     }
+
     // Build parameters for API requests
     private fun buildMediaParams(preferences: TvAndMoviePreferences) = mutableMapOf<String, String>().apply {
         val favoriteGenres = preferences.favoriteGenres.joinToString("|")
@@ -93,7 +121,7 @@ class HomeRepository @Inject constructor(
     //-----Local-----
 
     private fun HomePageData.toEntity() = HomeEntity(
-        trending= trending.data!!,
+        trending = trending.data!!,
         movieGenres = movieGenres.data!!,
         tvGenres = tvGenres.data!!,
         recommendedMovies = recommendedMovies.data!!,
