@@ -7,28 +7,30 @@
     <!--Poster-->
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/img_poster"
-        android:layout_width="@dimen/_220mdp"
-        android:layout_height="@dimen/_180mdp"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/_170mdp"
         android:scaleType="centerCrop"
-        app:shapeAppearanceOverlay="@style/RoundedCorners"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="3:2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearanceOverlay="@style/RoundedCorners"
         tools:src="@tools:sample/backgrounds/scenic" />
 
     <com.facebook.shimmer.ShimmerFrameLayout
         android:id="@+id/img_shimmer_container"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/_170mdp"
+        app:layout_constraintDimensionRatio="3:2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:shimmer_auto_start="true"
         app:shimmer_duration="1000">
 
         <View
-            android:layout_width="@dimen/_220mdp"
-            android:layout_height="@dimen/_180mdp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:background="@drawable/bg_shimmer_rounded_corners"
             android:contentDescription="@string/poster_image"
             app:layout_constraintStart_toStartOf="parent"

@@ -21,7 +21,7 @@ class TrendingAllAdapter @Inject constructor() : RecyclerView.Adapter<TrendingAl
 
             binding.apply {
                 val baseUrl = Constants.Network.IMAGE_BASE_URL
-                val fullPosterPath = baseUrl + Constants.ImageSize.ORIGINAL + item.posterPath
+                val fullPosterPath = baseUrl + Constants.ImageSize.ORIGINAL + item.backdropPath
                 imgShimmerContainer.visibility = View.VISIBLE
                 imgPoster.visibility = View.INVISIBLE
                 imgPoster.load(fullPosterPath) {
@@ -40,8 +40,6 @@ class TrendingAllAdapter @Inject constructor() : RecyclerView.Adapter<TrendingAl
                         }
                     )
                 }
-
-                imgPoster.scaleType = ImageView.ScaleType.CENTER_CROP
 
                 txtName.text = when {
                     item.mediaType == "tv" -> item.name

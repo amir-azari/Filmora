@@ -46,7 +46,6 @@ class RecommendMovieAdapter @Inject constructor() :
                         }
                     )
                 }
-                imgPoster.scaleType = ImageView.ScaleType.CENTER_CROP
 
                 txtTitle.text = item.title
                 txtYear.text = item.releaseDate?.split("-")?.get(0) ?: "N/A"

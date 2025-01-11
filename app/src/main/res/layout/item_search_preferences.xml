@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto">
@@ -23,20 +24,21 @@
 
             <com.facebook.shimmer.ShimmerFrameLayout
                 android:id="@+id/img_shimmer_container"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:shimmer_duration="1000"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:shimmer_auto_start="true">
-            <View
                 android:layout_width="@dimen/_35mdp"
-                android:layout_height="@dimen/_55mdp"
-                android:contentDescription="@string/poster_image"
-                android:background="@drawable/bg_shimmer_rounded_corners"
+                android:layout_height="0dp"
+                app:layout_constraintDimensionRatio="2:3"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                 />
+                app:shimmer_auto_start="true"
+                app:shimmer_duration="1000">
+
+                <View
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:background="@drawable/bg_shimmer_rounded_corners"
+                    android:contentDescription="@string/poster_image"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
             </com.facebook.shimmer.ShimmerFrameLayout>
 
@@ -44,11 +46,12 @@
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/img_poster"
                 android:layout_width="@dimen/_35mdp"
-                android:visibility="invisible"
-                android:layout_height="@dimen/_55mdp"
+                android:layout_height="0dp"
                 android:contentDescription="@string/poster_image"
                 android:scaleType="centerCrop"
                 android:src="@drawable/image"
+                android:visibility="invisible"
+                app:layout_constraintDimensionRatio="h,2:3"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:shapeAppearanceOverlay="@style/RoundedCorners" />
@@ -63,7 +66,7 @@
                 android:maxLines="1"
                 android:text="@string/title"
                 android:textColor="@color/cardTextColor"
-                android:textSize="@dimen/_12font_mdp"
+                android:textSize="@dimen/_10font_mdp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/img_poster"
@@ -72,12 +75,12 @@
             <!-- Release Year Icon -->
             <ImageView
                 android:id="@+id/img_calendar"
-                android:layout_width="@dimen/_12mdp"
-                android:layout_height="@dimen/_12mdp"
-                android:layout_marginTop="@dimen/_6mdp"
+                android:layout_width="@dimen/_11mdp"
+                android:layout_height="@dimen/_11mdp"
+                android:layout_marginBottom="@dimen/_2mdp"
                 android:src="@drawable/calendar"
+                app:layout_constraintBottom_toTopOf="@+id/img_star"
                 app:layout_constraintStart_toStartOf="@+id/txt_title"
-                app:layout_constraintTop_toBottomOf="@id/txt_title"
                 app:tint="@color/iconColor" />
 
             <!-- Release Year -->
@@ -89,19 +92,18 @@
                 android:gravity="center_vertical"
                 android:text="@string/empty_text"
                 android:textColor="@color/cardTextColorAlpha"
-                android:textSize="@dimen/_9font_mdp"
+                android:textSize="@dimen/_8font_mdp"
                 app:layout_constraintStart_toEndOf="@id/img_calendar"
                 app:layout_constraintTop_toTopOf="@id/img_calendar" />
 
             <!-- Rating Icon -->
             <ImageView
                 android:id="@+id/img_star"
-                android:layout_width="@dimen/_12mdp"
-                android:layout_height="@dimen/_12mdp"
-                android:layout_marginTop="@dimen/_2mdp"
+                android:layout_width="@dimen/_11mdp"
+                android:layout_height="@dimen/_11mdp"
                 android:src="@drawable/star"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/img_calendar"
-                app:layout_constraintTop_toBottomOf="@+id/img_calendar"
                 app:tint="#FFBC00" />
 
             <!-- Rating -->
@@ -113,7 +115,7 @@
                 android:gravity="center_vertical"
                 android:text="@string/no_rate"
                 android:textColor="@color/cardTextColorAlpha"
-                android:textSize="@dimen/_9font_mdp"
+                android:textSize="@dimen/_8font_mdp"
                 app:layout_constraintBottom_toBottomOf="@+id/img_star"
                 app:layout_constraintStart_toEndOf="@id/img_star" />
 

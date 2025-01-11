@@ -44,7 +44,6 @@ class TvPreferencesAdapter  @Inject constructor() : RecyclerView.Adapter<TvPrefe
                         }
                     )
                 }
-                imgPoster.scaleType = ImageView.ScaleType.CENTER_CROP
 
                 txtTitle.text = item.name
                 txtYear.text = item.firstAirDate?.split("-")?.get(0) ?: "N/A"
