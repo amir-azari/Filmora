@@ -1,7 +1,5 @@
 package azari.amirhossein.filmora.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import azari.amirhossein.filmora.data.repository.HomeRepository
@@ -10,64 +8,91 @@ import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.NetworkChecker
 import azari.amirhossein.filmora.utils.NetworkRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val repository: HomeRepository,
-    networkChecker: NetworkChecker
+    private val networkChecker: NetworkChecker,
 ) : ViewModel() {
 
-    private val _homePageData =MutableLiveData<NetworkRequest<HomePageData>>()
-    val homePageData: LiveData<NetworkRequest<HomePageData>> = _homePageData
+    private val _homePageData = MutableStateFlow<NetworkRequest<HomePageData>>(NetworkRequest.Loading())
+    val homePageData: StateFlow<NetworkRequest<HomePageData>> = _homePageData
 
-    private val _randomMoviePoster = MutableLiveData<String?>()
-    val randomMoviePoster: LiveData<String?> = _randomMoviePoster
+    private val _randomMoviePoster = MutableStateFlow<String?>(null)
+    val randomMoviePoster: StateFlow<String?> = _randomMoviePoster
 
-    private val _randomTvPoster = MutableLiveData<String?>()
-    val randomTvPoster: LiveData<String?> = _randomTvPoster
+    private val _randomTvPoster = MutableStateFlow<String?>(null)
+    val randomTvPoster: StateFlow<String?> = _randomTvPoster
 
-    val isNetworkAvailable = networkChecker.startMonitoring()
-    private var isDataLoaded = false
+    private var cachedData: HomePageData? = null
 
+    init {
+        networkChecker.startMonitoring()
+        monitorNetworkChanges()
+    }
 
-    fun combinedData() {
-        if (isDataLoaded) return
-
+    private fun monitorNetworkChanges() {
         viewModelScope.launch {
-            isNetworkAvailable.collect { isAvailable ->
-                if (isAvailable) {
-                    repository.getRemoteData().collect { result ->
-                        _homePageData.postValue(result)
-                        result.data?.let { selectRandomPosters(it) }
-                        filterTrendingMovies(result.data)
-                        isDataLoaded = true
-                    }
-                } else {
-                    _homePageData.postValue(repository.getCachedData())
-                }
+            networkChecker.isNetworkAvailable.collect { isAvailable ->
+                if (isAvailable) handleOnlineState()
+                else handleOfflineState()
             }
         }
     }
+    //-----Api-----
+    private fun handleOnlineState() {
+        repository.getRemoteData()
+            .catch { error ->
+                _homePageData.value = NetworkRequest.Error(error.message ?: Constants.Message.NO_INTERNET_CONNECTION)
+            }
+            .onEach { result ->
+                updateHomePageData(result)
+                result.data?.let {
+                    selectRandomPosters(it)
+                    filterTrendingMovies(it)
+                }
+            }
+            .launchIn(viewModelScope)
+    }
+
     private fun selectRandomPosters(data: HomePageData?) {
         val baseUrl = Constants.Network.IMAGE_BASE_URL
         val movieResults = data?.recommendedMovies?.data?.results.orEmpty()
         val tvResults = data?.recommendedTvs?.data?.results.orEmpty()
 
-        val randomMoviePoster = movieResults.randomOrNull()?.backdropPath
-        val randomTvPoster = tvResults.randomOrNull()?.backdropPath
-
-        _randomMoviePoster.postValue(randomMoviePoster?.let { baseUrl + Constants.ImageSize.ORIGINAL+ it })
-        _randomTvPoster.postValue(randomTvPoster?.let { baseUrl + Constants.ImageSize.ORIGINAL+ it })
+        _randomMoviePoster.value = movieResults.randomOrNull()?.backdropPath?.let { baseUrl + Constants.ImageSize.ORIGINAL + it }
+        _randomTvPoster.value = tvResults.randomOrNull()?.backdropPath?.let { baseUrl + Constants.ImageSize.ORIGINAL + it }
     }
-    private fun filterTrendingMovies(data: HomePageData?) {
-        val trendingMovies = data?.trending?.data?.results.orEmpty()
-        val filteredTrendingMovies = trendingMovies
-            .filter { it.mediaType == "movie" || it.mediaType == "tv" }
 
-        data?.trending?.data?.results = filteredTrendingMovies
+    private fun filterTrendingMovies(data: HomePageData?) {
+        data?.trending?.data?.results = data?.trending?.data?.results.orEmpty()
+            .filter { it.mediaType == "movie" || it.mediaType == "tv" }
+    }
+
+    // Update data
+    private fun updateHomePageData(newData: NetworkRequest<HomePageData>) {
+        if (_homePageData.value != newData) {
+            _homePageData.value = newData
+        }
+    }
+    //-----Local-----
+    private suspend fun handleOfflineState() {
+        cachedData?.let {
+            _homePageData.value = NetworkRequest.Success(it)
+        } ?: run {
+            _homePageData.value = repository.getCachedData()
+        }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        networkChecker.stopMonitoring()
     }
 }
-
-
