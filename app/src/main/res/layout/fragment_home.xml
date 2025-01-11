@@ -58,7 +58,7 @@
                 <com.jackandphantom.carouselrecyclerview.CarouselRecyclerview
                     android:id="@+id/rv_trending"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/_182mdp"
+                    android:layout_height="@dimen/_172mdp"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:listitem="@layout/item_trending_all" />
 
