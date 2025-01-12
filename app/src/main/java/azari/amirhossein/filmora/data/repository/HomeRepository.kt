@@ -13,6 +13,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
@@ -31,33 +32,21 @@ class HomeRepository @Inject constructor(
 
         try {
             // Get user preferences
-            val moviePreferencesFlow = sessionManager.getMoviePreferences().stateIn(
-                scope = CoroutineScope(Dispatchers.IO),
-                started = SharingStarted.Lazily,
-                initialValue = TvAndMoviePreferences(
-                    selectedIds = emptyList(),
-                    favoriteGenres = emptySet(),
-                    dislikedGenres = emptySet(),
-                    selectedKeywords = emptySet(),
-                    selectedGenres = emptySet()
-                )
+            val moviePreferences = sessionManager.getMoviePreferences().firstOrNull() ?: TvAndMoviePreferences(
+                selectedIds = emptyList(),
+                favoriteGenres = emptySet(),
+                dislikedGenres = emptySet(),
+                selectedKeywords = emptySet(),
+                selectedGenres = emptySet()
             )
 
-            val tvPreferencesFlow = sessionManager.getTvPreferences().stateIn(
-                scope = CoroutineScope(Dispatchers.IO),
-                started = SharingStarted.Lazily,
-                initialValue = TvAndMoviePreferences(
-                    selectedIds = emptyList(),
-                    favoriteGenres = emptySet(),
-                    dislikedGenres = emptySet(),
-                    selectedKeywords = emptySet(),
-                    selectedGenres = emptySet()
-                )
+            val tvPreferences = sessionManager.getTvPreferences().firstOrNull() ?: TvAndMoviePreferences(
+                selectedIds = emptyList(),
+                favoriteGenres = emptySet(),
+                dislikedGenres = emptySet(),
+                selectedKeywords = emptySet(),
+                selectedGenres = emptySet()
             )
-
-            // Collect the cached preferences
-            val moviePreferences = moviePreferencesFlow.value
-            val tvPreferences = tvPreferencesFlow.value
 
             // Fetch remote data based on user preferences
             val remoteData = fetchRemoteData(moviePreferences, tvPreferences)
