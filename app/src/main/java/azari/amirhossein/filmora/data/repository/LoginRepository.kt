@@ -4,6 +4,7 @@ import azari.amirhossein.filmora.data.SessionManager
 import azari.amirhossein.filmora.data.source.RemoteDataSource
 import azari.amirhossein.filmora.models.authentication.RequestLogin
 import azari.amirhossein.filmora.models.authentication.RequestSession
+import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.NetworkRequest
 import azari.amirhossein.filmora.utils.NetworkResponse
 import kotlinx.coroutines.Dispatchers
@@ -20,42 +21,38 @@ class LoginRepository @Inject constructor(
 
     fun authenticateUser(username: String, password: String): Flow<NetworkRequest<String>> = flow {
         emit(NetworkRequest.Loading())
+        // Request Token
+        val tokenResponse = remote.requestToken()
+        val tokenNetworkResponse = NetworkResponse(tokenResponse).handleNetworkResponse()
 
-        try {
-            // Request Token
-            val tokenResponse = remote.requestToken()
-            val tokenNetworkResponse = NetworkResponse(tokenResponse).handleNetworkResponse()
-            if (tokenNetworkResponse is NetworkRequest.Success) {
-                val requestToken = tokenNetworkResponse.data?.requestToken ?: throw Exception("Token is null")
-                emit(NetworkRequest.Success(requestToken))
-
+        if (tokenNetworkResponse is NetworkRequest.Success) {
+            tokenNetworkResponse.data?.requestToken?.let { requestToken ->
                 // Validate with Login
                 val loginRequest = RequestLogin(password, requestToken, username)
                 val loginResponse = remote.validateWithLogin(loginRequest)
                 val loginNetworkResponse = NetworkResponse(loginResponse).handleNetworkResponse()
-                if (loginNetworkResponse is NetworkRequest.Success) {
-                    emit(NetworkRequest.Success(requestToken))  // Pass the token to next step
-                } else {
-                    throw Exception((loginNetworkResponse as NetworkRequest.Error).message)
-                }
 
-                // Create Session
-                val sessionRequest = RequestSession(requestToken)
-                val sessionResponse = remote.createSession(sessionRequest)
-                val sessionNetworkResponse = NetworkResponse(sessionResponse).handleNetworkResponse()
-                if (sessionNetworkResponse is NetworkRequest.Success) {
-                    val sessionId = sessionNetworkResponse.data?.sessionId ?: throw Exception("Session ID is null")
-                    // Save session ID
-                    sessionManager.saveSessionId(sessionId,false)
-                    emit(NetworkRequest.Success(sessionId))
+                if (loginNetworkResponse is NetworkRequest.Success) {
+                    // Create Session
+                    val sessionRequest = RequestSession(requestToken)
+                    val sessionResponse = remote.createSession(sessionRequest)
+                    val sessionNetworkResponse = NetworkResponse(sessionResponse).handleNetworkResponse()
+
+                    if (sessionNetworkResponse is NetworkRequest.Success) {
+                        sessionNetworkResponse.data?.sessionId?.let { sessionId ->
+                            // Save session ID
+                            sessionManager.saveSessionId(sessionId, false)
+                            emit(NetworkRequest.Success(sessionId))
+                        } ?: emit(NetworkRequest.Error(Constants.Message.SESSION_NULL))
+                    } else {
+                        emit(NetworkRequest.Error((sessionNetworkResponse as NetworkRequest.Error).message!!))
+                    }
                 } else {
-                    throw Exception((sessionNetworkResponse as NetworkRequest.Error).message)
+                    emit(NetworkRequest.Error((loginNetworkResponse as NetworkRequest.Error).message!!))
                 }
-            } else {
-                throw Exception((tokenNetworkResponse as NetworkRequest.Error).message)
-            }
-        } catch (e: Exception) {
-            emit(NetworkRequest.Error(e.message.toString()))
+            } ?: emit(NetworkRequest.Error(Constants.Message.TOKEN_NULL))
+        } else {
+            emit(NetworkRequest.Error((tokenNetworkResponse as NetworkRequest.Error).message!!))
         }
     }.flowOn(Dispatchers.IO)
 
@@ -64,15 +61,18 @@ class LoginRepository @Inject constructor(
         emit(NetworkRequest.Loading())
 
         try {
+            // Create a guest session
             val response = remote.createGuestSession()
             val networkResponse = NetworkResponse(response).handleNetworkResponse()
 
             if (networkResponse is NetworkRequest.Success) {
-                val guestSessionId = networkResponse.data?.guestSessionId ?: throw Exception("Guest Session ID is null")
-                sessionManager.saveSessionId(guestSessionId , true)
-                emit(NetworkRequest.Success(guestSessionId))
+                networkResponse.data?.guestSessionId?.let { guestSessionId ->
+                    // Save the Guest Session ID
+                    sessionManager.saveSessionId(guestSessionId, true)
+                    emit(NetworkRequest.Success(guestSessionId))
+                } ?: emit(NetworkRequest.Error(Constants.Message.SESSION_NULL))
             } else {
-                throw Exception((networkResponse as NetworkRequest.Error).message)
+                emit(NetworkRequest.Error((networkResponse as NetworkRequest.Error).message!!))
             }
         } catch (e: Exception) {
             emit(NetworkRequest.Error(e.message.toString()))
@@ -81,9 +81,9 @@ class LoginRepository @Inject constructor(
 
     fun checkSessionStatus(): Flow<Boolean> {
         return sessionManager.getSessionId().map { sessionId ->
-            sessionId?.isNotEmpty() == true
+            sessionId?.isNotEmpty() ?: false
         }
     }
-    fun getSessionId(): Flow<String?> = sessionManager.getSessionId()
 
+    fun getSessionId(): Flow<String?> = sessionManager.getSessionId()
 }
