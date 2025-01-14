@@ -10,7 +10,9 @@ import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.Navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import azari.amirhossein.filmora.R
@@ -25,11 +27,11 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class LoginFragment : Fragment() {
-    //Binding
+    // Binding
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
 
-    //View Model
+    // View Model
     private val viewModel: LoginViewModel by viewModels()
     private var currentAuthType: AuthType = AuthType.LOGIN
 
@@ -44,7 +46,6 @@ class LoginFragment : Fragment() {
         // Inflate the layout for this fragment
         _binding = FragmentLoginBinding.inflate(inflater, container, false)
         return binding.root
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -78,31 +79,19 @@ class LoginFragment : Fragment() {
                 // Validate inputs
                 if (username.isNotEmpty() && password.isNotEmpty()) {
                     if (validateUsername(username) && validatePassword(password)) {
-                        if (viewModel.isNetworkAvailable.value) {
-                            viewModel.authenticateUser(username, password)
-                        } else {
-                            showErrorSnackbar(root, "No internet connection")
-                        }
+                        viewModel.authenticateUser(username, password)
                     }
                 } else {
                     // Show an error if any field is empty
-                    showErrorSnackbar(
-                        root,
-                        ContextCompat.getString(requireContext(), R.string.fillRequiredFields)
-                    )
+                    showErrorSnackbar(root, ContextCompat.getString(requireContext(), R.string.fillRequiredFields))
                 }
             }
             // Authenticate as guest
             btnContinue.setOnClickListener {
                 currentAuthType = AuthType.CONTINUE
-
-                if (viewModel.isNetworkAvailable.value) {
-                    viewModel.authenticateGuest()
-                } else {
-                    showErrorSnackbar(root, "No internet connection")
-                }
+                viewModel.authenticateGuest()
             }
-            // navigates to reset password screen
+            // Navigates to reset password screen
             tvForgotPassword.setOnClickListener { view ->
                 val url = Constants.WebView.RESET_PASSWORD_URL
                 val bundle = Bundle().apply {
@@ -110,7 +99,7 @@ class LoginFragment : Fragment() {
                 }
                 findNavController(view).navigate(R.id.actionToWebView, bundle)
             }
-            // navigates to sign-up screen
+            // Navigates to sign-up screen
             tvSignup.setOnClickListener { view ->
                 val url = Constants.WebView.SIGNUP_URL
                 val bundle = Bundle().apply {
@@ -120,32 +109,33 @@ class LoginFragment : Fragment() {
                 findNavController(view).navigate(R.id.actionToWebView, bundle)
             }
 
-            // authentication result
-            viewModel.authResult.observe(viewLifecycleOwner) { result ->
-                result?.let {
-                    when (result) {
-                        is NetworkRequest.Loading -> {
-                            toggleLoadingState(true)
-                        }
+            // Authentication result collector
+            viewLifecycleOwner.lifecycleScope.launch {
+                repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    viewModel.authResult.collect { result ->
+                        result?.getContentIfNotHandled()?.let {
+                            when (it) {
+                                is NetworkRequest.Loading -> {
+                                    toggleLoadingState(true)
+                                }
 
-                        is NetworkRequest.Success -> {
-                            toggleLoadingState(false)
+                                is NetworkRequest.Success -> {
+                                    toggleLoadingState(false)
 
-                            val sessionId = result.data
-                            if (!sessionId.isNullOrEmpty()) {
-                                findNavController().navigate(R.id.actionLoginToMoviePreferences)
-                            } else {
-                                showErrorSnackbar(root, "Session ID is empty")
+                                    val sessionId = it.data
+                                    if (!sessionId.isNullOrEmpty()) {
+                                        findNavController().navigate(R.id.actionLoginToMoviePreferences)
+                                    } else {
+                                        showErrorSnackbar(root, Constants.Message.SESSION_EMPTY)
+                                    }
+                                }
 
+                                is NetworkRequest.Error -> {
+                                    toggleLoadingState(false)
+                                    showErrorSnackbar(root, it.message.toString())
+
+                                }
                             }
-                        }
-
-                        is NetworkRequest.Error -> {
-                            toggleLoadingState(false)
-                            showErrorSnackbar(root, result.message.toString())
-                            // Clear result after showing error
-                            viewModel.clearAuthResult()
-
                         }
                     }
                 }
@@ -192,6 +182,7 @@ class LoginFragment : Fragment() {
             else -> false
         }
     }
+
     private fun toggleLoadingState(isLoading: Boolean) {
         binding.apply {
             when (currentAuthType) {
