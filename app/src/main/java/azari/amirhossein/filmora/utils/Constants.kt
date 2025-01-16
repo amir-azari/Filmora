@@ -94,6 +94,13 @@ object Constants {
         const val CELEBRITIES_TABLE = "celebrities_table"
     }
 
+    object Defaults {
+        const val TITLE = "N/A"
+        const val OVERVIEW = "No overview available"
+        const val VOTE_COUNT = "0"
+        const val VOTE_AVERAGE = 0.0
+        const val OVERVIEW_MAX_LINES = 5
+    }
     object MediaType {
         const val TV = "tv"
         const val MOVIE = "movie"
