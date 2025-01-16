@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.detail.DetailFragment">
+
+    <!-- Loading State -->
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:indeterminateTint="@color/md_theme_primary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!--Internet Error-->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/internetLay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_gravity="center_vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <include
+            layout="@layout/internet_error"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_editor_absoluteX="0dp" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!-- Main container -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/mainContentContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- Backdrop Section -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/backdrop_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/img_backdrop"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:contentDescription="@string/poster_image"
+                    app:layout_constraintDimensionRatio="16:9"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:src="@drawable/image_slash_large" />
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/_72mdp"
+                    android:background="@drawable/background_shadow_bottom"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <!-- Poster and Title Section -->
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/img_poster"
+                android:layout_width="@dimen/_75mdp"
+                android:layout_height="0dp"
+                android:layout_marginStart="@dimen/_12mdp"
+                android:layout_marginTop="@dimen/mines45mdp"
+                app:layout_constraintDimensionRatio="2:3"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/backdrop_container"
+                app:shapeAppearanceOverlay="@style/RoundedCorners"
+                tools:src="@drawable/image_slash_medium" />
+
+            <TextView
+                android:id="@+id/txt_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_8mdp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="@color/textColor"
+                android:textSize="@dimen/_13font_mdp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/img_poster"
+                app:layout_constraintTop_toTopOf="@+id/img_poster" />
+
+            <!-- Rating Section -->
+            <RatingBar
+                android:id="@+id/ratingBar"
+                style="@style/Widget.AppCompat.RatingBar.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_4mdp"
+                android:numStars="5"
+                android:stepSize="0.01"
+                android:secondaryProgressTint="@android:color/transparent"
+                android:progressTint="@color/rate_icon"
+                app:layout_constraintStart_toStartOf="@+id/txt_title"
+                app:layout_constraintTop_toBottomOf="@+id/txt_title"
+                tools:rating="4.1" />
+
+            <TextView
+                android:id="@+id/txt_voteCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_4mdp"
+                android:textColor="@color/rate_icon"
+                android:textSize="@dimen/_7font_mdp"
+                app:layout_constraintBottom_toBottomOf="@+id/ratingBar"
+                app:layout_constraintStart_toEndOf="@+id/ratingBar" />
+
+            <ImageView
+                android:id="@+id/img_star"
+                android:layout_width="@dimen/_10mdp"
+                android:layout_height="@dimen/_10mdp"
+                android:layout_marginEnd="@dimen/_2mdp"
+                android:src="@drawable/star"
+                app:layout_constraintBottom_toBottomOf="@+id/txt_voteAverage"
+                app:layout_constraintEnd_toStartOf="@+id/txt_voteAverage"
+                app:layout_constraintTop_toTopOf="@+id/txt_voteAverage"
+                app:tint="@color/rate_icon" />
+
+            <TextView
+                android:id="@+id/txt_voteAverage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/_8mdp"
+                android:textColor="@color/rate_icon"
+                android:textSize="@dimen/_8font_mdp"
+                app:layout_constraintBottom_toBottomOf="@+id/ratingBar"
+                app:layout_constraintEnd_toEndOf="@+id/txt_title"
+                app:layout_constraintTop_toTopOf="@+id/ratingBar"
+                />
+
+            <!-- Genres RecyclerView -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_genre"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_4mdp"
+                android:layout_marginEnd="@dimen/_8mdp"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/ratingBar"
+                app:layout_constraintTop_toBottomOf="@+id/ratingBar"
+                tools:itemCount="5"
+                tools:listitem="@layout/item_genre" />
+
+            <!-- Overview Section -->
+            <LinearLayout
+                android:id="@+id/overview_container"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_4mdp"
+                android:layout_marginEnd="@dimen/_8mdp"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/rv_genre"
+                app:layout_constraintTop_toBottomOf="@id/rv_genre">
+
+                <TextView
+                    android:id="@+id/txt_overview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:textIsSelectable="false"
+                    android:minLines="5"
+                    android:textColor="@color/textColor_secondary"
+                    android:textSize="@dimen/_8font_mdp"
+                    android:layout_marginBottom="@dimen/_2mdp" />
+
+                <ImageView
+                    android:id="@+id/img_expand"
+                    android:layout_width="@dimen/_10mdp"
+                    android:layout_height="@dimen/_10mdp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/mines2mdp"
+                    android:visibility="invisible"
+                    android:src="@drawable/angle_down"
+                    app:tint="@color/textColor_secondary" />
+
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

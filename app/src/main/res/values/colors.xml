@@ -23,6 +23,11 @@
 
     <color name="cardBackgroundColor">#EFFAFB</color>
     <color name="cardTextColor">#032B4E</color>
+
+    <color name="textColor">#161414</color>
+    <color name="textColor_secondary">#CC161414</color>
+    <color name="textColor_tertiary">#054176</color>
+
     <color name="cardTextColorAlpha">#054176</color>
     <color name="iconColor">#05243F</color>
 
@@ -36,6 +41,11 @@
 
     <color name="shadow_background">#F6F6F6</color>
     <color name="shadow_background_alpha">#4DF6F6F6</color>
+    <color name="shadow_background_alpha10">#0DF6F6F6</color>
+
+    <color name="rate_icon">#054176</color>
+    <color name="rate_icon_Secondary">#FFBC00</color>
+
 
 
 </resources>
