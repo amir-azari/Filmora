@@ -21,7 +21,7 @@ data class ResponseMoviesList(
         @SerializedName("genre_ids")
         val genreIds: List<Int?>?,
         @SerializedName("id")
-        val id: Int?, // 1356991
+        val id: Int, // 1356991
         @SerializedName("original_language")
         val originalLanguage: String?, // xx
         @SerializedName("original_title")

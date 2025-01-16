@@ -23,7 +23,7 @@ data class ResponseTvsList(
         @SerializedName("genre_ids")
         val genreIds: List<Int?>?,
         @SerializedName("id")
-        val id: Int?, // 262252
+        val id: Int, // 262252
         @SerializedName("name")
         val name: String?, // KLASS 95: The Power of Beauty
         @SerializedName("origin_country")
