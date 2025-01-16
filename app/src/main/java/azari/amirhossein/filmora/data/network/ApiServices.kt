@@ -5,6 +5,8 @@ import azari.amirhossein.filmora.models.authentication.RequestSession
 import azari.amirhossein.filmora.models.authentication.ResponseGuestSession
 import azari.amirhossein.filmora.models.authentication.ResponseToken
 import azari.amirhossein.filmora.models.authentication.ResponseSession
+import azari.amirhossein.filmora.models.detail.ResponseMovieDetails
+import azari.amirhossein.filmora.models.detail.ResponseTvDetails
 import azari.amirhossein.filmora.models.home.ResponseTrendingList
 import azari.amirhossein.filmora.models.prefences.ResponseGenresList
 import azari.amirhossein.filmora.models.prefences.movie.ResponseMovieKeywordList
@@ -56,6 +58,10 @@ interface ApiServices {
     @GET("discover/movie")
     suspend fun discoverMovies(@QueryMap params: Map<String, String>): Response<ResponseMoviesList>
 
+    // Detail
+    @GET("movie/{movie_id}")
+    suspend fun getMovieDetails(@Path("movie_id") movieId: Int): Response<ResponseMovieDetails>
+
     //---------TVs---------
 
     // Search TV
@@ -73,6 +79,10 @@ interface ApiServices {
     // Discover
     @GET("discover/tv")
     suspend fun discoverTvShows(@QueryMap params: Map<String, String>): Response<ResponseTvsList>
+
+    // Detail
+    @GET("tv/{series_id}")
+    suspend fun getDetailsTvSeries(@Path("series_id") seriesId: Int): Response<ResponseTvDetails>
 
     //---------All(Movie , Tv , People)---------
 
