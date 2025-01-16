@@ -21,6 +21,12 @@ class RecommendMovieAdapter @Inject constructor() :
 
     private var allGenres: List<ResponseGenresList.Genre> = emptyList()
 
+    private var onItemClickListener: ((ResponseMoviesList.Result) -> Unit)? = null
+    fun setOnItemClickListener(listener: (ResponseMoviesList.Result) -> Unit) {
+        onItemClickListener = listener
+    }
+
+
     inner class ViewHolder(private val binding: ItemMediaBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: ResponseMoviesList.Result) {
@@ -57,6 +63,10 @@ class RecommendMovieAdapter @Inject constructor() :
 
                 val genres = getGenresByIds(item.genreIds)
                 genreAdapter.differ.submitList(genres)
+            }
+            // Click
+            binding.root.setOnClickListener {
+                onItemClickListener?.let { it(item) }
             }
         }
     }

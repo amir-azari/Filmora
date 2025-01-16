@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import azari.amirhossein.filmora.databinding.ItemMediaBinding
 import azari.amirhossein.filmora.models.prefences.ResponseGenresList
+import azari.amirhossein.filmora.models.prefences.movie.ResponseMoviesList
 import azari.amirhossein.filmora.models.prefences.tv.ResponseTvsList
 import azari.amirhossein.filmora.utils.Constants
 import coil3.load
@@ -18,6 +19,11 @@ import javax.inject.Inject
 
 class RecommendTvAdapter @Inject constructor() :
     RecyclerView.Adapter<RecommendTvAdapter.ViewHolder>() {
+
+    private var onItemClickListener: ((ResponseTvsList.Result) -> Unit)? = null
+    fun setOnItemClickListener(listener: (ResponseTvsList.Result) -> Unit) {
+        onItemClickListener = listener
+    }
 
     private var allGenres: List<ResponseGenresList.Genre> = emptyList()
 
@@ -45,6 +51,10 @@ class RecommendTvAdapter @Inject constructor() :
                             imgPoster.visibility = View.VISIBLE
                         }
                     )
+                    // Click
+                    binding.root.setOnClickListener {
+                        onItemClickListener?.let { it(item) }
+                    }
                 }
 
                 txtTitle.text = item.name
