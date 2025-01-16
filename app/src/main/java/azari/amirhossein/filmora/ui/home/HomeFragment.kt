@@ -11,18 +11,20 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import azari.amirhossein.filmora.R
 import azari.amirhossein.filmora.adapter.RecommendMovieAdapter
 import azari.amirhossein.filmora.adapter.RecommendTvAdapter
 import azari.amirhossein.filmora.adapter.TrendingAllAdapter
 import azari.amirhossein.filmora.databinding.FragmentHomeBinding
+import azari.amirhossein.filmora.models.prefences.movie.ResponseMoviesList
+import azari.amirhossein.filmora.models.prefences.tv.ResponseTvsList
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.NetworkRequest
 import azari.amirhossein.filmora.utils.customize
 import azari.amirhossein.filmora.viewmodel.HomeViewModel
 import coil3.load
-import coil3.request.CachePolicy
 import coil3.request.crossfade
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -61,7 +63,9 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerViews()
         observeViewModel()
-    }
+        recommendMovieAdapter.setOnItemClickListener(clickMovie)
+        recommendTvAdapter.setOnItemClickListener(clickTv)
+        }
 
     // Setup recyclerView
     private fun setupRecyclerViews() {
@@ -185,7 +189,18 @@ class HomeFragment : Fragment() {
         binding.mainContentContainer.visibility = View.GONE
 
     }
+    //Click media
+    private val clickMovie = { movie: ResponseMoviesList.Result ->
+        val action = HomeFragmentDirections.actionToDetail(Constants.MediaType.MOVIE,movie.id)
+        findNavController().navigate(action)
 
+    }
+
+    private val clickTv = { tvId: ResponseTvsList.Result ->
+        val action = HomeFragmentDirections.actionToDetail(Constants.MediaType.TV,tvId.id)
+        findNavController().navigate(action)
+
+    }
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
