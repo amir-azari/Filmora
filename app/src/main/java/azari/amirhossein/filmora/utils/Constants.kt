@@ -66,6 +66,10 @@ object Constants {
     object Message{
         const val NO_INTERNET_CONNECTION = "No internet connection"
         const val UNKNOWN_ERROR = "Unknown error"
+        const val SESSION_EMPTY = "Session ID is empty"
+        const val SESSION_NULL = "Session ID is null"
+        const val TOKEN_NULL = "Token is null"
+        const val INVALID_MEDIA_TYPE = "Invalid media type."
         const val NO_CACHED_DATA = "No cached data available."
     }
     object BundleKey{
@@ -88,5 +92,10 @@ object Constants {
         const val DETAIL_TABLE = "detail_table"
         const val TV_SHOW_TABLE = "tv_show_table"
         const val CELEBRITIES_TABLE = "celebrities_table"
+    }
+
+    object MediaType {
+        const val TV = "tv"
+        const val MOVIE = "movie"
     }
 }
