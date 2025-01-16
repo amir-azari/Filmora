@@ -67,6 +67,7 @@ class MainActivity : AppCompatActivity() {
                     showToolbar()
                     showProfileSection()
                     hideToolbarTitle()
+                    supportActionBar?.setDisplayHomeAsUpEnabled(false)
                 }
                 R.id.movieFragment,
                 R.id.tvFragment,
@@ -75,6 +76,15 @@ class MainActivity : AppCompatActivity() {
                     showToolbar()
                     hideProfileSection()
                     showToolbarTitle()
+                    supportActionBar?.setDisplayHomeAsUpEnabled(false)
+                }
+                R.id.detailFragment -> {
+                    hideBottomNav()
+                    showToolbar()
+                    hideProfileSection()
+                    showToolbarTitle()
+                    supportActionBar?.setDisplayHomeAsUpEnabled(true)
+                    invalidateOptionsMenu()
                 }
                 R.id.splashFragment,
                 R.id.loginFragment,
@@ -88,8 +98,16 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
+
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.toolbar_menu, menu)
+
+        if (navController.currentDestination?.id == R.id.detailFragment) {
+            for (i in 0 until menu.size()) {
+                menu.getItem(i).isVisible = false
+            }
+        }
         return true
     }
     private fun showProfileSection() {
