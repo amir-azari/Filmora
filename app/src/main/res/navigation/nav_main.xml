@@ -112,7 +112,11 @@
         android:id="@+id/homeFragment"
         android:name="azari.amirhossein.filmora.ui.home.HomeFragment"
         android:label="@string/home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+
+    </fragment>
+
+
     <fragment
         android:id="@+id/movieFragment"
         android:name="azari.amirhossein.filmora.ui.movies.MovieFragment"
@@ -128,5 +132,28 @@
         android:name="azari.amirhossein.filmora.ui.people.PeopleFragment"
         android:label="@string/celebrities"
         tools:layout="@layout/fragment_people" />
+
+    <fragment
+        android:id="@+id/detailFragment"
+        android:name="azari.amirhossein.filmora.ui.detail.DetailFragment"
+        android:label="fragment_detail"
+        tools:layout="@layout/fragment_detail" >
+        <argument
+            android:name="id"
+            app:argType="integer"
+            android:defaultValue="0"/>
+        <argument
+            android:name="mediaType"
+            app:argType="string" />
+    </fragment>
+    <action
+        android:id="@+id/actionToDetail"
+        app:destination="@id/detailFragment"
+        app:enterAnim="@anim/nav_default_enter_anim"
+        app:exitAnim="@anim/nav_default_exit_anim"
+        app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+        app:popExitAnim="@anim/nav_default_pop_exit_anim"
+
+        />
 
 </navigation>
