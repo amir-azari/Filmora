@@ -18,6 +18,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import azari.amirhossein.filmora.R
 import azari.amirhossein.filmora.adapter.GenresAdapter
+import azari.amirhossein.filmora.adapter.SeasonsAdapter
 import azari.amirhossein.filmora.data.SessionManager
 import azari.amirhossein.filmora.databinding.FragmentDetailBinding
 import azari.amirhossein.filmora.models.detail.ResponseMovieDetails
@@ -47,6 +48,9 @@ class DetailFragment : Fragment() {
 
     @Inject
     lateinit var genresAdapter: GenresAdapter
+
+    @Inject
+    lateinit var seasonsAdapter: SeasonsAdapter
 
     // State variables for overview expansion and configuration
     private var isOverviewExpanded = false
@@ -84,7 +88,10 @@ class DetailFragment : Fragment() {
 
         // Fetch media details
         when (mediaType) {
-            Constants.MediaType.MOVIE -> viewModel.getMediaDetails(mediaId, Constants.MediaType.MOVIE)
+            Constants.MediaType.MOVIE -> {
+                viewModel.getMediaDetails(mediaId, Constants.MediaType.MOVIE)
+                binding.cvTvSeasons.visibility = View.GONE
+            }
             Constants.MediaType.TV -> viewModel.getMediaDetails(mediaId, Constants.MediaType.TV)
         }
 
@@ -102,6 +109,10 @@ class DetailFragment : Fragment() {
         binding.rvGenre.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             adapter = genresAdapter
+        }
+        binding.rvTvSeasons.apply {
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            adapter = seasonsAdapter
         }
     }
     private fun setupOverviewExpansion() {
@@ -230,7 +241,8 @@ class DetailFragment : Fragment() {
             voteAverage = data.voteAverage,
             genres = data.genres,
             posterPath = data.posterPath,
-            backdropPath = data.backdropPath
+            backdropPath = data.backdropPath,
+            seasons = data.seasons
         )
     }
 
@@ -258,7 +270,8 @@ class DetailFragment : Fragment() {
         voteAverage: Double?,
         genres: List<ResponseGenresList.Genre?>?,
         posterPath: String?,
-        backdropPath: String?
+        backdropPath: String?,
+        seasons:List<ResponseTvDetails.Season?>? =null
     ) {
         // Bind common UI elements for both movies and TV shows
         binding.apply {
@@ -301,6 +314,7 @@ class DetailFragment : Fragment() {
                     }
                 )
             }
+            seasonsAdapter.differ.submitList(seasons)
         }
     }
 
