@@ -42,5 +42,6 @@
     <color name="rate_icon">#40BEC6</color>
     <color name="rate_icon_Secondary">#FFBC00</color>
 
+    <color name="btn_icon">#1D6166</color>
 
 </resources>

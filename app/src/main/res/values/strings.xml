@@ -41,4 +41,8 @@
     <string name="setting">Setting</string>
     <string name="search">Search</string>
 
+    <string name="list">List</string>
+    <string name="favorite">Favorite</string>
+    <string name="watchlist">Watchlist</string>
+    <string name="rate">Rate</string>
 </resources>

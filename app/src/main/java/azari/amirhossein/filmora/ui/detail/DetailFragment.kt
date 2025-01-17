@@ -18,6 +18,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import azari.amirhossein.filmora.R
 import azari.amirhossein.filmora.adapter.GenresAdapter
+import azari.amirhossein.filmora.data.SessionManager
 import azari.amirhossein.filmora.databinding.FragmentDetailBinding
 import azari.amirhossein.filmora.models.detail.ResponseMovieDetails
 import azari.amirhossein.filmora.models.detail.ResponseTvDetails
@@ -40,6 +41,9 @@ class DetailFragment : Fragment() {
     //Binding
     private var _binding: FragmentDetailBinding? = null
     private val binding get() = _binding!!
+
+    @Inject
+    lateinit var sessionManager: SessionManager
 
     @Inject
     lateinit var genresAdapter: GenresAdapter
@@ -87,6 +91,7 @@ class DetailFragment : Fragment() {
         setupUI()
         setupOverviewExpansion()
         observeViewModel()
+        observeLoginStatus()
     }
 
     private fun setupUI() {
@@ -124,6 +129,19 @@ class DetailFragment : Fragment() {
             // Set click listeners
             txtOverview.setOnClickListener(clickListener)
             imgExpand.setOnClickListener(clickListener)
+        }
+    }
+    private fun observeLoginStatus() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                sessionManager.isGuest().collect { isLoggedIn ->
+                    if (isLoggedIn) {
+                        binding.cvMediaAction.visibility = View.GONE
+                    } else {
+                        binding.cvMediaAction.visibility = View.VISIBLE
+                    }
+                }
+            }
         }
     }
 

@@ -199,6 +199,148 @@
                     app:tint="@color/textColor_secondary" />
 
             </LinearLayout>
+            <!-- Media action section -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cv_media_action"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_8mdp"
+                app:cardBackgroundColor="@color/cardBackgroundColor"
+                app:cardCornerRadius="@dimen/_8mdp"
+                app:cardElevation="@dimen/_2mdp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/overview_container">
+
+                <LinearLayout
+                    android:id="@+id/mediaActionSection"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="@dimen/_6mdp"
+                    android:paddingVertical="@dimen/_6mdp"
+                    android:weightSum="4">
+
+                    <!-- List Button with Text -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <com.google.android.material.floatingactionbutton.FloatingActionButton
+                            android:id="@+id/btn_list"
+                            style="?attr/floatingActionButtonSmallStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:contentDescription="@string/list"
+                            app:maxImageSize="@dimen/_13mdp"
+                            app:srcCompat="@drawable/list"
+                            app:tint="@color/btn_icon" />
+
+                        <TextView
+                            android:id="@+id/tv_list"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_2mdp"
+                            android:text="@string/list"
+                            android:textColor="@color/textColor"
+                            android:textSize="@dimen/_8font_mdp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <!-- Favorite Button with Text -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <com.google.android.material.floatingactionbutton.FloatingActionButton
+                            android:id="@+id/btn_favorite"
+                            style="?attr/floatingActionButtonSmallStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:contentDescription="@string/favorite"
+                            app:maxImageSize="@dimen/_13mdp"
+                            app:srcCompat="@drawable/heart"
+                            app:tint="@color/btn_icon" />
+
+                        <TextView
+                            android:id="@+id/tv_favorite"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_2mdp"
+                            android:text="@string/favorite"
+                            android:textColor="@color/textColor"
+                            android:textSize="@dimen/_8font_mdp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <!-- Watchlist Button with Text -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <com.google.android.material.floatingactionbutton.FloatingActionButton
+                            android:id="@+id/btn_watchlist"
+                            style="?attr/floatingActionButtonSmallStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:contentDescription="@string/watchlist"
+                            app:maxImageSize="@dimen/_13mdp"
+                            app:srcCompat="@drawable/bookmark"
+                            app:tint="@color/btn_icon" />
+
+                        <TextView
+                            android:id="@+id/tv_watchlist"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_2mdp"
+                            android:text="@string/watchlist"
+                            android:textColor="@color/textColor"
+                            android:textSize="@dimen/_8font_mdp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <!-- Rate Button with Text -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <com.google.android.material.floatingactionbutton.FloatingActionButton
+                            android:id="@+id/btn_rate"
+                            style="?attr/floatingActionButtonSmallStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:contentDescription="@string/rate"
+                            app:maxImageSize="@dimen/_13mdp"
+                            app:srcCompat="@drawable/star_secondary"
+                            app:tint="@color/btn_icon" />
+
+                        <TextView
+                            android:id="@+id/tv_rate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_2mdp"
+                            android:text="@string/rate"
+                            android:textColor="@color/textColor"
+                            android:textSize="@dimen/_8font_mdp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

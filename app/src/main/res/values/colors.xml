@@ -43,6 +43,8 @@
     <color name="shadow_background_alpha">#4DF6F6F6</color>
     <color name="shadow_background_alpha10">#0DF6F6F6</color>
 
+    <color name="btn_icon">#A1DEE3</color>
+
     <color name="rate_icon">#054176</color>
     <color name="rate_icon_Secondary">#FFBC00</color>
 
