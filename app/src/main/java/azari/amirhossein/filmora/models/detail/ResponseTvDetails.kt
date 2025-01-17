@@ -108,7 +108,7 @@ data class ResponseTvDetails(
         @SerializedName("still_path")
         val stillPath: String?, // /eouAk5coqRxaW8UZG77q8qaMsUg.jpg
         @SerializedName("vote_average")
-        val voteAverage: Int?, // 7
+        val voteAverage: Double?, // 7
         @SerializedName("vote_count")
         val voteCount: Int? // 5
     )
