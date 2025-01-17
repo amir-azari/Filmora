@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingHorizontal="@dimen/_6mdp"
+    >
+
+    <!-- Poster Image -->
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/img_poster"
+        android:layout_width="@dimen/_80mdp"
+        android:layout_height="0dp"
+        android:contentDescription="@string/poster_image"
+        android:scaleType="centerCrop"
+        android:src="@drawable/image"
+        android:visibility="invisible"
+        app:layout_constraintDimensionRatio="2:3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearanceOverlay="@style/RoundedCorners" />
+
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/img_shimmer_container"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="2:3"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:shimmer_auto_start="true"
+        app:shimmer_duration="1000">
+
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_shimmer_rounded_corners"
+            android:contentDescription="@string/poster_image"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+
+    </com.facebook.shimmer.ShimmerFrameLayout>
+
+    <TextView
+        android:id="@+id/txt_title"
+        android:layout_width="0dp"
+        app:layout_goneMarginTop="@dimen/_2mdp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_2mdp"
+        android:ellipsize="end"
+        android:maxHeight="@dimen/_30mdp"
+        android:maxLines="1"
+        android:text="@string/title"
+        android:textColor="@color/cardTextColor"
+        android:textSize="@dimen/_10font_mdp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/img_poster"
+        app:layout_constraintTop_toBottomOf="@+id/img_poster" />
+
+    <!-- Release Year with Icon -->
+    <ImageView
+        android:id="@+id/img_calendar"
+        android:layout_width="@dimen/_11mdp"
+        android:layout_height="@dimen/_11mdp"
+        android:layout_marginTop="@dimen/_6mdp"
+        android:src="@drawable/calendar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/txt_title"
+        app:tint="@color/iconColor" />
+
+    <TextView
+        android:id="@+id/txt_year"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_2mdp"
+        android:gravity="center_vertical"
+        android:text="@string/empty_text"
+        android:textColor="@color/textColor_secondary"
+        android:textSize="@dimen/_8font_mdp"
+        app:layout_constraintBottom_toBottomOf="@+id/img_calendar"
+        app:layout_constraintStart_toEndOf="@id/img_calendar" />
+    <!-- Rating with Icon -->
+    <ImageView
+        android:id="@+id/img_star"
+        android:layout_width="@dimen/_11mdp"
+        android:layout_height="@dimen/_11mdp"
+        android:layout_marginEnd="@dimen/_2mdp"
+        android:src="@drawable/star"
+        android:layout_marginTop="@dimen/_6mdp"
+        app:layout_constraintStart_toStartOf="@+id/img_calendar"
+        app:layout_constraintTop_toBottomOf="@id/img_calendar"
+        app:tint="@color/rate_icon_Secondary" />
+
+    <TextView
+        android:id="@+id/txt_rating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:text="@string/no_rate"
+        android:layout_marginStart="@dimen/_2mdp"
+        android:textColor="@color/rate_icon"
+        android:textSize="@dimen/_8font_mdp"
+        app:layout_constraintBottom_toBottomOf="@+id/img_star"
+        app:layout_constraintStart_toEndOf="@+id/img_star" />
+</androidx.constraintlayout.widget.ConstraintLayout>
