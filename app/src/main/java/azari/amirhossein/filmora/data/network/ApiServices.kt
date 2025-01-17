@@ -5,6 +5,7 @@ import azari.amirhossein.filmora.models.authentication.RequestSession
 import azari.amirhossein.filmora.models.authentication.ResponseGuestSession
 import azari.amirhossein.filmora.models.authentication.ResponseToken
 import azari.amirhossein.filmora.models.authentication.ResponseSession
+import azari.amirhossein.filmora.models.detail.ResponseCredit
 import azari.amirhossein.filmora.models.detail.ResponseMovieDetails
 import azari.amirhossein.filmora.models.detail.ResponseTvDetails
 import azari.amirhossein.filmora.models.home.ResponseTrendingList
@@ -62,6 +63,8 @@ interface ApiServices {
     @GET("movie/{movie_id}")
     suspend fun getMovieDetails(@Path("movie_id") movieId: Int): Response<ResponseMovieDetails>
 
+    @GET("movie/{movie_id}/credits")
+    suspend fun getMovieCredits(@Path("movie_id") movieId: Int): Response<ResponseCredit>
     //---------TVs---------
 
     // Search TV
@@ -84,6 +87,8 @@ interface ApiServices {
     @GET("tv/{series_id}")
     suspend fun getDetailsTvSeries(@Path("series_id") seriesId: Int): Response<ResponseTvDetails>
 
+    @GET("tv/{series_id}/credits")
+    suspend fun getTvCredits(@Path("series_id") seriesId: Int): Response<ResponseCredit>
     //---------All(Movie , Tv , People)---------
 
     // Trending
