@@ -17,6 +17,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import azari.amirhossein.filmora.R
+import azari.amirhossein.filmora.adapter.CastAdapter
 import azari.amirhossein.filmora.adapter.GenresAdapter
 import azari.amirhossein.filmora.adapter.SeasonsAdapter
 import azari.amirhossein.filmora.data.SessionManager
@@ -51,6 +52,9 @@ class DetailFragment : Fragment() {
 
     @Inject
     lateinit var seasonsAdapter: SeasonsAdapter
+
+    @Inject
+    lateinit var castAdapter: CastAdapter
 
     // State variables for overview expansion and configuration
     private var isOverviewExpanded = false
@@ -114,6 +118,12 @@ class DetailFragment : Fragment() {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             adapter = seasonsAdapter
         }
+
+        binding.rvCastAndCrew.apply {
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            adapter = castAdapter
+            setHasFixedSize(true)
+        }
     }
     private fun setupOverviewExpansion() {
         binding.apply {
@@ -166,7 +176,10 @@ class DetailFragment : Fragment() {
                                 showLoading()
                             }
                             is NetworkRequest.Success -> {
-                                it.data?.let { mediaItem -> showSuccess(mediaItem) }
+                                it.data?.let { mediaItem ->
+                                    showSuccess(mediaItem)
+                                    mediaItem.credits?.cast?.let { it1 -> castAdapter.submitList(it1.filterNotNull()) }
+                                }
                             }
                             is NetworkRequest.Error -> {
                                 showError()
@@ -217,6 +230,7 @@ class DetailFragment : Fragment() {
             (requireActivity() as AppCompatActivity).supportActionBar?.title = ""
         }
     }
+
 
 
     private fun bindMovieToUI(data: ResponseMovieDetails) {
@@ -271,8 +285,7 @@ class DetailFragment : Fragment() {
         genres: List<ResponseGenresList.Genre?>?,
         posterPath: String?,
         backdropPath: String?,
-        seasons:List<ResponseTvDetails.Season?>? =null
-    ) {
+        seasons:List<ResponseTvDetails.Season?>? =null) {
         // Bind common UI elements for both movies and TV shows
         binding.apply {
             txtTitle.text = title ?: Constants.Defaults.TITLE
