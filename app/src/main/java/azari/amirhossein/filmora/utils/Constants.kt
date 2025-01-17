@@ -71,6 +71,7 @@ object Constants {
         const val TOKEN_NULL = "Token is null"
         const val INVALID_MEDIA_TYPE = "Invalid media type."
         const val NO_CACHED_DATA = "No cached data available."
+        const val INVALID_DATE = "Invalid date."
     }
     object BundleKey{
         const val URL_BUNDLE_KEY = "url"
