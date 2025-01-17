@@ -389,6 +389,86 @@
 
             </androidx.cardview.widget.CardView>
 
+            <!-- Cast and crew section -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cv_cast_and_crew"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_8mdp"
+                android:orientation="horizontal"
+                app:cardBackgroundColor="@color/cardBackgroundColor"
+                app:cardCornerRadius="@dimen/_8mdp"
+                app:cardElevation="@dimen/_2mdp"
+                app:layout_constraintEnd_toEndOf="@+id/cv_tvSeasons"
+                app:layout_constraintStart_toStartOf="@+id/cv_tvSeasons"
+                app:layout_constraintTop_toBottomOf="@id/cv_tvSeasons">
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/castAndCrewSection"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingVertical="@dimen/_8mdp">
+
+                    <!--Header -->
+                    <TextView
+                        android:id="@+id/txt_cast_and_crew"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_12mdp"
+                        android:text="@string/cast_amp_crew"
+                        android:textSize="@dimen/_12mdp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <!-- See All -->
+                    <LinearLayout
+                        android:id="@+id/layoutSeeAllCastAndCrew"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/_12mdp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        app:layout_constraintBottom_toBottomOf="@id/txt_cast_and_crew"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/txt_cast_and_crew">
+
+                        <TextView
+                            android:id="@+id/txt_seeAll_movies"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/_1mdp"
+                            android:textColor="@color/textColor_secondary"
+                            android:textStyle="bold"
+                            android:text="@string/see_all"
+                            android:textSize="@dimen/_8font_mdp" />
+
+                        <ImageView
+                            android:id="@+id/img_arrow_movies"
+                            android:layout_width="@dimen/_12mdp"
+                            android:layout_height="@dimen/_12mdp"
+                            android:src="@drawable/angle_right"
+                            app:tint="@color/white" />
+                    </LinearLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_cast_and_crew"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_marginTop="@dimen/_9mdp"
+                        android:clipToPadding="false"
+                        android:orientation="horizontal"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        app:layout_constraintTop_toBottomOf="@+id/txt_cast_and_crew"
+                        tools:listitem="@layout/item_credit" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.cardview.widget.CardView>
+
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.core.widget.NestedScrollView>

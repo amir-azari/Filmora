@@ -46,4 +46,8 @@
     <string name="watchlist">Watchlist</string>
     <string name="rate">Rate</string>
     <string name="seasons">Seasons</string>
+    <string name="cast_amp_crew"><![CDATA[Cast & Crew]]></string>
+    <string name="see_all">See all</string>
+    <string name="character_name">Character Name</string>
+    <string name="description">Description</string>
 </resources>
