@@ -114,6 +114,7 @@
         android:label="@string/home"
         tools:layout="@layout/fragment_home" >
 
+
     </fragment>
 
 
@@ -134,21 +135,41 @@
         tools:layout="@layout/fragment_people" />
 
     <fragment
-        android:id="@+id/detailFragment"
-        android:name="azari.amirhossein.filmora.ui.detail.DetailFragment"
+        android:id="@+id/movieDetailFragment"
+        android:name="azari.amirhossein.filmora.ui.detail.MovieDetailFragment"
         android:label="fragment_detail"
-        tools:layout="@layout/fragment_detail" >
-        <argument
-            android:name="id"
-            app:argType="integer"
-            android:defaultValue="0"/>
+        tools:layout="@layout/fragment_movie_detail" >
         <argument
             android:name="mediaType"
             app:argType="string" />
+        <argument android:name="id"
+            app:argType="integer" />
+
     </fragment>
     <action
-        android:id="@+id/actionToDetail"
-        app:destination="@id/detailFragment"
+        android:id="@+id/actionToMovieDetail"
+        app:destination="@id/movieDetailFragment"
+        app:enterAnim="@anim/nav_fade_in"
+        app:exitAnim="@anim/nav_fade_out"
+        app:popEnterAnim="@anim/nav_fade_in"
+        app:popExitAnim="@anim/nav_fade_out"
+        />
+    <fragment
+        android:id="@+id/tvDetailsFragment"
+        android:name="azari.amirhossein.filmora.ui.detail.TvDetailsFragment"
+        android:label="fragment_tv_details"
+        tools:layout="@layout/fragment_tv_details">
+
+        <argument
+            android:name="mediaType"
+            app:argType="string" />
+        <argument android:name="id"
+            app:argType="integer" />
+    </fragment>
+
+    <action
+        android:id="@+id/actionToTvDetail"
+        app:destination="@id/tvDetailsFragment"
         app:enterAnim="@anim/nav_fade_in"
         app:exitAnim="@anim/nav_fade_out"
         app:popEnterAnim="@anim/nav_fade_in"
