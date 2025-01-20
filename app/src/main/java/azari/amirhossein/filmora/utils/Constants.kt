@@ -96,7 +96,7 @@ object Constants {
     }
 
     object Defaults {
-        const val TITLE = "N/A"
+        const val NOT_APPLICABLE = "N/A"
         const val OVERVIEW = "No overview available"
         const val VOTE_COUNT = "0"
         const val VOTE_AVERAGE = 0.0
