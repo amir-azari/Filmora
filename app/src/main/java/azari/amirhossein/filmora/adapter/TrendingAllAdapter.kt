@@ -9,12 +9,18 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import azari.amirhossein.filmora.databinding.ItemTrendingAllBinding
 import azari.amirhossein.filmora.models.home.ResponseTrendingList
+import azari.amirhossein.filmora.models.prefences.movie.ResponseMoviesList
 import azari.amirhossein.filmora.utils.Constants
 import coil3.load
 import coil3.request.crossfade
 import javax.inject.Inject
 
 class TrendingAllAdapter @Inject constructor() : RecyclerView.Adapter<TrendingAllAdapter.ViewHolder>(){
+
+    private var onItemClickListener: ((ResponseTrendingList.Result) -> Unit)? = null
+    fun setOnItemClickListener(listener: (ResponseTrendingList.Result) -> Unit) {
+        onItemClickListener = listener
+    }
 
     inner class ViewHolder(private val binding: ItemTrendingAllBinding) : RecyclerView.ViewHolder(binding.root){
         fun bind (item : ResponseTrendingList.Result){
@@ -52,6 +58,9 @@ class TrendingAllAdapter @Inject constructor() : RecyclerView.Adapter<TrendingAl
                 val voteAverage = item.voteAverage?.let { String.format("%.1f", it) } ?: "N/A"
                 txtRating.text = voteAverage
                 txtYear.text = year
+            }
+            binding.root.setOnClickListener {
+                onItemClickListener?.let { it(item) }
             }
         }
 
