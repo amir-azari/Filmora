@@ -10,6 +10,7 @@ import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.TextStyle
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
@@ -30,6 +31,11 @@ import coil3.request.ErrorResult
 import coil3.request.ImageRequest
 import coil3.request.SuccessResult
 import coil3.request.crossfade
+import coil3.request.error
+import coil3.request.fallback
+import coil3.request.placeholder
+import com.facebook.shimmer.ShimmerFrameLayout
+import com.google.android.material.imageview.ShapeableImageView
 import com.google.android.material.shape.CornerFamily
 import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.shape.ShapeAppearanceModel
@@ -136,19 +142,23 @@ fun Int?.toFormattedWithUnits(): String {
 }
 
 fun List<ProductionCountry?>?.toCountryNames(): String {
-    return this?.filterNotNull()?.joinToString("\n") { it.name ?: "Unknown Country" } ?: Constants.Defaults.NOT_APPLICABLE
+    return this?.filterNotNull()?.joinToString("\n") { it.name ?: "Unknown Country" }
+        ?: Constants.Defaults.NOT_APPLICABLE
 }
 
 fun List<ProductionCompany?>?.toCompanyNames(): String {
-    return this?.filterNotNull()?.joinToString("\n") { "${it.name} (${it.originCountry})" } ?: Constants.Defaults.NOT_APPLICABLE
+    return this?.filterNotNull()?.joinToString("\n") { "${it.name} (${it.originCountry})" }
+        ?: Constants.Defaults.NOT_APPLICABLE
 }
 
 fun List<CreatedBy?>?.toCreatorNames(): String {
-    return this?.filterNotNull()?.joinToString("\n") { "${it.name}" } ?: Constants.Defaults.NOT_APPLICABLE
+    return this?.filterNotNull()?.joinToString("\n") { "${it.name}" }
+        ?: Constants.Defaults.NOT_APPLICABLE
 }
 
 fun List<Network?>?.toNetworkNames(): String {
-    return this?.filterNotNull()?.joinToString("\n") { "${it.name}" } ?: Constants.Defaults.NOT_APPLICABLE
+    return this?.filterNotNull()?.joinToString("\n") { "${it.name}" }
+        ?: Constants.Defaults.NOT_APPLICABLE
 }
 
 fun String?.getFullLanguageName(languages: NetworkRequest<ResponseLanguage>?): String? {
@@ -186,10 +196,11 @@ fun List<SpokenLanguage?>?.toSpokenLanguagesText(): String {
     return this?.filterNotNull()?.joinToString("\n") { it.englishName ?: "Unknown Language" }
         ?: Constants.Defaults.NOT_APPLICABLE
 }
+
 fun LifecycleOwner.observeLoginStatus(
     sessionManager: SessionManager,
     onGuestAction: () -> Unit,
-    onUserAction: () -> Unit
+    onUserAction: () -> Unit,
 ) {
     lifecycleScope.launch {
         repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -206,26 +217,83 @@ fun LifecycleOwner.observeLoginStatus(
 
 fun ImageView.loadImageWithoutShimmer(
     path: String?,
-    baseUrl: String,
-    placeholderRes: Int,
+    fallback: Int,
     errorRes: Int,
-) {
-    if (path.isNullOrEmpty()) {
-        scaleType = ImageView.ScaleType.CENTER
-        setImageResource(placeholderRes)
-    } else {
-        load(baseUrl + path) {
-            crossfade(true)
-            crossfade(400)
-            listener(
-                onError = { _, _ ->
-                    setImageResource(errorRes)
-                    scaleType = ImageView.ScaleType.CENTER
+    originalScaleType: ImageView.ScaleType,
+    hasStroke: Boolean,
+
+    ) {
+
+    load(path) {
+        crossfade(true)
+        crossfade(400)
+        error(errorRes)
+        fallback(fallback)
+        listener(
+            onSuccess = { _, _ ->
+                scaleType = originalScaleType
+
+            },
+            onError = { _, _ ->
+                if (hasStroke) {
+                    if (this@loadImageWithoutShimmer is ShapeableImageView && hasStroke) {
+                        this@loadImageWithoutShimmer.strokeWidth = 2.0f
+                    }
                 }
+
+                scaleType = ImageView.ScaleType.CENTER
+            },
+
+
             )
-        }
+
     }
 }
+
+fun ImageView.loadImageWithShimmer(
+    path: String?,
+    fallback: Int,
+    errorRes: Int,
+    originalScaleType: ImageView.ScaleType,
+    hasStroke: Boolean,
+    shimmerFrameLayout: ShimmerFrameLayout,
+
+    ) {
+    shimmerFrameLayout.startShimmer()
+    shimmerFrameLayout.visibility = View.VISIBLE
+    this.visibility = View.INVISIBLE
+
+    load(path) {
+        crossfade(true)
+        crossfade(400)
+        error(errorRes)
+        fallback(fallback)
+        listener(
+            onSuccess = { _, _ ->
+                shimmerFrameLayout.stopShimmer()
+                shimmerFrameLayout.visibility = View.GONE
+                this@loadImageWithShimmer.visibility = View.VISIBLE
+                scaleType = originalScaleType
+
+            },
+            onError = { _, _ ->
+                shimmerFrameLayout.stopShimmer()
+                shimmerFrameLayout.visibility = View.GONE
+                this@loadImageWithShimmer.visibility = View.VISIBLE
+
+                if (hasStroke) {
+                    if (this@loadImageWithShimmer is ShapeableImageView && hasStroke) {
+                        this@loadImageWithShimmer.strokeWidth = 2.0f
+                    }
+                }
+                scaleType = ImageView.ScaleType.CENTER
+            },
+
+            )
+
+    }
+}
+
 fun LinearLayout.setupOverviewExpansion(
     txtOverview: TextView,
     imgExpand: ImageView,
