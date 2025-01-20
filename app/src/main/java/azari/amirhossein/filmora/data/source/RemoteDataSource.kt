@@ -31,4 +31,7 @@ class RemoteDataSource @Inject constructor(private val api : ApiServices) {
     //---------All(Movie , Tv , People)---------
     suspend fun getTrending(timeWindow:String) = api.getTrending(timeWindow)
 
+    //---------Configuration---------
+    suspend fun getLanguage() = api.getLanguage()
+
 }

@@ -1,5 +1,6 @@
 package azari.amirhossein.filmora.data.network
 
+import azari.amirhossein.filmora.models.ResponseLanguage
 import azari.amirhossein.filmora.models.authentication.RequestLogin
 import azari.amirhossein.filmora.models.authentication.RequestSession
 import azari.amirhossein.filmora.models.authentication.ResponseGuestSession
@@ -94,4 +95,8 @@ interface ApiServices {
     // Trending
     @GET("trending/all/{time_window}")
     suspend fun getTrending(@Path("time_window") timeWindow: String): Response<ResponseTrendingList>
+
+    // Configuration
+    @GET("configuration/languages")
+    suspend fun getLanguage(): Response<ResponseLanguage>
 }
