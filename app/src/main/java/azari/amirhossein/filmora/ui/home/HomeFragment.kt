@@ -21,6 +21,7 @@ import azari.amirhossein.filmora.adapter.RecommendMovieAdapter
 import azari.amirhossein.filmora.adapter.RecommendTvAdapter
 import azari.amirhossein.filmora.adapter.TrendingAllAdapter
 import azari.amirhossein.filmora.databinding.FragmentHomeBinding
+import azari.amirhossein.filmora.models.home.ResponseTrendingList
 import azari.amirhossein.filmora.models.prefences.movie.ResponseMoviesList
 import azari.amirhossein.filmora.models.prefences.tv.ResponseTvsList
 import azari.amirhossein.filmora.utils.Constants
@@ -68,6 +69,7 @@ class HomeFragment : Fragment() {
         observeViewModel()
         recommendMovieAdapter.setOnItemClickListener(clickMovie)
         recommendTvAdapter.setOnItemClickListener(clickTv)
+        trendingAdapter.setOnItemClickListener(clickTrending)
         }
 
     // Setup recyclerView
@@ -159,7 +161,6 @@ class HomeFragment : Fragment() {
 
             }
         }
-
     }
 
     private fun loadImage(url: String?, imageView: ImageView) {
@@ -203,11 +204,23 @@ class HomeFragment : Fragment() {
 
     }
 
-    private val clickTv = { tvId: ResponseTvsList.Result ->
-        val action = HomeFragmentDirections.actionToTvDetail(Constants.MediaType.TV,tvId.id)
+    private val clickTv = { tv: ResponseTvsList.Result ->
+        val action = HomeFragmentDirections.actionToTvDetail(Constants.MediaType.TV,tv.id)
         findNavController().navigate(action)
 
     }
+
+    private val clickTrending = { trending : ResponseTrendingList.Result ->
+        if (trending.mediaType == Constants.MediaType.MOVIE){
+            val action = HomeFragmentDirections.actionToMovieDetail(Constants.MediaType.MOVIE,trending.id)
+            findNavController().navigate(action)
+        }
+        if (trending.mediaType == Constants.MediaType.TV){
+            val action = HomeFragmentDirections.actionToTvDetail(Constants.MediaType.TV,trending.id)
+            findNavController().navigate(action)
+        }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
