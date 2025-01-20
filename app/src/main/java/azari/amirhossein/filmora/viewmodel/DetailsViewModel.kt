@@ -3,7 +3,8 @@ package azari.amirhossein.filmora.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import azari.amirhossein.filmora.data.repository.DetailsRepository
-import azari.amirhossein.filmora.models.home.HomeMediaItem
+import azari.amirhossein.filmora.models.ResponseLanguage
+import azari.amirhossein.filmora.models.detail.DetailMediaItem
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.Event
 import azari.amirhossein.filmora.utils.NetworkChecker
@@ -15,19 +16,23 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class DetailsMovieViewModel @Inject constructor(
+class DetailsViewModel @Inject constructor(
     private val repository: DetailsRepository,
     private val networkChecker: NetworkChecker,
 ) : ViewModel() {
 
-    private val _mediaDetails  = MutableStateFlow<Event<NetworkRequest<HomeMediaItem>>?>(null)
-    val mediaDetails: StateFlow<Event<NetworkRequest<HomeMediaItem>>?> = _mediaDetails
+    private val _mediaDetails = MutableStateFlow<Event<NetworkRequest<DetailMediaItem>>>(Event(NetworkRequest.Loading()))
+    val mediaDetails: StateFlow<Event<NetworkRequest<DetailMediaItem>>?> = _mediaDetails
+
+    private val _languages = MutableStateFlow<Event<NetworkRequest<ResponseLanguage>>>(Event(NetworkRequest.Loading()))
+    val languages: StateFlow<Event<NetworkRequest<ResponseLanguage>>?> = _languages
 
     private var lastRequestedMediaId: Int? = null
     private var lastRequestedMediaType: String? = null
     init {
         networkChecker.startMonitoring()
         monitorNetworkChanges()
+        getLanguages()
     }
 
     private fun monitorNetworkChanges() {
@@ -64,6 +69,18 @@ class DetailsMovieViewModel @Inject constructor(
         }
     }
 
+
+    private fun getLanguages() {
+        viewModelScope.launch {
+            if (networkChecker.isNetworkAvailable.value) {
+                repository.getLanguages().collect { result ->
+                    _languages.value = Event(result)
+                }
+            } else {
+                _languages.value = Event(NetworkRequest.Error(Constants.Message.NO_INTERNET_CONNECTION))
+            }
+        }
+    }
 
     override fun onCleared() {
         super.onCleared()
