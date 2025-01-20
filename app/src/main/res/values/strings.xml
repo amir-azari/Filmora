@@ -67,7 +67,8 @@
     <string name="about_tv_show">About TV Show</string>
     <string name="first_release">First Release</string>
 
-
+    <string name="seasons_and_episodes">Seasons: %1$s, Episodes: %2$s</string>
+    <string name="release_value">%1$s, (%2$s)</string>
 
 
 

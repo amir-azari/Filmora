@@ -11,7 +11,7 @@ data class ResponseTvDetails(
     @SerializedName("created_by")
     val createdBy: List<CreatedBy?>?,
     @SerializedName("episode_run_time")
-    val episodeRunTime: List<Any?>?,
+    val episodeRunTime: List<Int?>?,
     @SerializedName("first_air_date")
     val firstAirDate: String?, // 2024-12-02
     @SerializedName("genres")
@@ -69,20 +69,6 @@ data class ResponseTvDetails(
     @SerializedName("vote_count")
     val voteCount: Int? // 144
 ) {
-    data class CreatedBy(
-        @SerializedName("credit_id")
-        val creditId: String?, // 662bb340c1e56e011df1ccba
-        @SerializedName("gender")
-        val gender: Int?, // 2
-        @SerializedName("id")
-        val id: Int?, // 1293994
-        @SerializedName("name")
-        val name: String?, // Jon Watts
-        @SerializedName("original_name")
-        val originalName: String?, // Jon Watts
-        @SerializedName("profile_path")
-        val profilePath: String? // /fkXChMX6CUXY1yOxBehAzvaTCl7.jpg
-    )
 
     data class LastEpisodeToAir(
         @SerializedName("air_date")
@@ -113,35 +99,6 @@ data class ResponseTvDetails(
         val voteCount: Int? // 5
     )
 
-    data class Network(
-        @SerializedName("id")
-        val id: Int?, // 2739
-        @SerializedName("logo_path")
-        val logoPath: String?, // /gJ8VX6JSu3ciXHuC2dDGAo2lvwM.png
-        @SerializedName("name")
-        val name: String?, // Disney+
-        @SerializedName("origin_country")
-        val originCountry: String?
-    )
-
-    data class ProductionCompany(
-        @SerializedName("id")
-        val id: Int?, // 1
-        @SerializedName("logo_path")
-        val logoPath: String?, // /tlVSws0RvvtPBwViUyOFAO0vcQS.png
-        @SerializedName("name")
-        val name: String?, // Lucasfilm Ltd.
-        @SerializedName("origin_country")
-        val originCountry: String? // US
-    )
-
-    data class ProductionCountry(
-        @SerializedName("iso_3166_1")
-        val iso31661: String?, // US
-        @SerializedName("name")
-        val name: String? // United States of America
-    )
-
     data class Season(
         @SerializedName("air_date")
         val airDate: String?, // 2024-12-02
@@ -159,14 +116,5 @@ data class ResponseTvDetails(
         val seasonNumber: Int?, // 1
         @SerializedName("vote_average")
         val voteAverage: Double? // 6.8
-    )
-
-    data class SpokenLanguage(
-        @SerializedName("english_name")
-        val englishName: String?, // English
-        @SerializedName("iso_639_1")
-        val iso6391: String?, // en
-        @SerializedName("name")
-        val name: String? // English
     )
 }

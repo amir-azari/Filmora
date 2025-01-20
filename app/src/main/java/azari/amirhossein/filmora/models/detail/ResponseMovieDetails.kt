@@ -68,30 +68,4 @@ data class ResponseMovieDetails(
         val posterPath: String? // /fwFWhYXj8wY6gFACtecJbg229FI.jpg
     )
 
-    data class ProductionCompany(
-        @SerializedName("id")
-        val id: Int?, // 4
-        @SerializedName("logo_path")
-        val logoPath: String?, // /gz66EfNoYPqHTYI4q9UEN4CbHRc.png
-        @SerializedName("name")
-        val name: String?, // Paramount Pictures
-        @SerializedName("origin_country")
-        val originCountry: String? // US
-    )
-
-    data class ProductionCountry(
-        @SerializedName("iso_3166_1")
-        val iso31661: String?, // JP
-        @SerializedName("name")
-        val name: String? // Japan
-    )
-
-    data class SpokenLanguage(
-        @SerializedName("english_name")
-        val englishName: String?, // English
-        @SerializedName("iso_639_1")
-        val iso6391: String?, // en
-        @SerializedName("name")
-        val name: String? // English
-    )
 }
