@@ -50,4 +50,25 @@
     <string name="see_all">See all</string>
     <string name="character_name">Character Name</string>
     <string name="description">Description</string>
+
+    <string name="release_date">Rebase Date</string>
+    <string name="duration">Duration</string>
+    <string name="original_language">Original Language</string>
+    <string name="languages_spoken">Language Spoken</string>
+    <string name="budget">Budget</string>
+    <string name="revenue">Revenue</string>
+    <string name="production_countries">Production Countries</string>
+    <string name="production_companies">Production Companies</string>
+
+    <string name="content_type">Content Type</string>
+    <string name="total_seasons_amp_episodes">Total Seasons &amp; Episodes</string>
+    <string name="broadcast_networks">Broadcast Networks</string>
+    <string name="creators">Creators</string>
+    <string name="about_tv_show">About TV Show</string>
+    <string name="first_release">First Release</string>
+
+
+
+
+
 </resources>
