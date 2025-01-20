@@ -1,9 +1,13 @@
 package azari.amirhossein.filmora.adapter
 
+import android.content.Context
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -11,11 +15,15 @@ import azari.amirhossein.filmora.R
 import azari.amirhossein.filmora.databinding.ItemCreditBinding
 import azari.amirhossein.filmora.models.detail.ResponseCredit.Cast
 import azari.amirhossein.filmora.utils.Constants
+import azari.amirhossein.filmora.utils.loadImageWithoutShimmer
+import coil3.Bitmap
 import coil3.load
 import coil3.request.crossfade
 import coil3.request.error
+import coil3.request.fallback
 import coil3.request.placeholder
 import coil3.size.Scale
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 class CreditAdapter @Inject constructor() :
@@ -28,30 +36,26 @@ class CreditAdapter @Inject constructor() :
 
     inner class ViewHolder(private val binding: ItemCreditBinding) :
         RecyclerView.ViewHolder(binding.root) {
+        private val originalScaleType: ImageView.ScaleType = binding.ivProfile.scaleType
+
         fun bind(item: Cast) {
-            binding.apply {val baseUrl = Constants.Network.IMAGE_BASE_URL
+            binding.apply {
+                val baseUrl = Constants.Network.IMAGE_BASE_URL
                 val fullPosterPath = if (item.profilePath.isNullOrEmpty()) {
                     null
                 } else {
                     baseUrl + Constants.ImageSize.ORIGINAL + item.profilePath
                 }
 
-                ivProfile.load(fullPosterPath) {
-                    crossfade(true)
-                    crossfade(400)
-                    error(R.drawable.user)
-                    listener(
-                        onSuccess = { _, _ ->
-                            ivProfile.scaleType = ImageView.ScaleType.CENTER_CROP
+                ivProfile.loadImageWithoutShimmer(
+                    fullPosterPath,
+                    R.drawable.user,
+                    R.drawable.user,
+                    originalScaleType,
+                    false
+                )
 
-                        },
-                        onError = { _, _ ->
-                            ivProfile.scaleType = ImageView.ScaleType.CENTER
 
-                        }
-                    )
-                }
-                
                 // Click
                 binding.root.setOnClickListener {
                     onItemClickListener?.let { it(item) }

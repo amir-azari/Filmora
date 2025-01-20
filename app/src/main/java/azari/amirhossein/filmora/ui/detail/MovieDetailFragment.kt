@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -75,6 +76,8 @@ class MovieDetailFragment : Fragment() {
     // Base URL for loading images
     val baseUrl = Constants.Network.IMAGE_BASE_URL
 
+    private lateinit var originalScaleType: ImageView.ScaleType
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -99,6 +102,7 @@ class MovieDetailFragment : Fragment() {
         viewModel.getMediaDetails(mediaId, Constants.MediaType.MOVIE)
         binding.cvTvSeasons.visibility = View.GONE
 
+        originalScaleType = binding.imgPoster.scaleType
 
         setupUI()
         binding.overviewContainer.setupOverviewExpansion(
@@ -246,20 +250,34 @@ class MovieDetailFragment : Fragment() {
                 genresAdapter.differ.submitList(genres)
 
                 // Load poster
+                val posterFullPath = if (posterPath.isNullOrEmpty()) {
+                    null
+                } else {
+                    baseUrl + Constants.ImageSize.ORIGINAL + posterPath
+                }
                 imgPoster.loadImageWithoutShimmer(
-                    posterPath,
-                    baseUrl + Constants.ImageSize.ORIGINAL,
+                    posterFullPath,
                     R.drawable.image_slash_medium,
-                    R.drawable.image_medium
+                    R.drawable.image_medium,
+                    originalScaleType,
+                    true
                 )
 
+
                 // Load backdrop
+                val backdropFullPath = if (backdropPath.isNullOrEmpty()) {
+                    null
+                } else {
+                    baseUrl + Constants.ImageSize.ORIGINAL + backdropPath
+                }
                 imgBackdrop.loadImageWithoutShimmer(
-                    backdropPath,
-                    baseUrl + Constants.ImageSize.ORIGINAL,
+                    backdropFullPath,
                     R.drawable.image_slash_large,
-                    R.drawable.image_large
+                    R.drawable.image_large,
+                    originalScaleType,
+                    true
                 )
+
 
                 txtStatusValue.text = releaseDate.let { it?.toFormattedDate() }
                 originalLanguage.getFullLanguageName(viewModel.languages.value?.peekContent())

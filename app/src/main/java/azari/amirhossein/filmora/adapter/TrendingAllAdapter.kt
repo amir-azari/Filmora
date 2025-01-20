@@ -7,10 +7,12 @@ import android.widget.ImageView
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import azari.amirhossein.filmora.R
 import azari.amirhossein.filmora.databinding.ItemTrendingAllBinding
 import azari.amirhossein.filmora.models.home.ResponseTrendingList
 import azari.amirhossein.filmora.models.prefences.movie.ResponseMoviesList
 import azari.amirhossein.filmora.utils.Constants
+import azari.amirhossein.filmora.utils.loadImageWithShimmer
 import coil3.load
 import coil3.request.crossfade
 import javax.inject.Inject
@@ -23,29 +25,26 @@ class TrendingAllAdapter @Inject constructor() : RecyclerView.Adapter<TrendingAl
     }
 
     inner class ViewHolder(private val binding: ItemTrendingAllBinding) : RecyclerView.ViewHolder(binding.root){
+        private val originalScaleType: ImageView.ScaleType = binding.imgPoster.scaleType
+
         fun bind (item : ResponseTrendingList.Result){
 
             binding.apply {
                 val baseUrl = Constants.Network.IMAGE_BASE_URL
-                val fullPosterPath = baseUrl + Constants.ImageSize.ORIGINAL + item.backdropPath
-                imgShimmerContainer.visibility = View.VISIBLE
-                imgPoster.visibility = View.INVISIBLE
-                imgPoster.load(fullPosterPath) {
-                    crossfade(true)
-                    crossfade(400)
-                    listener(
-                        onSuccess = { _, _ ->
-                            imgShimmerContainer.stopShimmer()
-                            imgShimmerContainer.visibility = View.GONE
-                            imgPoster.visibility = View.VISIBLE
-                        },
-                        onError = { _, _ ->
-                            imgShimmerContainer.stopShimmer()
-                            imgShimmerContainer.visibility = View.GONE
-                            imgPoster.visibility = View.VISIBLE
-                        }
-                    )
+                val fullPosterPath = if (item.posterPath.isNullOrEmpty()) {
+                    null
+                } else {
+                    baseUrl + Constants.ImageSize.ORIGINAL + item.backdropPath
                 }
+
+                imgPoster.loadImageWithShimmer(
+                    fullPosterPath,
+                    R.drawable.image_slash_large,
+                    R.drawable.image_large,
+                    originalScaleType,
+                    true,
+                    imgShimmerContainer
+                )
 
                 txtName.text = when {
                     item.mediaType == "tv" -> item.name

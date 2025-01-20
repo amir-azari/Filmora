@@ -1,5 +1,6 @@
 package azari.amirhossein.filmora.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +17,8 @@ import azari.amirhossein.filmora.models.detail.ResponseTvDetails.Season
 import azari.amirhossein.filmora.models.prefences.ResponseGenresList
 import azari.amirhossein.filmora.models.prefences.tv.ResponseTvsList
 import azari.amirhossein.filmora.utils.Constants
+import azari.amirhossein.filmora.utils.loadImageWithShimmer
+import azari.amirhossein.filmora.utils.loadImageWithoutShimmer
 import coil3.load
 import coil3.request.crossfade
 import java.text.SimpleDateFormat
@@ -32,44 +35,32 @@ class SeasonsAdapter @Inject constructor() :
 
     inner class ViewHolder(private val binding: ItemSeasonBinding) :
         RecyclerView.ViewHolder(binding.root) {
+        private val originalScaleType: ImageView.ScaleType = binding.imgPoster.scaleType
+
         fun bind(item: Season) {
             binding.apply {
                 val baseUrl = Constants.Network.IMAGE_BASE_URL
-
-                if (item.posterPath == null) {
-                    imgShimmerContainer.stopShimmer()
-                    imgShimmerContainer.visibility = View.GONE
-                    imgPoster.visibility = View.VISIBLE
-                    imgPoster.scaleType = ImageView.ScaleType.CENTER
-                    imgPoster.strokeWidth = 2.0f
-                    imgPoster.setImageResource(R.drawable.image_slash_medium)
+                val fullPosterPath = if (item.posterPath.isNullOrEmpty()) {
+                    null
                 } else {
-                    val fullPosterPath = baseUrl + Constants.ImageSize.W500 + item.posterPath
-
-                    imgShimmerContainer.visibility = View.VISIBLE
-                    imgPoster.visibility = View.INVISIBLE
-                    imgPoster.load(fullPosterPath) {
-                        crossfade(true)
-                        crossfade(400)
-                        listener(
-                            onSuccess = { _, _ ->
-                                imgShimmerContainer.stopShimmer()
-                                imgShimmerContainer.visibility = View.GONE
-                                imgPoster.visibility = View.VISIBLE
-                            },
-                            onError = { _, _ ->
-                                imgShimmerContainer.stopShimmer()
-                                imgShimmerContainer.visibility = View.GONE
-                                imgPoster.visibility = View.VISIBLE
-                            }
-                        )
-                    }
-                    // Click
-                    binding.root.setOnClickListener {
-                        onItemClickListener?.let { it(item) }
-                    }
+                    baseUrl + Constants.ImageSize.ORIGINAL + item.posterPath
                 }
-                if (item.airDate == null){
+
+                imgPoster.loadImageWithShimmer(
+                    fullPosterPath,
+                    R.drawable.image_slash_medium,
+                    R.drawable.image_medium,
+                    originalScaleType,
+                    true,
+                    imgShimmerContainer
+                )
+
+                // Click
+                binding.root.setOnClickListener {
+                    onItemClickListener?.let { it(item) }
+
+                }
+                if (item.airDate == null) {
                     imgCalendar.visibility = View.GONE
                     txtYear.visibility = View.GONE
                 }
@@ -80,6 +71,7 @@ class SeasonsAdapter @Inject constructor() :
             }
         }
     }
+
     fun formatDate(inputDate: String?): String {
         return try {
             if (inputDate.isNullOrEmpty()) {

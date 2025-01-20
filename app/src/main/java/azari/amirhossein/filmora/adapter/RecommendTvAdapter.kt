@@ -8,11 +8,13 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import azari.amirhossein.filmora.R
 import azari.amirhossein.filmora.databinding.ItemMediaBinding
 import azari.amirhossein.filmora.models.prefences.ResponseGenresList
 import azari.amirhossein.filmora.models.prefences.movie.ResponseMoviesList
 import azari.amirhossein.filmora.models.prefences.tv.ResponseTvsList
 import azari.amirhossein.filmora.utils.Constants
+import azari.amirhossein.filmora.utils.loadImageWithShimmer
 import coil3.load
 import coil3.request.crossfade
 import javax.inject.Inject
@@ -29,32 +31,30 @@ class RecommendTvAdapter @Inject constructor() :
 
     inner class ViewHolder(private val binding: ItemMediaBinding) :
         RecyclerView.ViewHolder(binding.root) {
+        private val originalScaleType: ImageView.ScaleType = binding.imgPoster.scaleType
+
         fun bind(item: ResponseTvsList.Result) {
             binding.apply {
                 val baseUrl = Constants.Network.IMAGE_BASE_URL
-                val fullPosterPath = baseUrl + Constants.ImageSize.W500 + item.posterPath
+                val fullPosterPath = if (item.posterPath.isNullOrEmpty()) {
+                    null
+                } else {
+                    baseUrl + Constants.ImageSize.ORIGINAL + item.posterPath
+                }
 
-                imgShimmerContainer.visibility = View.VISIBLE
-                imgPoster.visibility = View.INVISIBLE
-                imgPoster.load(fullPosterPath) {
-                    crossfade(true)
-                    crossfade(400)
-                    listener(
-                        onSuccess = { _, _ ->
-                            imgShimmerContainer.stopShimmer()
-                            imgShimmerContainer.visibility = View.GONE
-                            imgPoster.visibility = View.VISIBLE
-                        },
-                        onError = { _, _ ->
-                            imgShimmerContainer.stopShimmer()
-                            imgShimmerContainer.visibility = View.GONE
-                            imgPoster.visibility = View.VISIBLE
-                        }
-                    )
-                    // Click
-                    binding.root.setOnClickListener {
-                        onItemClickListener?.let { it(item) }
-                    }
+                imgPoster.loadImageWithShimmer(
+                    fullPosterPath,
+                    R.drawable.image_slash_medium,
+                    R.drawable.image_medium,
+                    originalScaleType,
+                    true,
+                    imgShimmerContainer
+                )
+
+                // Click
+                binding.root.setOnClickListener {
+                    onItemClickListener?.let { it(item) }
+
                 }
 
                 txtTitle.text = item.name
@@ -63,16 +63,19 @@ class RecommendTvAdapter @Inject constructor() :
 
                 val genreAdapter = GenresAdapter()
                 rvGenres.adapter = genreAdapter
-                rvGenres.layoutManager = LinearLayoutManager(itemView.context, LinearLayoutManager.HORIZONTAL, false)
+                rvGenres.layoutManager =
+                    LinearLayoutManager(itemView.context, LinearLayoutManager.HORIZONTAL, false)
 
                 val genres = getGenresByIds(item.genreIds)
                 genreAdapter.differ.submitList(genres)
             }
         }
     }
+
     fun submitGenres(genres: List<ResponseGenresList.Genre>) {
         this.allGenres = genres
     }
+
     private fun getGenresByIds(genreIds: List<Int?>?): List<ResponseGenresList.Genre> {
         if (genreIds.isNullOrEmpty()) {
             return emptyList()
@@ -98,11 +101,17 @@ class RecommendTvAdapter @Inject constructor() :
     }
 
     private val diffCallback = object : DiffUtil.ItemCallback<ResponseTvsList.Result>() {
-        override fun areItemsTheSame(oldItem: ResponseTvsList.Result, newItem: ResponseTvsList.Result): Boolean {
+        override fun areItemsTheSame(
+            oldItem: ResponseTvsList.Result,
+            newItem: ResponseTvsList.Result,
+        ): Boolean {
             return oldItem.id == newItem.id
         }
 
-        override fun areContentsTheSame(oldItem: ResponseTvsList.Result, newItem: ResponseTvsList.Result): Boolean {
+        override fun areContentsTheSame(
+            oldItem: ResponseTvsList.Result,
+            newItem: ResponseTvsList.Result,
+        ): Boolean {
             return oldItem == newItem
         }
     }

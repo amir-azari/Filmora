@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -75,6 +76,7 @@ class TvDetailsFragment : Fragment() {
 
     // Base URL for loading images
     val baseUrl = Constants.Network.IMAGE_BASE_URL
+    private lateinit var originalScaleType: ImageView.ScaleType
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -98,6 +100,7 @@ class TvDetailsFragment : Fragment() {
 
         // Fetch media details
         viewModel.getMediaDetails(mediaId, Constants.MediaType.TV)
+        originalScaleType = binding.imgPoster.scaleType
 
 
         setupUI()
@@ -254,18 +257,21 @@ class TvDetailsFragment : Fragment() {
 
                 // Load poster
                 imgPoster.loadImageWithoutShimmer(
-                    posterPath,
-                    baseUrl + Constants.ImageSize.ORIGINAL,
+                    baseUrl + Constants.ImageSize.ORIGINAL + posterPath,
                     R.drawable.image_slash_medium,
-                    R.drawable.image_medium
+                    R.drawable.image_medium,
+                    originalScaleType,
+                    true
                 )
+
 
                 // Load backdrop
                 imgBackdrop.loadImageWithoutShimmer(
-                    backdropPath,
-                    baseUrl + Constants.ImageSize.ORIGINAL,
+                    baseUrl + Constants.ImageSize.ORIGINAL + backdropPath,
                     R.drawable.image_slash_large,
-                    R.drawable.image_large
+                    R.drawable.image_large,
+                    originalScaleType,
+                    false
                 )
                 // Seasons
                 seasonsAdapter.differ.submitList(seasons)
