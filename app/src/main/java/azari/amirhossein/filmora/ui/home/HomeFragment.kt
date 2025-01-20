@@ -8,7 +8,10 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
@@ -38,7 +41,7 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding!!
 
     // ViewModel
-    private val viewModel: HomeViewModel by activityViewModels()
+    private val viewModel: HomeViewModel by viewModels()
 
     // Adapters
     @Inject
@@ -99,34 +102,37 @@ class HomeFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.homePageData.collect { state ->
-                    when (state) {
-                        is NetworkRequest.Loading -> {
-                            showLoading()
-                        }
+                    binding.mainContentContainer.visibility = View.GONE
+                    if (state != null) {
+                        when (state) {
+                            is NetworkRequest.Loading -> {
+                                showLoading()
+                            }
 
-                        is NetworkRequest.Success -> {
-                            showSuccess()
-                            state.data?.let { data ->
-                                // Update adapters with the new data
-                                trendingAdapter.differ.submitList(data.trending.data?.results)
-                                recommendMovieAdapter.differ.submitList(data.recommendedMovies.data?.results)
-                                recommendTvAdapter.differ.submitList(data.recommendedTvs.data?.results)
+                            is NetworkRequest.Success -> {
+                                showSuccess()
+                                state.data?.let { data ->
+                                    // Update adapters with the new data
+                                    trendingAdapter.differ.submitList(data.trending.data?.results)
+                                    recommendMovieAdapter.differ.submitList(data.recommendedMovies.data?.results)
+                                    recommendTvAdapter.differ.submitList(data.recommendedTvs.data?.results)
 
-                                data.tvGenres.data?.genres?.let { genres ->
-                                    recommendTvAdapter.submitGenres(genres)
-                                }
-                                data.movieGenres.data?.genres?.let { genres ->
-                                    recommendMovieAdapter.submitGenres(genres)
+                                    data.tvGenres.data?.genres?.let { genres ->
+                                        recommendTvAdapter.submitGenres(genres)
+                                    }
+                                    data.movieGenres.data?.genres?.let { genres ->
+                                        recommendMovieAdapter.submitGenres(genres)
+                                    }
                                 }
                             }
-                        }
 
-                        is NetworkRequest.Error -> {
-                            showError()
-                            if (state.message == Constants.Message.NO_INTERNET_CONNECTION) {
-                                binding.internetLay.visibility = View.VISIBLE
+                            is NetworkRequest.Error -> {
+                                showError()
+                                if (state.message == Constants.Message.NO_INTERNET_CONNECTION) {
+                                    binding.internetLay.visibility = View.VISIBLE
+                                }
+                                showErrorSnackbar(binding.root, state.message.toString())
                             }
-                            showErrorSnackbar(binding.root, state.message.toString())
                         }
                     }
                 }
@@ -143,6 +149,7 @@ class HomeFragment : Fragment() {
 
             }
         }
+
         // Observing random Tv
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -191,13 +198,13 @@ class HomeFragment : Fragment() {
     }
     //Click media
     private val clickMovie = { movie: ResponseMoviesList.Result ->
-        val action = HomeFragmentDirections.actionToDetail(Constants.MediaType.MOVIE,movie.id)
+        val action = HomeFragmentDirections.actionToMovieDetail(Constants.MediaType.MOVIE,movie.id)
         findNavController().navigate(action)
 
     }
 
     private val clickTv = { tvId: ResponseTvsList.Result ->
-        val action = HomeFragmentDirections.actionToDetail(Constants.MediaType.TV,tvId.id)
+        val action = HomeFragmentDirections.actionToTvDetail(Constants.MediaType.TV,tvId.id)
         findNavController().navigate(action)
 
     }
