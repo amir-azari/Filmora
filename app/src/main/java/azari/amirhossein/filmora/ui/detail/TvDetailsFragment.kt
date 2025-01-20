@@ -146,48 +146,6 @@ class TvDetailsFragment : Fragment() {
         }
     }
 
-    private fun setupOverviewExpansion() {
-        binding.apply {
-            val clickListener = View.OnClickListener {
-                isOverviewExpanded = !isOverviewExpanded
-
-                TransitionManager.beginDelayedTransition(
-                    overviewContainer,
-                    AutoTransition()
-                        .setDuration(400)
-                        .setInterpolator(AccelerateDecelerateInterpolator())
-                )
-
-                val initialHeight = txtOverview.height
-                txtOverview.maxLines = if (isOverviewExpanded) Int.MAX_VALUE else overviewMaxLines
-                txtOverview.measure(
-                    View.MeasureSpec.makeMeasureSpec(txtOverview.width, View.MeasureSpec.EXACTLY),
-                    View.MeasureSpec.UNSPECIFIED
-                )
-                val targetHeight = txtOverview.measuredHeight
-
-                ValueAnimator.ofInt(initialHeight, targetHeight).apply {
-                    duration = 400
-                    interpolator = AccelerateDecelerateInterpolator()
-                    addUpdateListener { animator ->
-                        val value = animator.animatedValue as Int
-                        txtOverview.layoutParams.height = value
-                        txtOverview.requestLayout()
-                    }
-                    start()
-                }
-
-                imgExpand.animate()
-                    .rotation(if (isOverviewExpanded) 180f else 0f)
-                    .setDuration(400)
-                    .start()
-            }
-
-            // Set click listeners
-            txtOverview.setOnClickListener(clickListener)
-            imgExpand.setOnClickListener(clickListener)
-        }
-    }
 
     private fun observeViewModel() {
         viewLifecycleOwner.lifecycleScope.launch {

@@ -141,34 +141,6 @@ class MovieDetailFragment : Fragment() {
         }
     }
 
-    private fun setupOverviewExpansion() {
-        binding.apply {
-            val clickListener = View.OnClickListener {
-                isOverviewExpanded = !isOverviewExpanded
-
-                TransitionManager.beginDelayedTransition(
-                    overviewContainer,
-                    AutoTransition()
-                        .setDuration(400)
-                        .setInterpolator(AccelerateDecelerateInterpolator())
-                )
-
-                // Set max lines
-                txtOverview.maxLines = if (isOverviewExpanded) Int.MAX_VALUE else overviewMaxLines
-
-                // Rotate the arrow icon
-                imgExpand.animate()
-                    .rotation(if (isOverviewExpanded) 180f else 0f)
-                    .setDuration(400)
-                    .start()
-            }
-
-            // Set click listeners
-            txtOverview.setOnClickListener(clickListener)
-            imgExpand.setOnClickListener(clickListener)
-        }
-    }
-
     private fun observeViewModel() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
