@@ -394,7 +394,6 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/_8mdp"
                 android:orientation="horizontal"
-                android:visibility="gone"
                 app:cardBackgroundColor="@color/cardBackgroundColor"
                 app:cardCornerRadius="@dimen/_8mdp"
                 app:cardElevation="@dimen/_2mdp"
