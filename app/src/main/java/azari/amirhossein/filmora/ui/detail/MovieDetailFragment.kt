@@ -1,6 +1,7 @@
 package azari.amirhossein.filmora.ui.detail
 
 import android.os.Bundle
+import android.text.TextUtils
 import android.transition.AutoTransition
 import android.transition.TransitionManager
 import android.view.Gravity
@@ -215,15 +216,15 @@ class MovieDetailFragment : Fragment() {
     }
 
     private fun handleOverviewExpansion() {
-        // Configure overview text to show/hide based on the line count
+        binding.txtOverview.maxLines = overviewMaxLines
+        binding.txtOverview.ellipsize = TextUtils.TruncateAt.END
+
         binding.txtOverview.post {
-            val lineCount = binding.txtOverview.lineCount
-            if (lineCount > overviewMaxLines) {
-                binding.txtOverview.maxLines = overviewMaxLines
-                binding.imgExpand.visibility = View.VISIBLE
-            } else {
-                binding.imgExpand.visibility = View.INVISIBLE
-            }
+            val isEllipsized = binding.txtOverview.layout?.let { layout ->
+                layout.getEllipsisCount(layout.lineCount - 1) > 0
+            } ?: false
+
+            binding.imgExpand.visibility = if (isEllipsized) View.VISIBLE else View.INVISIBLE
         }
     }
 
