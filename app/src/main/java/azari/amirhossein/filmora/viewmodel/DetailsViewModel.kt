@@ -24,15 +24,12 @@ class DetailsViewModel @Inject constructor(
     private val _mediaDetails = MutableStateFlow<Event<NetworkRequest<DetailMediaItem>>>(Event(NetworkRequest.Loading()))
     val mediaDetails: StateFlow<Event<NetworkRequest<DetailMediaItem>>?> = _mediaDetails
 
-    private val _languages = MutableStateFlow<Event<NetworkRequest<ResponseLanguage>>>(Event(NetworkRequest.Loading()))
-    val languages: StateFlow<Event<NetworkRequest<ResponseLanguage>>?> = _languages
-
     private var lastRequestedMediaId: Int? = null
     private var lastRequestedMediaType: String? = null
+
     init {
         networkChecker.startMonitoring()
         monitorNetworkChanges()
-        getLanguages()
     }
 
     private fun monitorNetworkChanges() {
@@ -65,19 +62,6 @@ class DetailsViewModel @Inject constructor(
             } else {
                 _mediaDetails.value =
                     Event(NetworkRequest.Error(Constants.Message.NO_INTERNET_CONNECTION))
-            }
-        }
-    }
-
-
-    private fun getLanguages() {
-        viewModelScope.launch {
-            if (networkChecker.isNetworkAvailable.value) {
-                repository.getLanguages().collect { result ->
-                    _languages.value = Event(result)
-                }
-            } else {
-                _languages.value = Event(NetworkRequest.Error(Constants.Message.NO_INTERNET_CONNECTION))
             }
         }
     }
