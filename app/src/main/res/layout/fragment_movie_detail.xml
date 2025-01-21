@@ -342,52 +342,90 @@
 
             </androidx.cardview.widget.CardView>
 
+            <!-- Collection section -->
             <androidx.cardview.widget.CardView
-                android:id="@+id/cv_tvSeasons"
+                android:id="@+id/cv_collection"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/_8mdp"
-                android:visibility="gone"
+                android:orientation="horizontal"
                 app:cardBackgroundColor="@color/cardBackgroundColor"
                 app:cardCornerRadius="@dimen/_8mdp"
+                android:visibility="gone"
                 app:cardElevation="@dimen/_2mdp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/cv_media_action"
+                app:layout_constraintStart_toStartOf="@+id/cv_media_action"
                 app:layout_constraintTop_toBottomOf="@id/cv_media_action">
 
+
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/tvSeasonSection"
+                    android:id="@+id/collectionSection"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:paddingVertical="@dimen/_8mdp">
+                    android:padding="@dimen/_12mdp"
+                    >
 
-                    <!--Header -->
+
+                    <!-- Header -->
                     <TextView
-                        android:id="@+id/txt_tvSeasons"
+                        android:id="@+id/txt_collection"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/_12mdp"
-                        android:text="@string/seasons"
+                        android:text="@string/collection"
                         android:textSize="@dimen/_12font_mdp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rv_tvSeasons"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                    <Button
+                        android:id="@+id/btn_seeCollection"
+                        android:layout_width="@dimen/_90mdp"
+                        android:layout_height="@dimen/_30mdp"
+                        android:background="@drawable/transparent_button_with_border"
+                        android:text="@string/see_collection"
+                        android:textAllCaps="false"
+                        android:textColor="@color/textColor"
+                        android:textStyle="bold"
+                        android:textSize="@dimen/_8font_mdp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent" />
+
+
+                    <!-- Poster and Title Section -->
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/img_collection"
+                        android:layout_width="@dimen/_55mdp"
                         android:layout_marginTop="@dimen/_9mdp"
-                        android:clipToPadding="false"
-                        android:orientation="horizontal"
-                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                        app:layout_constraintTop_toBottomOf="@+id/txt_tvSeasons"
-                        tools:listitem="@layout/item_season" />
+                        android:layout_height="0dp"
+                        android:layout_marginBottom="@dimen/_12mdp"
+                        app:layout_constraintDimensionRatio="2:3"
+                        app:layout_constraintStart_toStartOf="@+id/txt_collection"
+
+                        app:layout_constraintTop_toBottomOf="@+id/txt_collection"
+                        app:shapeAppearanceOverlay="@style/RoundedCorners"
+                        tools:src="@drawable/image_medium" />
+
+
+                    <TextView
+                        android:id="@+id/tv_collection_name"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_5mdp"
+                        android:ellipsize="end"
+                        android:maxLines="2"
+                        android:textColor="@color/textColor"
+                        android:textSize="@dimen/_10font_mdp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/img_collection"
+                        app:layout_constraintTop_toTopOf="@+id/img_collection" />
+
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-
             </androidx.cardview.widget.CardView>
+
+
 
             <!-- Cast and crew section -->
             <androidx.cardview.widget.CardView
@@ -395,13 +433,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/_8mdp"
+                android:visibility="gone"
                 android:orientation="horizontal"
                 app:cardBackgroundColor="@color/cardBackgroundColor"
                 app:cardCornerRadius="@dimen/_8mdp"
                 app:cardElevation="@dimen/_2mdp"
-                app:layout_constraintEnd_toEndOf="@+id/cv_tvSeasons"
-                app:layout_constraintStart_toStartOf="@+id/cv_tvSeasons"
-                app:layout_constraintTop_toBottomOf="@id/cv_tvSeasons">
+                app:layout_constraintEnd_toEndOf="@+id/cv_collection"
+                app:layout_constraintStart_toStartOf="@+id/cv_collection"
+                app:layout_constraintTop_toBottomOf="@id/cv_collection">
 
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -417,7 +456,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_12mdp"
                         android:text="@string/cast_amp_crew"
-                        android:textSize="@dimen/_12mdp"
+                        android:textSize="@dimen/_12font_mdp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -495,7 +534,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="About Movie"
-                        android:textSize="@dimen/_12mdp"
+                        android:textSize="@dimen/_12font_mdp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -506,8 +545,9 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/_10mdp"
                         android:maxLines="2"
+                        android:gravity="center_horizontal"
                         android:textColor="@color/cardTextColorAlpha"
-                        android:textSize="@dimen/_10mdp"
+                        android:textSize="@dimen/_10font_mdp"
                         android:textStyle="bold"
                         android:visibility="gone"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -523,7 +563,7 @@
                         android:text="@string/release_date"
 
                         android:textColor="@color/textColor"
-                        android:textSize="@dimen/_10mdp"
+                        android:textSize="@dimen/_10font_mdp"
                         android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="@+id/txt_language"
                         app:layout_constraintTop_toBottomOf="@+id/txt_tag" />
@@ -534,7 +574,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_10mdp"
                         android:textColor="@color/textColor_secondary"
-                        android:textSize="@dimen/_8mdp"
+                        android:textSize="@dimen/_8font_mdp"
                         app:layout_constraintBottom_toBottomOf="@+id/txt_status"
                         app:layout_constraintStart_toEndOf="@+id/txt_status"
                         app:layout_constraintTop_toTopOf="@+id/txt_status" />
@@ -547,7 +587,7 @@
                         android:layout_marginTop="@dimen/_8mdp"
                         android:text="@string/duration"
                         android:textColor="@color/textColor"
-                        android:textSize="@dimen/_10mdp"
+                        android:textSize="@dimen/_10font_mdp"
                         android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="@+id/txt_language"
                         app:layout_constraintTop_toBottomOf="@+id/txt_status" />
@@ -558,7 +598,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_10mdp"
                         android:textColor="@color/textColor_secondary"
-                        android:textSize="@dimen/_8mdp"
+                        android:textSize="@dimen/_8font_mdp"
                         app:layout_constraintBottom_toBottomOf="@+id/txt_duration"
                         app:layout_constraintStart_toEndOf="@+id/txt_duration"
                         app:layout_constraintTop_toTopOf="@+id/txt_duration" />
@@ -571,7 +611,7 @@
                         android:layout_marginTop="@dimen/_8mdp"
                         android:text="@string/original_language"
                         android:textColor="@color/textColor"
-                        android:textSize="@dimen/_10mdp"
+                        android:textSize="@dimen/_10font_mdp"
                         android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="@+id/txt_budget"
                         app:layout_constraintTop_toBottomOf="@+id/txt_duration" />
@@ -582,7 +622,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_10mdp"
                         android:textColor="@color/textColor_secondary"
-                        android:textSize="@dimen/_8mdp"
+                        android:textSize="@dimen/_8font_mdp"
                         app:layout_constraintBottom_toBottomOf="@+id/txt_language"
                         app:layout_constraintStart_toEndOf="@+id/txt_language"
                         app:layout_constraintTop_toTopOf="@+id/txt_language" />
@@ -595,7 +635,7 @@
                         android:layout_marginTop="@dimen/_8mdp"
                         android:text="@string/languages_spoken"
                         android:textColor="@color/textColor"
-                        android:textSize="@dimen/_10mdp"
+                        android:textSize="@dimen/_10font_mdp"
                         android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="@+id/txt_budget"
                         app:layout_constraintTop_toBottomOf="@+id/txt_language" />
@@ -609,7 +649,7 @@
                         android:gravity="start"
                         android:lineSpacingExtra="4dp"
                         android:textColor="@color/textColor_secondary"
-                        android:textSize="@dimen/_8mdp"
+                        android:textSize="@dimen/_8font_mdp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/txt_spokenLanguages"
                         app:layout_constraintTop_toTopOf="@+id/txt_spokenLanguages" />
@@ -622,7 +662,7 @@
                         android:layout_marginTop="@dimen/_8mdp"
                         android:text="@string/budget"
                         android:textColor="@color/textColor"
-                        android:textSize="@dimen/_10mdp"
+                        android:textSize="@dimen/_10font_mdp"
                         android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="@+id/txt_revenue"
                         app:layout_constraintTop_toBottomOf="@+id/txt_spokenLanguages_value" />
@@ -633,7 +673,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_10mdp"
                         android:textColor="@color/textColor_secondary"
-                        android:textSize="@dimen/_8mdp"
+                        android:textSize="@dimen/_8font_mdp"
                         app:layout_constraintBottom_toBottomOf="@+id/txt_budget"
                         app:layout_constraintStart_toEndOf="@+id/txt_budget"
                         app:layout_constraintTop_toTopOf="@+id/txt_budget" />
@@ -647,7 +687,7 @@
                         android:layout_marginTop="@dimen/_8mdp"
                         android:text="@string/revenue"
                         android:textColor="@color/textColor"
-                        android:textSize="@dimen/_10mdp"
+                        android:textSize="@dimen/_10font_mdp"
                         android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="@+id/txt_production_countries"
                         app:layout_constraintTop_toBottomOf="@+id/txt_budget" />
@@ -658,7 +698,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_10mdp"
                         android:textColor="@color/textColor_secondary"
-                        android:textSize="@dimen/_8mdp"
+                        android:textSize="@dimen/_8font_mdp"
                         app:layout_constraintBottom_toBottomOf="@+id/txt_revenue"
                         app:layout_constraintStart_toEndOf="@+id/txt_revenue"
                         app:layout_constraintTop_toTopOf="@+id/txt_revenue" />
@@ -671,7 +711,7 @@
                         android:layout_marginTop="@dimen/_8mdp"
                         android:text="@string/production_countries"
                         android:textColor="@color/textColor"
-                        android:textSize="@dimen/_10mdp"
+                        android:textSize="@dimen/_10font_mdp"
                         android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="@+id/txt_production_companies"
                         app:layout_constraintTop_toBottomOf="@+id/txt_revenue" />
@@ -685,7 +725,7 @@
                         android:gravity="start"
                         android:lineSpacingExtra="4dp"
                         android:textColor="@color/textColor_secondary"
-                        android:textSize="@dimen/_8mdp"
+                        android:textSize="@dimen/_8font_mdp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/txt_production_countries"
                         app:layout_constraintTop_toTopOf="@+id/txt_production_countries" />
@@ -698,7 +738,7 @@
                         android:layout_marginTop="@dimen/_8mdp"
                         android:text="@string/production_companies"
                         android:textColor="@color/textColor"
-                        android:textSize="@dimen/_10mdp"
+                        android:textSize="@dimen/_10font_mdp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/txt_production_countries_value" />
@@ -713,14 +753,13 @@
                         android:gravity="start"
                         android:lineSpacingExtra="4dp"
                         android:textColor="@color/textColor_secondary"
-                        android:textSize="@dimen/_8mdp"
+                        android:textSize="@dimen/_8font_mdp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/txt_production_companies"
                         app:layout_constraintTop_toTopOf="@+id/txt_production_companies" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
             </androidx.cardview.widget.CardView>
-
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
