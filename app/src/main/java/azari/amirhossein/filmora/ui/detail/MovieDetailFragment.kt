@@ -23,6 +23,9 @@ import azari.amirhossein.filmora.adapter.GenresAdapter
 import azari.amirhossein.filmora.adapter.SeasonsAdapter
 import azari.amirhossein.filmora.data.SessionManager
 import azari.amirhossein.filmora.databinding.FragmentMovieDetailBinding
+import azari.amirhossein.filmora.models.ResponseLanguage
+import azari.amirhossein.filmora.models.detail.DetailMediaItem
+import azari.amirhossein.filmora.models.detail.ResponseCredit
 import azari.amirhossein.filmora.models.detail.ResponseMovieDetails
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.NetworkRequest
@@ -100,7 +103,6 @@ class MovieDetailFragment : Fragment() {
 
         // Fetch media details
         viewModel.getMediaDetails(mediaId, Constants.MediaType.MOVIE)
-        binding.cvTvSeasons.visibility = View.GONE
 
         originalScaleType = binding.imgPoster.scaleType
 
@@ -159,14 +161,7 @@ class MovieDetailFragment : Fragment() {
                             is NetworkRequest.Success -> {
                                 it.data?.let { mediaItem ->
                                     showSuccess()
-                                    mediaItem.movie?.let { data -> bindUI(data) }
-
-                                    mediaItem.credits?.cast?.let { cast ->
-                                        creditAdapter.submitList(
-                                            cast.filterNotNull()
-                                        )
-                                    }
-
+                                    bindUI(mediaItem)
 
                                 }
                             }
@@ -231,8 +226,13 @@ class MovieDetailFragment : Fragment() {
             binding.imgExpand.visibility = if (isEllipsized) View.VISIBLE else View.INVISIBLE
         }
     }
+    private fun bindUI(data: DetailMediaItem) {
+        data.movie?.let {  bindUiDetail(it) }
+        data.credits?.let { bindUiCast(it) }
+        data.language?.let { bindUiLanguage(it) }
+    }
 
-    private fun bindUI(data: ResponseMovieDetails) {
+    private fun bindUiDetail(data : ResponseMovieDetails) {
         binding.apply {
             data.apply {
                 // Movie name and overview
@@ -280,8 +280,7 @@ class MovieDetailFragment : Fragment() {
 
 
                 txtStatusValue.text = releaseDate.let { it?.toFormattedDate() }
-                originalLanguage.getFullLanguageName(viewModel.languages.value?.peekContent())
-                    .also { txtLanguageValue.text = it }
+                txtLanguageValue.text = originalLanguage
                 txtBudgetValue.text = if (budget == 0) "-" else budget.toFormattedWithUnits()
                 txtRevenueValue.text = if (revenue == 0) "-" else revenue.toFormattedWithUnits()
 
@@ -299,11 +298,47 @@ class MovieDetailFragment : Fragment() {
                 txtProductionCountriesValue.text = productionCountries.toCountryNames()
                 txtProductionCompaniesValue.text = productionCompanies?.toCompanyNames()
 
+                // Collection
+                if (belongsToCollection?.id != null) {
+                    binding.cvCollection.visibility = View.VISIBLE
+                }
+
+                val collectionPosterFullPath = if (belongsToCollection?.posterPath.isNullOrEmpty()) {
+                    null
+                } else {
+                    baseUrl + Constants.ImageSize.ORIGINAL + belongsToCollection?.posterPath
+                }
+
+                imgCollection.loadImageWithoutShimmer(
+                    collectionPosterFullPath,
+                    R.drawable.image_slash_medium,
+                    R.drawable.image_medium,
+                    originalScaleType,
+                    true
+                )
+                tvCollectionName.text = getString(R.string.part_of_collection, belongsToCollection?.name)
 
             }
-
         }
 
+    }
+
+
+    private fun bindUiCast(data : ResponseCredit){
+        data.cast?.let { cast ->
+            if (cast.isNotEmpty()){
+                binding.cvCastAndCrew.visibility = View.VISIBLE
+            }
+            creditAdapter.submitList(
+                cast.filterNotNull()
+            )
+        }
+    }
+
+    private fun bindUiLanguage(data: ResponseLanguage ){
+        val originalLanguage = binding.txtLanguageValue.text.toString()
+        originalLanguage.getFullLanguageName(data)
+            .also { binding.txtLanguageValue.text = it }
     }
 
     override fun onDestroyView() {
