@@ -415,7 +415,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_12mdp"
                         android:text="@string/cast_amp_crew"
-                        android:textSize="@dimen/_12mdp"
+                        android:textSize="@dimen/_12font_mdp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -493,7 +493,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/about_tv_show"
-                        android:textSize="@dimen/_12mdp"
+                        android:textSize="@dimen/_12font_mdp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -505,7 +505,7 @@
                         android:layout_marginTop="@dimen/_10mdp"
                         android:maxLines="2"
                         android:textColor="@color/cardTextColorAlpha"
-                        android:textSize="@dimen/_10mdp"
+                        android:textSize="@dimen/_10font_mdp"
                         android:textStyle="bold"
                         android:visibility="gone"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -519,7 +519,7 @@
                         android:layout_marginTop="@dimen/_12mdp"
                         android:text="@string/creators"
                         android:textColor="@color/textColor"
-                        android:textSize="@dimen/_10mdp"
+                        android:textSize="@dimen/_10font_mdp"
                         android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="@+id/txt_networks"
                         app:layout_constraintTop_toBottomOf="@+id/txt_tag" />
@@ -533,7 +533,7 @@
                         android:gravity="start"
                         android:lineSpacingExtra="4dp"
                         android:textColor="@color/textColor_secondary"
-                        android:textSize="@dimen/_8mdp"
+                        android:textSize="@dimen/_8font_mdp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/txt_creator"
                         app:layout_constraintTop_toTopOf="@+id/txt_creator" />
@@ -545,7 +545,7 @@
                         android:layout_marginTop="@dimen/_8mdp"
                         android:text="@string/first_release"
                         android:textColor="@color/textColor"
-                        android:textSize="@dimen/_10mdp"
+                        android:textSize="@dimen/_10font_mdp"
                         android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="@+id/txt_networks"
                         app:layout_constraintTop_toBottomOf="@+id/txt_creator_value" />
@@ -556,7 +556,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_10mdp"
                         android:textColor="@color/textColor_secondary"
-                        android:textSize="@dimen/_8mdp"
+                        android:textSize="@dimen/_8font_mdp"
                         app:layout_constraintBottom_toBottomOf="@+id/txt_release"
                         app:layout_constraintStart_toEndOf="@+id/txt_release"
                         app:layout_constraintTop_toTopOf="@+id/txt_release" />
@@ -571,7 +571,7 @@
                         android:layout_marginTop="@dimen/_8mdp"
                         android:text="@string/broadcast_networks"
                         android:textColor="@color/textColor"
-                        android:textSize="@dimen/_10mdp"
+                        android:textSize="@dimen/_10font_mdp"
                         android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="@+id/txt_language"
                         app:layout_constraintTop_toBottomOf="@+id/txt_release" />
@@ -585,7 +585,7 @@
                         android:gravity="start"
                         android:lineSpacingExtra="4dp"
                         android:textColor="@color/textColor_secondary"
-                        android:textSize="@dimen/_8mdp"
+                        android:textSize="@dimen/_8font_mdp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/txt_networks"
                         app:layout_constraintTop_toTopOf="@+id/txt_networks" />
@@ -599,7 +599,7 @@
                         android:text="@string/original_language"
                         android:layout_marginTop="@dimen/_8mdp"
                         android:textColor="@color/textColor"
-                        android:textSize="@dimen/_10mdp"
+                        android:textSize="@dimen/_10font_mdp"
                         android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="@+id/txt_spokenLanguages"
                         app:layout_constraintTop_toBottomOf="@+id/txt_networks_value" />
@@ -610,7 +610,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_10mdp"
                         android:textColor="@color/textColor_secondary"
-                        android:textSize="@dimen/_8mdp"
+                        android:textSize="@dimen/_8font_mdp"
                         app:layout_constraintBottom_toBottomOf="@+id/txt_language"
                         app:layout_constraintStart_toEndOf="@+id/txt_language"
                         app:layout_constraintTop_toTopOf="@+id/txt_language" />
@@ -623,7 +623,7 @@
                         android:layout_marginTop="@dimen/_8mdp"
                         android:text="@string/languages_spoken"
                         android:textColor="@color/textColor"
-                        android:textSize="@dimen/_10mdp"
+                        android:textSize="@dimen/_10font_mdp"
                         android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="@+id/txt_seasons_and_episodes"
                         app:layout_constraintTop_toBottomOf="@+id/txt_language" />
@@ -637,7 +637,7 @@
                         android:gravity="start"
                         android:lineSpacingExtra="4dp"
                         android:textColor="@color/textColor_secondary"
-                        android:textSize="@dimen/_8mdp"
+                        android:textSize="@dimen/_8font_mdp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/txt_spokenLanguages"
                         app:layout_constraintTop_toTopOf="@+id/txt_spokenLanguages" />
@@ -650,7 +650,7 @@
                         android:layout_marginTop="@dimen/_8mdp"
                         android:text="@string/total_seasons_amp_episodes"
                         android:textColor="@color/textColor"
-                        android:textSize="@dimen/_10mdp"
+                        android:textSize="@dimen/_10font_mdp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/txt_spokenLanguages_value" />
@@ -661,7 +661,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_10mdp"
                         android:textColor="@color/textColor_secondary"
-                        android:textSize="@dimen/_8mdp"
+                        android:textSize="@dimen/_8font_mdp"
                         app:layout_constraintBottom_toBottomOf="@+id/txt_seasons_and_episodes"
                         app:layout_constraintStart_toEndOf="@+id/txt_seasons_and_episodes"
                         app:layout_constraintTop_toTopOf="@+id/txt_seasons_and_episodes" />
@@ -674,7 +674,7 @@
                         android:layout_marginTop="@dimen/_8mdp"
                         android:text="@string/content_type"
                         android:textColor="@color/textColor"
-                        android:textSize="@dimen/_10mdp"
+                        android:textSize="@dimen/_10font_mdp"
                         android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="@+id/txt_seasons_and_episodes"
                         app:layout_constraintTop_toBottomOf="@+id/txt_seasons_and_episodes" />
@@ -685,7 +685,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_10mdp"
                         android:textColor="@color/textColor_secondary"
-                        android:textSize="@dimen/_8mdp"
+                        android:textSize="@dimen/_8font_mdp"
                         app:layout_constraintBottom_toBottomOf="@+id/txt_type"
                         app:layout_constraintStart_toEndOf="@+id/txt_type"
                         app:layout_constraintTop_toTopOf="@+id/txt_type" />
@@ -698,7 +698,7 @@
                         android:layout_marginTop="@dimen/_8mdp"
                         android:text="@string/production_countries"
                         android:textColor="@color/textColor"
-                        android:textSize="@dimen/_10mdp"
+                        android:textSize="@dimen/_10font_mdp"
                         android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="@+id/txt_type"
                         app:layout_constraintTop_toBottomOf="@+id/txt_type" />
@@ -712,7 +712,7 @@
                         android:gravity="start"
                         android:lineSpacingExtra="4dp"
                         android:textColor="@color/textColor_secondary"
-                        android:textSize="@dimen/_8mdp"
+                        android:textSize="@dimen/_8font_mdp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/txt_production_countries"
                         app:layout_constraintTop_toTopOf="@+id/txt_production_countries" />
@@ -726,7 +726,7 @@
                         android:layout_marginTop="@dimen/_8mdp"
                         android:text="@string/production_companies"
                         android:textColor="@color/textColor"
-                        android:textSize="@dimen/_10mdp"
+                        android:textSize="@dimen/_10font_mdp"
                         android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="@+id/txt_production_countries"
                         app:layout_constraintTop_toBottomOf="@+id/txt_production_countries_value" />
@@ -740,7 +740,7 @@
                         android:gravity="start"
                         android:lineSpacingExtra="4dp"
                         android:textColor="@color/textColor_secondary"
-                        android:textSize="@dimen/_8mdp"
+                        android:textSize="@dimen/_8font_mdp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/txt_production_companies"
                         app:layout_constraintTop_toTopOf="@+id/txt_production_companies" />
