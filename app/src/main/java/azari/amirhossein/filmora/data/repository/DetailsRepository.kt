@@ -1,8 +1,10 @@
 package azari.amirhossein.filmora.data.repository
 
+import android.util.Log
 import azari.amirhossein.filmora.data.source.RemoteDataSource
 import azari.amirhossein.filmora.models.ResponseLanguage
 import azari.amirhossein.filmora.models.detail.DetailMediaItem
+import azari.amirhossein.filmora.models.detail.ResponseMovieDetails
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.NetworkRequest
 import azari.amirhossein.filmora.utils.NetworkResponse
@@ -20,21 +22,32 @@ class DetailsRepository @Inject constructor(private val remote: RemoteDataSource
         emit(NetworkRequest.Loading())
 
         try {
-
             when (type) {
                 Constants.MediaType.MOVIE -> {
                     flow { emit(remote.getMovieDetails(id)) }
                         .zip(flow { emit(remote.getMovieCredits(id)) }) { detailsResponse, creditsResponse ->
-                            val movieDetails = NetworkResponse(detailsResponse).handleNetworkResponse()
-                            val credits = NetworkResponse(creditsResponse).handleNetworkResponse()
+                            Pair(
+                                NetworkResponse(detailsResponse).handleNetworkResponse(),
+                                NetworkResponse(creditsResponse).handleNetworkResponse()
+                            )
+                        }
+                        .zip(flow { emit(remote.getLanguage()) }) { (movieDetails, credits), languageResponse ->
+                            val language = NetworkResponse(languageResponse).handleNetworkResponse()
 
-                            if (movieDetails is NetworkRequest.Success && credits is NetworkRequest.Success) {
+                            if (movieDetails is NetworkRequest.Success &&
+                                credits is NetworkRequest.Success &&
+                                language is NetworkRequest.Success) {
                                 NetworkRequest.Success(
-                                    DetailMediaItem(movie = movieDetails.data, credits = credits.data)
+                                    DetailMediaItem(
+                                        movie = movieDetails.data,
+                                        credits = credits.data,
+                                        language = language.data
+                                    )
                                 )
                             } else {
                                 val error = (movieDetails as? NetworkRequest.Error)?.message
                                     ?: (credits as? NetworkRequest.Error)?.message
+                                    ?: (language as? NetworkRequest.Error)?.message
                                     ?: Constants.Message.UNKNOWN_ERROR
                                 NetworkRequest.Error(error)
                             }
@@ -44,16 +57,28 @@ class DetailsRepository @Inject constructor(private val remote: RemoteDataSource
                 Constants.MediaType.TV -> {
                     flow { emit(remote.getDetailsTvSeries(id)) }
                         .zip(flow { emit(remote.getTvCredits(id)) }) { detailsResponse, creditsResponse ->
-                            val tvDetails = NetworkResponse(detailsResponse).handleNetworkResponse()
-                            val credits = NetworkResponse(creditsResponse).handleNetworkResponse()
+                            Pair(
+                                NetworkResponse(detailsResponse).handleNetworkResponse(),
+                                NetworkResponse(creditsResponse).handleNetworkResponse()
+                            )
+                        }
+                        .zip(flow { emit(remote.getLanguage()) }) { (tvDetails, credits), languageResponse ->
+                            val language = NetworkResponse(languageResponse).handleNetworkResponse()
 
-                            if (tvDetails is NetworkRequest.Success && credits is NetworkRequest.Success) {
+                            if (tvDetails is NetworkRequest.Success &&
+                                credits is NetworkRequest.Success &&
+                                language is NetworkRequest.Success) {
                                 NetworkRequest.Success(
-                                    DetailMediaItem(tv = tvDetails.data, credits = credits.data)
+                                    DetailMediaItem(
+                                        tv = tvDetails.data,
+                                        credits = credits.data,
+                                        language = language.data
+                                    )
                                 )
                             } else {
                                 val error = (tvDetails as? NetworkRequest.Error)?.message
                                     ?: (credits as? NetworkRequest.Error)?.message
+                                    ?: (language as? NetworkRequest.Error)?.message
                                     ?: Constants.Message.UNKNOWN_ERROR
                                 NetworkRequest.Error(error)
                             }
@@ -62,17 +87,6 @@ class DetailsRepository @Inject constructor(private val remote: RemoteDataSource
 
                 else -> emit(NetworkRequest.Error(Constants.Message.INVALID_MEDIA_TYPE))
             }
-        } catch (e: Exception) {
-            emit(NetworkRequest.Error(e.localizedMessage ?: Constants.Message.UNKNOWN_ERROR))
-        }
-    }.flowOn(Dispatchers.IO)
-
-    fun getLanguages(): Flow<NetworkRequest<ResponseLanguage>> = flow {
-        emit(NetworkRequest.Loading())
-        try {
-            val languagesResponse = remote.getLanguage()
-            val languages = NetworkResponse(languagesResponse).handleNetworkResponse()
-            emit(languages)
         } catch (e: Exception) {
             emit(NetworkRequest.Error(e.localizedMessage ?: Constants.Message.UNKNOWN_ERROR))
         }
