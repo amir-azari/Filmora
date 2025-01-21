@@ -24,6 +24,9 @@ import azari.amirhossein.filmora.adapter.GenresAdapter
 import azari.amirhossein.filmora.adapter.SeasonsAdapter
 import azari.amirhossein.filmora.data.SessionManager
 import azari.amirhossein.filmora.databinding.FragmentTvDetailsBinding
+import azari.amirhossein.filmora.models.ResponseLanguage
+import azari.amirhossein.filmora.models.detail.DetailMediaItem
+import azari.amirhossein.filmora.models.detail.ResponseCredit
 import azari.amirhossein.filmora.models.detail.ResponseTvDetails
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.NetworkRequest
@@ -164,12 +167,7 @@ class TvDetailsFragment : Fragment() {
                             is NetworkRequest.Success -> {
                                 it.data?.let { mediaItem ->
                                     showSuccess()
-                                    mediaItem.tv?.let { data -> bindUI(data) }
-                                    mediaItem.credits?.cast?.let { it1 ->
-                                        creditAdapter.submitList(
-                                            it1.filterNotNull()
-                                        )
-                                    }
+                                    bindUI(mediaItem)
 
                                 }
                             }
@@ -236,11 +234,9 @@ class TvDetailsFragment : Fragment() {
     }
 
 
-
-    private fun bindUI(data: ResponseTvDetails) {
+    private fun bindUiDetail(data: ResponseTvDetails) {
         binding.apply {
             data.apply {
-
                 // Tv show name and overview
                 txtTitle.text = name ?: Constants.Defaults.NOT_APPLICABLE
                 setActionBarTitle(name)
@@ -274,6 +270,9 @@ class TvDetailsFragment : Fragment() {
                     false
                 )
                 // Seasons
+                if (seasons.isNullOrEmpty()){
+                    cvTvSeasons.visibility = View.GONE
+                }
                 seasonsAdapter.differ.submitList(seasons)
 
                 // Creators
@@ -298,8 +297,8 @@ class TvDetailsFragment : Fragment() {
                 // Networks
                 txtNetworksValue.text = networks.toNetworkNames()
 
-                originalLanguage.getFullLanguageName(viewModel.languages.value?.peekContent())
-                    .also { txtLanguageValue.text = it }
+                txtLanguageValue.text = originalLanguage
+
 
                 // Spoken Languages
                 txtSpokenLanguagesValue.text = spokenLanguages.toSpokenLanguagesText()
@@ -322,11 +321,34 @@ class TvDetailsFragment : Fragment() {
                 // Production companies and countries
                 txtProductionCountriesValue.text = productionCountries.toCountryNames()
                 txtProductionCompaniesValue.text = productionCompanies?.toCompanyNames()
+            }
+
+
 
             }
         }
+
+    private fun bindUI(data: DetailMediaItem) {
+        data.tv?.let {  bindUiDetail(it) }
+        data.credits?.let { bindUiCast(it) }
+        data.language?.let { bindUiLanguage(it) }
     }
 
+    private fun bindUiCast(data : ResponseCredit){
+        data.cast?.let { cast ->
+            if (cast.isNotEmpty()){
+                binding.cvCastAndCrew.visibility = View.VISIBLE
+            }
+            creditAdapter.submitList(
+                cast.filterNotNull()
+            )
+        }
+    }
+    private fun bindUiLanguage(data: ResponseLanguage){
+        val originalLanguage = binding.txtLanguageValue.text.toString()
+        originalLanguage.getFullLanguageName(data)
+            .also { binding.txtLanguageValue.text = it }
+    }
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
