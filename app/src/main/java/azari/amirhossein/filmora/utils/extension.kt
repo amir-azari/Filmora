@@ -161,12 +161,9 @@ fun List<Network?>?.toNetworkNames(): String {
         ?: Constants.Defaults.NOT_APPLICABLE
 }
 
-fun String?.getFullLanguageName(languages: NetworkRequest<ResponseLanguage>?): String? {
-    return if (languages is NetworkRequest.Success) {
-        languages.data?.find { it.iso6391 == this }?.englishName
-    } else {
-        this
-    }
+fun String?.getFullLanguageName(languages: ResponseLanguage?): String? {
+    return languages?.find { it.iso6391 == this }?.englishName
+
 }
 
 fun Int?.toFormattedRuntime(): String {
