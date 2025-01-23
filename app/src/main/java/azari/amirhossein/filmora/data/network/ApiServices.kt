@@ -1,6 +1,7 @@
 package azari.amirhossein.filmora.data.network
 
 import azari.amirhossein.filmora.models.ResponseLanguage
+import azari.amirhossein.filmora.models.detail.ResponseMovieSimilar
 import azari.amirhossein.filmora.models.authentication.RequestLogin
 import azari.amirhossein.filmora.models.authentication.RequestSession
 import azari.amirhossein.filmora.models.authentication.ResponseGuestSession
@@ -8,7 +9,10 @@ import azari.amirhossein.filmora.models.authentication.ResponseToken
 import azari.amirhossein.filmora.models.authentication.ResponseSession
 import azari.amirhossein.filmora.models.detail.ResponseCredit
 import azari.amirhossein.filmora.models.detail.ResponseMovieDetails
+import azari.amirhossein.filmora.models.detail.ResponseMovieRecommendations
 import azari.amirhossein.filmora.models.detail.ResponseTvDetails
+import azari.amirhossein.filmora.models.detail.ResponseTvRecommendations
+import azari.amirhossein.filmora.models.detail.ResponseTvSimilar
 import azari.amirhossein.filmora.models.home.ResponseTrendingList
 import azari.amirhossein.filmora.models.prefences.ResponseGenresList
 import azari.amirhossein.filmora.models.prefences.movie.ResponseMovieKeywordList
@@ -66,6 +70,13 @@ interface ApiServices {
 
     @GET("movie/{movie_id}/credits")
     suspend fun getMovieCredits(@Path("movie_id") movieId: Int): Response<ResponseCredit>
+
+    @GET("movie/{movie_id}/similar")
+    suspend fun getMovieSimilar (@Path("movie_id")movieId: Int): Response<ResponseMovieSimilar>
+
+    @GET("movie/{movie_id}/recommendations")
+    suspend fun getMovieRecommendations (@Path("movie_id")movieId: Int): Response<ResponseMovieRecommendations>
+
     //---------TVs---------
 
     // Search TV
@@ -90,6 +101,12 @@ interface ApiServices {
 
     @GET("tv/{series_id}/credits")
     suspend fun getTvCredits(@Path("series_id") seriesId: Int): Response<ResponseCredit>
+
+    @GET("tv/{series_id}/similar")
+    suspend fun getTvSimilar (@Path("series_id")seriesId: Int): Response<ResponseTvSimilar>
+
+    @GET("tv/{series_id}/recommendations")
+    suspend fun getTvRecommendations (@Path("series_id")seriesId: Int): Response<ResponseTvRecommendations>
     //---------All(Movie , Tv , People)---------
 
     // Trending
