@@ -7,18 +7,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import azari.amirhossein.filmora.R
-import azari.amirhossein.filmora.adapter.RecommendMovieAdapter
-import azari.amirhossein.filmora.adapter.RecommendTvAdapter
+import azari.amirhossein.filmora.adapter.MayLikeMovieAdapter
+import azari.amirhossein.filmora.adapter.MayLikeTvAdapter
 import azari.amirhossein.filmora.adapter.TrendingAllAdapter
 import azari.amirhossein.filmora.databinding.FragmentHomeBinding
 import azari.amirhossein.filmora.models.home.ResponseTrendingList
@@ -46,10 +43,10 @@ class HomeFragment : Fragment() {
 
     // Adapters
     @Inject
-    lateinit var recommendMovieAdapter: RecommendMovieAdapter
+    lateinit var mayLikeMovieAdapter: MayLikeMovieAdapter
 
     @Inject
-    lateinit var recommendTvAdapter: RecommendTvAdapter
+    lateinit var mayLikeTvAdapter: MayLikeTvAdapter
 
     @Inject
     lateinit var trendingAdapter: TrendingAllAdapter
@@ -67,8 +64,8 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerViews()
         observeViewModel()
-        recommendMovieAdapter.setOnItemClickListener(clickMovie)
-        recommendTvAdapter.setOnItemClickListener(clickTv)
+        mayLikeMovieAdapter.setOnItemClickListener(clickMovie)
+        mayLikeTvAdapter.setOnItemClickListener(clickTv)
         trendingAdapter.setOnItemClickListener(clickTrending)
         }
 
@@ -78,14 +75,14 @@ class HomeFragment : Fragment() {
             rvMovies.apply {
                 layoutManager =
                     LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-                adapter = recommendMovieAdapter
+                adapter = mayLikeMovieAdapter
                 setHasFixedSize(true)
             }
 
             rvTvs.apply {
                 layoutManager =
                     LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-                adapter = recommendTvAdapter
+                adapter = mayLikeTvAdapter
                 setHasFixedSize(true)
 
             }
@@ -116,14 +113,14 @@ class HomeFragment : Fragment() {
                                 state.data?.let { data ->
                                     // Update adapters with the new data
                                     trendingAdapter.differ.submitList(data.trending.data?.results)
-                                    recommendMovieAdapter.differ.submitList(data.recommendedMovies.data?.results)
-                                    recommendTvAdapter.differ.submitList(data.recommendedTvs.data?.results)
+                                    mayLikeMovieAdapter.differ.submitList(data.recommendedMovies.data?.results)
+                                    mayLikeTvAdapter.differ.submitList(data.recommendedTvs.data?.results)
 
                                     data.tvGenres.data?.genres?.let { genres ->
-                                        recommendTvAdapter.submitGenres(genres)
+                                        mayLikeTvAdapter.submitGenres(genres)
                                     }
                                     data.movieGenres.data?.genres?.let { genres ->
-                                        recommendMovieAdapter.submitGenres(genres)
+                                        mayLikeMovieAdapter.submitGenres(genres)
                                     }
                                 }
                             }

@@ -1,7 +1,6 @@
 package azari.amirhossein.filmora.adapter
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.AsyncListDiffer
@@ -11,16 +10,13 @@ import androidx.recyclerview.widget.RecyclerView
 import azari.amirhossein.filmora.R
 import azari.amirhossein.filmora.databinding.ItemMediaBinding
 import azari.amirhossein.filmora.models.prefences.ResponseGenresList
-import azari.amirhossein.filmora.models.prefences.movie.ResponseMoviesList
 import azari.amirhossein.filmora.models.prefences.tv.ResponseTvsList
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.loadImageWithShimmer
-import coil3.load
-import coil3.request.crossfade
 import javax.inject.Inject
 
-class RecommendTvAdapter @Inject constructor() :
-    RecyclerView.Adapter<RecommendTvAdapter.ViewHolder>() {
+class MayLikeTvAdapter @Inject constructor() :
+    RecyclerView.Adapter<MayLikeTvAdapter.ViewHolder>() {
 
     private var onItemClickListener: ((ResponseTvsList.Result) -> Unit)? = null
     fun setOnItemClickListener(listener: (ResponseTvsList.Result) -> Unit) {

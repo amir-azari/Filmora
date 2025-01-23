@@ -1,7 +1,6 @@
 package azari.amirhossein.filmora.adapter
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.AsyncListDiffer
@@ -14,12 +13,10 @@ import azari.amirhossein.filmora.models.prefences.ResponseGenresList
 import azari.amirhossein.filmora.models.prefences.movie.ResponseMoviesList
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.loadImageWithShimmer
-import coil3.load
-import coil3.request.crossfade
 import javax.inject.Inject
 
-class RecommendMovieAdapter @Inject constructor() :
-    RecyclerView.Adapter<RecommendMovieAdapter.ViewHolder>() {
+class MayLikeMovieAdapter @Inject constructor() :
+    RecyclerView.Adapter<MayLikeMovieAdapter.ViewHolder>() {
 
     private var allGenres: List<ResponseGenresList.Genre> = emptyList()
 
