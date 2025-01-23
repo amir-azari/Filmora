@@ -2,13 +2,10 @@ package azari.amirhossein.filmora.ui.detail
 
 import android.os.Bundle
 import android.text.TextUtils
-import android.transition.AutoTransition
-import android.transition.TransitionManager
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -21,6 +18,7 @@ import azari.amirhossein.filmora.R
 import azari.amirhossein.filmora.adapter.CreditAdapter
 import azari.amirhossein.filmora.adapter.GenresAdapter
 import azari.amirhossein.filmora.adapter.SeasonsAdapter
+import azari.amirhossein.filmora.adapter.SimilarMovieRecommendationsPagerAdapter
 import azari.amirhossein.filmora.data.SessionManager
 import azari.amirhossein.filmora.databinding.FragmentMovieDetailBinding
 import azari.amirhossein.filmora.models.ResponseLanguage
@@ -43,6 +41,7 @@ import azari.amirhossein.filmora.utils.toFormattedWithUnits
 import azari.amirhossein.filmora.utils.toSpokenLanguagesText
 import azari.amirhossein.filmora.viewmodel.DetailsViewModel
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -64,6 +63,8 @@ class MovieDetailFragment : Fragment() {
 
     @Inject
     lateinit var creditAdapter: CreditAdapter
+
+    private lateinit var pagerAdapter: SimilarMovieRecommendationsPagerAdapter
 
     // State variables for overview expansion and configuration
     private var isOverviewExpanded = false
@@ -93,6 +94,8 @@ class MovieDetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupViewPager()
+
         // Extract fragment arguments
         args = MovieDetailFragmentArgs.fromBundle(requireArguments())
         mediaId = args.id
@@ -103,7 +106,6 @@ class MovieDetailFragment : Fragment() {
 
         // Fetch media details
         viewModel.getMediaDetails(mediaId, Constants.MediaType.MOVIE)
-
         originalScaleType = binding.imgPoster.scaleType
 
         setupUI()
@@ -133,6 +135,61 @@ class MovieDetailFragment : Fragment() {
     private fun setupUI() {
         setupRecyclerViews()
     }
+    private fun setupViewPager() {
+        val viewPager = binding.viewPager
+        val tabLayout = binding.tabLayout
+
+        // Initialize pagerAdapter property
+        pagerAdapter = SimilarMovieRecommendationsPagerAdapter(this)
+        viewPager.adapter = pagerAdapter
+        viewPager.isUserInputEnabled = false
+
+        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+            when (position) {
+                0 -> tab.text = getString(R.string.similar_movies)
+
+                1 -> tab.text = getString(R.string.recommendations)
+
+            }
+        }.attach()
+    }
+    private fun setupSimilarAndRecommendations(mediaItem: DetailMediaItem) {
+        val hasSimilar = !mediaItem.similar?.results.isNullOrEmpty()
+        val hasRecommendations = !mediaItem.recommendations?.results.isNullOrEmpty()
+
+        if (!hasRecommendations && !hasSimilar) {
+            binding.cvSimilarRecommendations.visibility = View.GONE
+            return
+        }
+
+        binding.cvSimilarRecommendations.visibility = View.VISIBLE
+
+        if (hasSimilar xor hasRecommendations) {
+            binding.tabLayout.visibility = View.GONE
+            binding.txtHeader.visibility = View.VISIBLE
+            binding.txtHeader.text = if (hasSimilar) {
+                getString(R.string.similar_tv_show)
+            } else {
+                getString(R.string.recommendations)
+            }
+        } else {
+            binding.tabLayout.visibility = View.VISIBLE
+            binding.txtHeader.visibility = View.GONE
+        }
+
+        if (hasSimilar) {
+            (pagerAdapter.getFragment(0) as? SimilarMovieFragment)?.updateMediaData(mediaItem.similar)
+        }
+
+        if (hasRecommendations) {
+            (pagerAdapter.getFragment(1) as? RecommendationsMovieFragment)?.updateMediaData(mediaItem.recommendations)
+        }
+
+        if (hasSimilar xor hasRecommendations) {
+            binding.viewPager.setCurrentItem(if (hasSimilar) 0 else 1, false)
+        }
+    }
+
 
     private fun setupRecyclerViews() {
         // Set up the RecyclerView for displaying genres
@@ -148,6 +205,7 @@ class MovieDetailFragment : Fragment() {
         }
     }
 
+
     private fun observeViewModel() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -162,6 +220,7 @@ class MovieDetailFragment : Fragment() {
                                 it.data?.let { mediaItem ->
                                     showSuccess()
                                     bindUI(mediaItem)
+                                    setupSimilarAndRecommendations(mediaItem)
 
                                 }
                             }
@@ -208,7 +267,6 @@ class MovieDetailFragment : Fragment() {
             (requireActivity() as AppCompatActivity).supportActionBar?.title = ""
         }
     }
-
 
     private fun setActionBarTitle(title: String?) {
         (requireActivity() as AppCompatActivity).supportActionBar?.title = title
