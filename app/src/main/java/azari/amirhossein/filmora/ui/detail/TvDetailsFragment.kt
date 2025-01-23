@@ -1,15 +1,11 @@
 package azari.amirhossein.filmora.ui.detail
 
-import android.animation.ValueAnimator
 import android.os.Bundle
 import android.text.TextUtils
-import android.transition.AutoTransition
-import android.transition.TransitionManager
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -22,6 +18,7 @@ import azari.amirhossein.filmora.R
 import azari.amirhossein.filmora.adapter.CreditAdapter
 import azari.amirhossein.filmora.adapter.GenresAdapter
 import azari.amirhossein.filmora.adapter.SeasonsAdapter
+import azari.amirhossein.filmora.adapter.SimilarTvRecommendationsPagerAdapter
 import azari.amirhossein.filmora.data.SessionManager
 import azari.amirhossein.filmora.databinding.FragmentTvDetailsBinding
 import azari.amirhossein.filmora.models.ResponseLanguage
@@ -44,6 +41,7 @@ import azari.amirhossein.filmora.utils.toNetworkNames
 import azari.amirhossein.filmora.utils.toSpokenLanguagesText
 import azari.amirhossein.filmora.viewmodel.DetailsViewModel
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -65,6 +63,8 @@ class TvDetailsFragment : Fragment() {
 
     @Inject
     lateinit var creditAdapter: CreditAdapter
+
+    private lateinit var pagerAdapter: SimilarTvRecommendationsPagerAdapter
 
     // State variables for overview expansion and configuration
     private var isOverviewExpanded = false
@@ -93,6 +93,8 @@ class TvDetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupViewPager()
+
         // Extract fragment arguments
         args = MovieDetailFragmentArgs.fromBundle(requireArguments())
         mediaId = args.id
@@ -103,6 +105,7 @@ class TvDetailsFragment : Fragment() {
 
         // Fetch media details
         viewModel.getMediaDetails(mediaId, Constants.MediaType.TV)
+
         originalScaleType = binding.imgPoster.scaleType
 
 
@@ -128,11 +131,66 @@ class TvDetailsFragment : Fragment() {
                 binding.cvMediaAction.visibility = View.VISIBLE
             }
         )
-
     }
 
     private fun setupUI() {
         setupRecyclerViews()
+    }
+    private fun setupViewPager() {
+        val viewPager = binding.viewPager
+        val tabLayout = binding.tabLayout
+
+        // Initialize pagerAdapter property
+        pagerAdapter = SimilarTvRecommendationsPagerAdapter(this)
+        viewPager.adapter = pagerAdapter
+        viewPager.isUserInputEnabled = false
+
+        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+            when (position) {
+                0 -> tab.text = getString(R.string.similar_tv_show)
+
+                1 -> tab.text = getString(R.string.recommendations)
+
+            }
+        }.attach()
+
+
+    }
+    private fun setupSimilarAndRecommendations(mediaItem: DetailMediaItem) {
+        val hasSimilar = !mediaItem.tvSimilar?.results.isNullOrEmpty()
+        val hasRecommendations = !mediaItem.tvRecommendations?.results.isNullOrEmpty()
+
+        if (!hasRecommendations && !hasSimilar) {
+            binding.cvSimilarRecommendations.visibility = View.GONE
+            return
+        }
+
+        binding.cvSimilarRecommendations.visibility = View.VISIBLE
+
+        if (hasSimilar xor hasRecommendations) {
+            binding.tabLayout.visibility = View.GONE
+            binding.txtHeader.visibility = View.VISIBLE
+            binding.txtHeader.text = if (hasSimilar) {
+                getString(R.string.similar_tv_show)
+            } else {
+                getString(R.string.recommendations)
+            }
+        } else {
+            binding.tabLayout.visibility = View.VISIBLE
+            binding.txtHeader.visibility = View.GONE
+        }
+
+        if (hasSimilar) {
+            (pagerAdapter.getFragment(0) as? SimilarTvFragment)?.updateMediaData(mediaItem.tvSimilar)
+        }
+
+        if (hasRecommendations) {
+            (pagerAdapter.getFragment(1) as? RecommendationsTvFragment)?.updateMediaData(mediaItem.tvRecommendations)
+        }
+
+        if (hasSimilar xor hasRecommendations) {
+            binding.viewPager.setCurrentItem(if (hasSimilar) 0 else 1, false)
+        }
     }
 
     private fun setupRecyclerViews() {
@@ -168,6 +226,7 @@ class TvDetailsFragment : Fragment() {
                                 it.data?.let { mediaItem ->
                                     showSuccess()
                                     bindUI(mediaItem)
+                                    setupSimilarAndRecommendations(mediaItem)
 
                                 }
                             }
