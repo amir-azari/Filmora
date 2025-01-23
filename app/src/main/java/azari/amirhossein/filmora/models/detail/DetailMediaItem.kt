@@ -6,5 +6,9 @@ data class DetailMediaItem(
     val movie: ResponseMovieDetails? = null,
     val tv: ResponseTvDetails? = null,
     val credits: ResponseCredit? = null,
-    val language: ResponseLanguage? = null
+    val language: ResponseLanguage? = null,
+    val similar: ResponseMovieSimilar? = null,
+    val recommendations: ResponseMovieRecommendations? = null,
+    val tvSimilar: ResponseTvSimilar? = null,
+    val tvRecommendations: ResponseTvRecommendations? = null
 )
