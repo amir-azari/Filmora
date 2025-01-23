@@ -74,5 +74,8 @@
     <string name="collection">Collection</string>
     <string name="part_of_collection">Part of the %1$s</string>
 
-
+    <string name="similar_movies">Similar Movies</string>
+    <string name="similar_tv_show">Similar TV Shows</string>
+    <string name="recommendations">Recommendations</string>
+    <string name="no_any_data_found">No any data found</string>
 </resources>

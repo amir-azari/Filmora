@@ -40,6 +40,8 @@
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
+        android:saveEnabled="true"
+        android:clipToPadding="false"
         android:layout_height="match_parent">
 
         <!-- Main container -->
@@ -394,13 +396,12 @@
                     <!-- Poster and Title Section -->
                     <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/img_collection"
-                        android:layout_width="@dimen/_55mdp"
+                        android:layout_width="@dimen/_70mdp"
                         android:layout_marginTop="@dimen/_9mdp"
                         android:layout_height="0dp"
                         android:layout_marginBottom="@dimen/_12mdp"
                         app:layout_constraintDimensionRatio="2:3"
                         app:layout_constraintStart_toStartOf="@+id/txt_collection"
-
                         app:layout_constraintTop_toBottomOf="@+id/txt_collection"
                         app:shapeAppearanceOverlay="@style/RoundedCorners"
                         tools:src="@drawable/image_medium" />
@@ -760,6 +761,61 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
             </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cv_similar_recommendations"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_8mdp"
+                app:cardBackgroundColor="@color/cardBackgroundColor"
+                app:cardCornerRadius="@dimen/_8mdp"
+                app:cardElevation="@dimen/_2mdp"
+                app:layout_constraintTop_toBottomOf="@id/cv_about">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingVertical="@dimen/_8mdp">
+
+                    <!--Header -->
+                    <TextView
+                        android:id="@+id/txt_header"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/similar_tv_show"
+                        android:textSize="@dimen/_12font_mdp"
+                        android:textStyle="bold"
+                        android:visibility="gone"
+                        android:layout_marginStart="@dimen/_12mdp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tabLayout" />
+
+                    <!-- TabLayout -->
+                    <com.google.android.material.tabs.TabLayout
+                        android:id="@+id/tabLayout"
+                        android:layout_width="0dp"
+                        android:visibility="visible"
+                        android:layout_height="wrap_content"
+                        android:background="@color/cardBackgroundColor"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:tabIndicatorColor="@color/md_theme_primary"
+                        app:tabSelectedTextColor="@color/md_theme_primary"
+                        app:tabTextColor="@color/textColor_secondary" />
+
+                    <!-- ViewPager2 -->
+                    <androidx.viewpager2.widget.ViewPager2
+                        android:id="@+id/viewPager"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="@dimen/_9mdp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/txt_header" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.cardview.widget.CardView>
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

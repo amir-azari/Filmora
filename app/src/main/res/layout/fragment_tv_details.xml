@@ -39,7 +39,9 @@
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:saveEnabled="true">
 
         <!-- Main container -->
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -206,6 +208,7 @@
                 android:layout_margin="@dimen/_8mdp"
                 app:cardBackgroundColor="@color/cardBackgroundColor"
                 app:cardCornerRadius="@dimen/_8mdp"
+                android:visibility="gone"
                 app:cardElevation="@dimen/_2mdp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -396,6 +399,7 @@
                 android:orientation="horizontal"
                 app:cardBackgroundColor="@color/cardBackgroundColor"
                 app:cardCornerRadius="@dimen/_8mdp"
+                android:visibility="gone"
                 app:cardElevation="@dimen/_2mdp"
                 app:layout_constraintEnd_toEndOf="@+id/cv_tvSeasons"
                 app:layout_constraintStart_toStartOf="@+id/cv_tvSeasons"
@@ -475,6 +479,7 @@
                 app:cardBackgroundColor="@color/cardBackgroundColor"
                 app:cardCornerRadius="@dimen/_8mdp"
                 app:cardElevation="@dimen/_2mdp"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="@+id/cv_cast_and_crew"
                 app:layout_constraintStart_toStartOf="@+id/cv_cast_and_crew"
                 app:layout_constraintTop_toBottomOf="@id/cv_cast_and_crew">
@@ -562,7 +567,6 @@
                         app:layout_constraintTop_toTopOf="@+id/txt_release" />
 
 
-
                     <!-- networks -->
                     <TextView
                         android:id="@+id/txt_networks"
@@ -596,8 +600,8 @@
                         android:id="@+id/txt_language"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/original_language"
                         android:layout_marginTop="@dimen/_8mdp"
+                        android:text="@string/original_language"
                         android:textColor="@color/textColor"
                         android:textSize="@dimen/_10font_mdp"
                         android:textStyle="bold"
@@ -746,6 +750,59 @@
                         app:layout_constraintTop_toTopOf="@+id/txt_production_companies" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cv_similar_recommendations"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_8mdp"
+                app:cardBackgroundColor="@color/cardBackgroundColor"
+                app:cardCornerRadius="@dimen/_8mdp"
+                app:cardElevation="@dimen/_2mdp"
+                app:layout_constraintTop_toBottomOf="@id/cv_about">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingVertical="@dimen/_8mdp">
+
+                    <!--Header -->
+                    <TextView
+                        android:id="@+id/txt_header"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/similar_tv_show"
+                        android:textSize="@dimen/_12font_mdp"
+                        android:textStyle="bold"
+                        android:visibility="gone"
+                        android:layout_marginStart="@dimen/_12mdp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tabLayout" />
+
+                    <!-- TabLayout -->
+                    <com.google.android.material.tabs.TabLayout
+                        android:id="@+id/tabLayout"
+                        android:layout_width="0dp"
+                        android:visibility="visible"
+                        android:layout_height="wrap_content"
+                        android:background="@color/cardBackgroundColor"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:tabIndicatorColor="@color/md_theme_primary"
+                        app:tabSelectedTextColor="@color/md_theme_primary"
+                        app:tabTextColor="@color/textColor_secondary" />
+
+                    <!-- ViewPager2 -->
+                    <androidx.viewpager2.widget.ViewPager2
+                        android:id="@+id/viewPager"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="@dimen/_9mdp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/txt_header" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
