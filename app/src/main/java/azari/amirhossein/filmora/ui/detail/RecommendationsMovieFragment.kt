@@ -5,24 +5,28 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import azari.amirhossein.filmora.adapter.RecommendationMovieAdapter
-import azari.amirhossein.filmora.adapter.RecommendationTvAdapter
 import azari.amirhossein.filmora.databinding.FragmentRecommendationsBinding
 import azari.amirhossein.filmora.models.detail.ResponseMovieRecommendations
-import azari.amirhossein.filmora.models.detail.ResponseTvRecommendations
 import azari.amirhossein.filmora.ui.home.HomeFragmentDirections
 import azari.amirhossein.filmora.utils.Constants
+import azari.amirhossein.filmora.utils.NetworkRequest
+import azari.amirhossein.filmora.viewmodel.DetailsViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class RecommendationsMovieFragment : Fragment(), MediaUpdateable<ResponseMovieRecommendations> {
+class RecommendationsMovieFragment : Fragment() {
     private var _binding: FragmentRecommendationsBinding? = null
     private val binding get() = _binding!!
 
-
+    private val viewModel: DetailsViewModel by viewModels({ requireParentFragment() })
     private val recommendationsMovieAdapter by lazy { RecommendationMovieAdapter() }
 
     override fun onCreateView(
@@ -37,8 +41,25 @@ class RecommendationsMovieFragment : Fragment(), MediaUpdateable<ResponseMovieRe
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerView()
+        observeRecommendationMovies()
         recommendationsMovieAdapter.setOnItemClickListener(clickMovie)
 
+    }
+
+    private fun observeRecommendationMovies() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.movieRecommendations.collect { result ->
+                    when (result) {
+                        is NetworkRequest.Success -> {
+                            recommendationsMovieAdapter.differ.submitList(result.data?.results)
+                        }
+
+                        else -> Unit
+                    }
+                }
+            }
+        }
     }
 
     private fun setupRecyclerView() {
@@ -48,14 +69,12 @@ class RecommendationsMovieFragment : Fragment(), MediaUpdateable<ResponseMovieRe
         }
     }
 
-    override fun updateMediaData(data: ResponseMovieRecommendations?) {
-        recommendationsMovieAdapter.differ.submitList(data?.results)
-    }
     private val clickMovie = { movie: ResponseMovieRecommendations.Result ->
-        val action = HomeFragmentDirections.actionToMovieDetail(Constants.MediaType.MOVIE,movie.id)
+        val action = HomeFragmentDirections.actionToMovieDetail(Constants.MediaType.MOVIE, movie.id)
         findNavController().navigate(action)
 
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

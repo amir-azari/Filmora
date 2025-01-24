@@ -5,26 +5,29 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import azari.amirhossein.filmora.adapter.SimilarMovieAdapter
-import azari.amirhossein.filmora.adapter.SimilarTvAdapter
 import azari.amirhossein.filmora.databinding.FragmentSimilarBinding
-import azari.amirhossein.filmora.models.detail.ResponseMovieRecommendations
 import azari.amirhossein.filmora.models.detail.ResponseMovieSimilar
 import azari.amirhossein.filmora.ui.home.HomeFragmentDirections
 import azari.amirhossein.filmora.utils.Constants
+import azari.amirhossein.filmora.utils.NetworkRequest
+import azari.amirhossein.filmora.viewmodel.DetailsViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class SimilarMovieFragment : Fragment(), MediaUpdateable<ResponseMovieSimilar> {
+class SimilarMovieFragment : Fragment() {
     private var _binding: FragmentSimilarBinding? = null
     private val binding get() = _binding!!
 
-
+    private val viewModel: DetailsViewModel by viewModels({ requireParentFragment() })
     private val similarMovieAdapter by lazy { SimilarMovieAdapter() }
-
 
 
     override fun onCreateView(
@@ -38,8 +41,24 @@ class SimilarMovieFragment : Fragment(), MediaUpdateable<ResponseMovieSimilar> {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerView()
+        observeSimilarMovies()
         similarMovieAdapter.setOnItemClickListener(clickMovie)
+    }
 
+    private fun observeSimilarMovies() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.movieSimilar.collect { result ->
+                    when (result) {
+                        is NetworkRequest.Success -> {
+                            similarMovieAdapter.differ.submitList(result.data?.results)
+                        }
+
+                        else -> Unit
+                    }
+                }
+            }
+        }
     }
 
     private fun setupRecyclerView() {
@@ -49,12 +68,8 @@ class SimilarMovieFragment : Fragment(), MediaUpdateable<ResponseMovieSimilar> {
         }
     }
 
-    override fun updateMediaData(data: ResponseMovieSimilar?) {
-        similarMovieAdapter.differ.submitList(data?.results)
-
-    }
     private val clickMovie = { movie: ResponseMovieSimilar.Result ->
-        val action = HomeFragmentDirections.actionToMovieDetail(Constants.MediaType.MOVIE,movie.id)
+        val action = HomeFragmentDirections.actionToMovieDetail(Constants.MediaType.MOVIE, movie.id)
         findNavController().navigate(action)
 
     }
