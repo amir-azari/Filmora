@@ -1,13 +1,10 @@
 package azari.amirhossein.filmora.adapter
 
-import android.content.Context
-import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.Drawable
+import android.graphics.Rect
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -15,21 +12,18 @@ import azari.amirhossein.filmora.R
 import azari.amirhossein.filmora.databinding.ItemCreditBinding
 import azari.amirhossein.filmora.models.detail.ResponseCredit.Cast
 import azari.amirhossein.filmora.utils.Constants
+import azari.amirhossein.filmora.utils.HeightPayload
 import azari.amirhossein.filmora.utils.loadImageWithoutShimmer
-import coil3.Bitmap
-import coil3.load
-import coil3.request.crossfade
-import coil3.request.error
-import coil3.request.fallback
-import coil3.request.placeholder
-import coil3.size.Scale
-import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 class CreditAdapter @Inject constructor() :
     RecyclerView.Adapter<CreditAdapter.ViewHolder>() {
 
+    private var maxItemHeight = 0
+    private var isHeightCalculated = false
+
     private var onItemClickListener: ((Cast) -> Unit)? = null
+
     fun setOnItemClickListener(listener: (Cast) -> Unit) {
         onItemClickListener = listener
     }
@@ -55,16 +49,34 @@ class CreditAdapter @Inject constructor() :
                     false
                 )
 
+                // Only calculate max height once
+                if (!isHeightCalculated) {
+                    root.post {
+                        val height = root.height
+                        if (height > maxItemHeight) {
+                            maxItemHeight = height
+                            isHeightCalculated = true // Mark height as calculated
+                            // Apply height to all items
+                            differ.currentList.forEachIndexed { index, _ ->
+                                notifyItemChanged(index, HeightPayload(maxItemHeight))
+                            }
+                        }
+                    }
+                }
 
                 // Click
-                binding.root.setOnClickListener {
+                root.setOnClickListener {
                     onItemClickListener?.let { it(item) }
                 }
 
-
                 tvCharacterName.text = item.name
                 tvCharacterDescription.text = item.character
+            }
+        }
 
+        fun setFixedHeight(maxItemHeight: Int) {
+            if (maxItemHeight > 0) {
+                binding.root.layoutParams.height = maxItemHeight
             }
         }
     }
@@ -84,21 +96,32 @@ class CreditAdapter @Inject constructor() :
         return differ.currentList.size
     }
 
+    override fun onBindViewHolder(holder: ViewHolder, position: Int, payloads: List<Any>) {
+        if (payloads.isNotEmpty()) {
+            val payload = payloads[0] as? HeightPayload
+            payload?.let {
+                holder.setFixedHeight(it.height)
+                return
+            }
+        }
+        super.onBindViewHolder(holder, position, payloads)
+    }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(differ.currentList[position])
-
+        if (maxItemHeight > 0) {
+            holder.setFixedHeight(maxItemHeight)
+        }
     }
 
     private val diffCallback = object : DiffUtil.ItemCallback<Cast>() {
-        override fun areItemsTheSame(oldItem: Cast, newItem: Cast): Boolean {
-            return oldItem.id == newItem.id
-        }
-
-        override fun areContentsTheSame(oldItem: Cast, newItem: Cast): Boolean {
-            return oldItem == newItem
+        override fun areItemsTheSame(oldItem: Cast, newItem: Cast) = oldItem.id == newItem.id
+        override fun areContentsTheSame(oldItem: Cast, newItem: Cast) = oldItem == newItem
+        override fun getChangePayload(oldItem: Cast, newItem: Cast): Any? {
+            return if (maxItemHeight > 0) HeightPayload(maxItemHeight) else null
         }
     }
 
     val differ = AsyncListDiffer(this, diffCallback)
 }
+
