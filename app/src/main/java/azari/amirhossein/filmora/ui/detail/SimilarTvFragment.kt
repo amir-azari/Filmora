@@ -22,7 +22,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class SimilarTvFragment : Fragment(), MediaUpdateable<ResponseTvSimilar> {
+class SimilarTvFragment : Fragment() {
     private var _binding: FragmentSimilarBinding? = null
     private val binding get() = _binding!!
 
@@ -72,10 +72,7 @@ class SimilarTvFragment : Fragment(), MediaUpdateable<ResponseTvSimilar> {
         findNavController().navigate(action)
 
     }
-    override fun updateMediaData(data: ResponseTvSimilar?) {
-        similarTvAdapter.differ.submitList(data?.results)
 
-    }
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
