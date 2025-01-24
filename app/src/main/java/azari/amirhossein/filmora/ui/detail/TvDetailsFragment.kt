@@ -64,7 +64,7 @@ class TvDetailsFragment : Fragment() {
     @Inject
     lateinit var creditAdapter: CreditAdapter
 
-    private lateinit var pagerAdapter: SimilarTvRecommendationsPagerAdapter
+    private lateinit var similarAndRecommendationsPagerAdapter: SimilarTvRecommendationsPagerAdapter
 
     // State variables for overview expansion and configuration
     private var isOverviewExpanded = false
@@ -137,15 +137,15 @@ class TvDetailsFragment : Fragment() {
         setupRecyclerViews()
     }
     private fun setupViewPager() {
-        val viewPager = binding.viewPager
-        val tabLayout = binding.tabLayout
+        val similarAndRecommendationsViewPager = binding.viewPager
+        val similarAndRecommendationsTabLayout = binding.tabLayout
 
         // Initialize pagerAdapter property
-        pagerAdapter = SimilarTvRecommendationsPagerAdapter(this)
-        viewPager.adapter = pagerAdapter
-        viewPager.isUserInputEnabled = false
+        similarAndRecommendationsPagerAdapter = SimilarTvRecommendationsPagerAdapter(this)
+        similarAndRecommendationsViewPager.adapter = similarAndRecommendationsPagerAdapter
+        similarAndRecommendationsViewPager.isUserInputEnabled = false
 
-        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+        TabLayoutMediator(similarAndRecommendationsTabLayout, similarAndRecommendationsViewPager) { tab, position ->
             when (position) {
                 0 -> tab.text = getString(R.string.similar_tv_show)
 
@@ -178,14 +178,6 @@ class TvDetailsFragment : Fragment() {
         } else {
             binding.tabLayout.visibility = View.VISIBLE
             binding.txtHeader.visibility = View.GONE
-        }
-
-        if (hasSimilar) {
-            (pagerAdapter.getFragment(0) as? SimilarTvFragment)?.updateMediaData(mediaItem.tvSimilar)
-        }
-
-        if (hasRecommendations) {
-            (pagerAdapter.getFragment(1) as? RecommendationsTvFragment)?.updateMediaData(mediaItem.tvRecommendations)
         }
 
         if (hasSimilar xor hasRecommendations) {
@@ -226,6 +218,7 @@ class TvDetailsFragment : Fragment() {
                                 it.data?.let { mediaItem ->
                                     showSuccess()
                                     bindUI(mediaItem)
+                                    viewModel.updateMediaDetails(mediaItem)
                                     setupSimilarAndRecommendations(mediaItem)
 
                                 }
@@ -381,8 +374,6 @@ class TvDetailsFragment : Fragment() {
                 txtProductionCountriesValue.text = productionCountries.toCountryNames()
                 txtProductionCompaniesValue.text = productionCompanies?.toCompanyNames()
             }
-
-
 
             }
         }
