@@ -64,7 +64,7 @@ class MovieDetailFragment : Fragment() {
     @Inject
     lateinit var creditAdapter: CreditAdapter
 
-    private lateinit var pagerAdapter: SimilarMovieRecommendationsPagerAdapter
+    private lateinit var similarAndRecommendationsPagerAdapter: SimilarMovieRecommendationsPagerAdapter
 
     // State variables for overview expansion and configuration
     private var isOverviewExpanded = false
@@ -130,21 +130,26 @@ class MovieDetailFragment : Fragment() {
                 binding.cvMediaAction.visibility = View.VISIBLE
             }
         )
+
     }
 
     private fun setupUI() {
         setupRecyclerViews()
     }
+
     private fun setupViewPager() {
-        val viewPager = binding.viewPager
-        val tabLayout = binding.tabLayout
+        val similarAndRecommendationsViewPager = binding.viewPager
+        val similarAndRecommendationsTabLayout = binding.tabLayout
 
         // Initialize pagerAdapter property
-        pagerAdapter = SimilarMovieRecommendationsPagerAdapter(this)
-        viewPager.adapter = pagerAdapter
-        viewPager.isUserInputEnabled = false
+        similarAndRecommendationsPagerAdapter = SimilarMovieRecommendationsPagerAdapter(this)
+        similarAndRecommendationsViewPager.adapter = similarAndRecommendationsPagerAdapter
+        similarAndRecommendationsViewPager.isUserInputEnabled = false
 
-        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+        TabLayoutMediator(
+            similarAndRecommendationsTabLayout,
+            similarAndRecommendationsViewPager
+        ) { tab, position ->
             when (position) {
                 0 -> tab.text = getString(R.string.similar_movies)
 
@@ -153,6 +158,7 @@ class MovieDetailFragment : Fragment() {
             }
         }.attach()
     }
+
     private fun setupSimilarAndRecommendations(mediaItem: DetailMediaItem) {
         val hasSimilar = !mediaItem.similar?.results.isNullOrEmpty()
         val hasRecommendations = !mediaItem.recommendations?.results.isNullOrEmpty()
@@ -177,14 +183,6 @@ class MovieDetailFragment : Fragment() {
             binding.txtHeader.visibility = View.GONE
         }
 
-        if (hasSimilar) {
-            (pagerAdapter.getFragment(0) as? SimilarMovieFragment)?.updateMediaData(mediaItem.similar)
-        }
-
-        if (hasRecommendations) {
-            (pagerAdapter.getFragment(1) as? RecommendationsMovieFragment)?.updateMediaData(mediaItem.recommendations)
-        }
-
         if (hasSimilar xor hasRecommendations) {
             binding.viewPager.setCurrentItem(if (hasSimilar) 0 else 1, false)
         }
@@ -196,13 +194,15 @@ class MovieDetailFragment : Fragment() {
         binding.rvGenre.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             adapter = genresAdapter
+            isNestedScrollingEnabled = false
+
         }
 
         binding.rvCastAndCrew.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             adapter = creditAdapter
-            setHasFixedSize(true)
         }
+
     }
 
 
@@ -210,7 +210,7 @@ class MovieDetailFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.mediaDetails.collect { result ->
-                    result?.getContentIfNotHandled()?.let { it ->
+                    result?.getContentIfNotHandled()?.let {
                         when (it) {
                             is NetworkRequest.Loading -> {
                                 showLoading()
@@ -220,8 +220,8 @@ class MovieDetailFragment : Fragment() {
                                 it.data?.let { mediaItem ->
                                     showSuccess()
                                     bindUI(mediaItem)
+                                    viewModel.updateMediaDetails(mediaItem)
                                     setupSimilarAndRecommendations(mediaItem)
-
                                 }
                             }
 
@@ -284,13 +284,14 @@ class MovieDetailFragment : Fragment() {
             binding.imgExpand.visibility = if (isEllipsized) View.VISIBLE else View.INVISIBLE
         }
     }
+
     private fun bindUI(data: DetailMediaItem) {
-        data.movie?.let {  bindUiDetail(it) }
+        data.movie?.let { bindUiDetail(it) }
         data.credits?.let { bindUiCast(it) }
         data.language?.let { bindUiLanguage(it) }
     }
 
-    private fun bindUiDetail(data : ResponseMovieDetails) {
+    private fun bindUiDetail(data: ResponseMovieDetails) {
         binding.apply {
             data.apply {
                 // Movie name and overview
@@ -361,11 +362,12 @@ class MovieDetailFragment : Fragment() {
                     binding.cvCollection.visibility = View.VISIBLE
                 }
 
-                val collectionPosterFullPath = if (belongsToCollection?.posterPath.isNullOrEmpty()) {
-                    null
-                } else {
-                    baseUrl + Constants.ImageSize.ORIGINAL + belongsToCollection?.posterPath
-                }
+                val collectionPosterFullPath =
+                    if (belongsToCollection?.posterPath.isNullOrEmpty()) {
+                        null
+                    } else {
+                        baseUrl + Constants.ImageSize.ORIGINAL + belongsToCollection?.posterPath
+                    }
 
                 imgCollection.loadImageWithoutShimmer(
                     collectionPosterFullPath,
@@ -374,7 +376,8 @@ class MovieDetailFragment : Fragment() {
                     originalScaleType,
                     true
                 )
-                tvCollectionName.text = getString(R.string.part_of_collection, belongsToCollection?.name)
+                tvCollectionName.text =
+                    getString(R.string.part_of_collection, belongsToCollection?.name)
 
             }
         }
@@ -382,9 +385,9 @@ class MovieDetailFragment : Fragment() {
     }
 
 
-    private fun bindUiCast(data : ResponseCredit){
+    private fun bindUiCast(data: ResponseCredit) {
         data.cast?.let { cast ->
-            if (cast.isNotEmpty()){
+            if (cast.isNotEmpty()) {
                 binding.cvCastAndCrew.visibility = View.VISIBLE
             }
             creditAdapter.submitList(
@@ -393,7 +396,7 @@ class MovieDetailFragment : Fragment() {
         }
     }
 
-    private fun bindUiLanguage(data: ResponseLanguage ){
+    private fun bindUiLanguage(data: ResponseLanguage) {
         val originalLanguage = binding.txtLanguageValue.text.toString()
         originalLanguage.getFullLanguageName(data)
             .also { binding.txtLanguageValue.text = it }
