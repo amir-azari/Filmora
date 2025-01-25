@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingHorizontal="@dimen/_3mdp">
+
+    <!-- Thumbnail ImageView -->
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/img_video"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/_125mdp"
+        android:scaleType="centerCrop"
+        app:shapeAppearanceOverlay="@style/RoundedCorners"
+        android:contentDescription="@string/video_thumbnail"
+        app:layout_constraintDimensionRatio="16:9"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/img_shimmer_container"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="16:9"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:shimmer_auto_start="true"
+        app:shimmer_duration="1000">
+
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:background="@drawable/bg_shimmer_rounded_corners"
+            android:contentDescription="@string/poster_image"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </com.facebook.shimmer.ShimmerFrameLayout>
+    <!-- Play Icon Overlay -->
+    <ImageView
+        android:id="@+id/img_play"
+        android:layout_width="@dimen/_24mdp"
+        android:layout_height="@dimen/_24mdp"
+        android:src="@drawable/play"
+        app:tint="@color/Youtube"
+        android:contentDescription="@string/play_video"
+        app:layout_constraintTop_toTopOf="@id/img_video"
+        app:layout_constraintBottom_toBottomOf="@id/img_video"
+        app:layout_constraintStart_toStartOf="@id/img_video"
+        app:layout_constraintEnd_toEndOf="@id/img_video" />
+
+    <!-- YouTube Logo -->
+    <ImageView
+        android:id="@+id/img_youtube_logo"
+        android:layout_width="@dimen/_18mdp"
+        android:layout_height="@dimen/_18mdp"
+        android:src="@drawable/youtube"
+        android:visibility="gone"
+        app:tint="@color/Youtube"
+        android:contentDescription="@string/youtube_logo"
+        android:layout_marginEnd="@dimen/_4mdp"
+        android:layout_marginBottom="@dimen/_4mdp"
+        app:layout_constraintBottom_toBottomOf="@id/img_video"
+        app:layout_constraintEnd_toEndOf="@id/img_video" />
+
+    <!-- Video Title -->
+    <TextView
+        android:id="@+id/txt_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_6mdp"
+        android:textSize="@dimen/_10mdp"
+        android:minLines="2"
+        android:textStyle="bold"
+        android:ellipsize="end"
+        android:maxLines="2"
+        app:layout_constraintTop_toBottomOf="@id/img_video"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Published Date -->
+    <TextView
+        android:id="@+id/txt_published_at"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_3mdp"
+        android:textSize="@dimen/_8mdp"
+        android:textColor="@android:color/darker_gray"
+        app:layout_constraintTop_toBottomOf="@id/txt_title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+         />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

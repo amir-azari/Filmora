@@ -78,4 +78,20 @@
     <string name="similar_tv_show">Similar TV Shows</string>
     <string name="recommendations">Recommendations</string>
     <string name="no_any_data_found">No any data found</string>
+
+    <string name="videos">Videos</string>
+    <string name="backdrops">Backdrops</string>
+    <string name="posters">Posters</string>
+
+
+    <string name="video_thumbnail">Thumbnail image for the video</string>
+    <string name="play_video">Play icon to indicate the video can be played</string>
+    <string name="placeholder_video">Placeholder image for video thumbnail</string>
+    <string name="video_title">Title of the video</string>
+    <string name="video_details">Details about the video including site and type</string>
+    <string name="youtube_logo">YouTube logo</string>
+    <string name="video_published_at">Date when the video was published</string>
+    <string name="all_backdrops">All Backdrops</string>
+    <string name="all_videos">All Videos</string>
+    <string name="all_posters">All Posters</string>
 </resources>
