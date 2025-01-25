@@ -2,6 +2,7 @@ package azari.amirhossein.filmora.ui.detail
 
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -14,11 +15,13 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.viewpager2.widget.ViewPager2
 import azari.amirhossein.filmora.R
 import azari.amirhossein.filmora.adapter.CreditAdapter
 import azari.amirhossein.filmora.adapter.GenresAdapter
 import azari.amirhossein.filmora.adapter.SeasonsAdapter
 import azari.amirhossein.filmora.adapter.SimilarTvRecommendationsPagerAdapter
+import azari.amirhossein.filmora.adapter.VisualContentPagerAdapter
 import azari.amirhossein.filmora.data.SessionManager
 import azari.amirhossein.filmora.databinding.FragmentTvDetailsBinding
 import azari.amirhossein.filmora.models.ResponseLanguage
@@ -65,6 +68,7 @@ class TvDetailsFragment : Fragment() {
     lateinit var creditAdapter: CreditAdapter
 
     private lateinit var similarAndRecommendationsPagerAdapter: SimilarTvRecommendationsPagerAdapter
+    private lateinit var visualContentPagerAdapter: VisualContentPagerAdapter
 
     // State variables for overview expansion and configuration
     private var isOverviewExpanded = false
@@ -137,8 +141,8 @@ class TvDetailsFragment : Fragment() {
         setupRecyclerViews()
     }
     private fun setupViewPager() {
-        val similarAndRecommendationsViewPager = binding.viewPager
-        val similarAndRecommendationsTabLayout = binding.tabLayout
+        val similarAndRecommendationsViewPager = binding.vpSimilarRecommendation
+        val similarAndRecommendationsTabLayout = binding.tlSimilarRecommendation
 
         // Initialize pagerAdapter property
         similarAndRecommendationsPagerAdapter = SimilarTvRecommendationsPagerAdapter(this)
@@ -154,8 +158,73 @@ class TvDetailsFragment : Fragment() {
             }
         }.attach()
 
+    }
+    private fun setupVisual(mediaItem: DetailMediaItem) {
+        val hasVideos = !mediaItem.videos?.results.isNullOrEmpty()
+        val hasBackdrops = !mediaItem.images?.backdrops.isNullOrEmpty()
+        val hasPosters = !mediaItem.images?.posters.isNullOrEmpty()
+
+        if (!hasVideos && !hasBackdrops && !hasPosters) {
+            binding.cvVisualContent.visibility = View.GONE
+            return
+        }
+
+        binding.cvVisualContent.visibility = View.VISIBLE
+
+        val tabLayout = binding.tlVisualContent
+        val viewPager = binding.vpVisualContent
+        viewPager.isUserInputEnabled = false
+
+        val visibleTabs = mutableListOf<Int>()
+
+        if (hasVideos) {
+            visibleTabs.add(0) // Videos tab
+        }
+        if (hasBackdrops) {
+            visibleTabs.add(1) // Backdrops tab
+        }
+        if (hasPosters) {
+            visibleTabs.add(2) // Posters tab
+        }
+
+        if (visibleTabs.size == 1) {
+            tabLayout.visibility = View.GONE
+            binding.txtHeaderVisualContent.visibility = View.VISIBLE
+
+            when (visibleTabs[0]) {
+                0 -> binding.txtHeaderVisualContent.text = getString(R.string.videos)
+                1 -> binding.txtHeaderVisualContent.text = getString(R.string.backdrops)
+                2 -> binding.txtHeaderVisualContent.text = getString(R.string.posters)
+            }
+
+            viewPager.setCurrentItem(0, false)
+        } else {
+            tabLayout.visibility = View.VISIBLE
+            binding.txtHeaderVisualContent.visibility = View.GONE
+        }
+
+        visualContentPagerAdapter = VisualContentPagerAdapter(this, visibleTabs)
+        viewPager.adapter = visualContentPagerAdapter
+
+        for (i in 0 until tabLayout.tabCount) {
+            val tab = tabLayout.getTabAt(i)
+            if (tab != null && !visibleTabs.contains(i)) {
+                tabLayout.removeTab(tab)
+            }
+        }
+
+        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+            when (visibleTabs[position]) {
+                0 -> tab.text = getString(R.string.videos)
+                1 -> tab.text = getString(R.string.backdrops)
+                2 -> tab.text = getString(R.string.posters)
+            }
+        }.attach()
 
     }
+
+
+
     private fun setupSimilarAndRecommendations(mediaItem: DetailMediaItem) {
         val hasSimilar = !mediaItem.tvSimilar?.results.isNullOrEmpty()
         val hasRecommendations = !mediaItem.tvRecommendations?.results.isNullOrEmpty()
@@ -168,20 +237,20 @@ class TvDetailsFragment : Fragment() {
         binding.cvSimilarRecommendations.visibility = View.VISIBLE
 
         if (hasSimilar xor hasRecommendations) {
-            binding.tabLayout.visibility = View.GONE
-            binding.txtHeader.visibility = View.VISIBLE
-            binding.txtHeader.text = if (hasSimilar) {
+            binding.tlSimilarRecommendation.visibility = View.GONE
+            binding.txtHeaderSimilarRecommendation.visibility = View.VISIBLE
+            binding.txtHeaderSimilarRecommendation.text = if (hasSimilar) {
                 getString(R.string.similar_tv_show)
             } else {
                 getString(R.string.recommendations)
             }
         } else {
-            binding.tabLayout.visibility = View.VISIBLE
-            binding.txtHeader.visibility = View.GONE
+            binding.tlSimilarRecommendation.visibility = View.VISIBLE
+            binding.txtHeaderSimilarRecommendation.visibility = View.GONE
         }
 
         if (hasSimilar xor hasRecommendations) {
-            binding.viewPager.setCurrentItem(if (hasSimilar) 0 else 1, false)
+            binding.vpSimilarRecommendation.setCurrentItem(if (hasSimilar) 0 else 1, false)
         }
     }
 
@@ -218,6 +287,7 @@ class TvDetailsFragment : Fragment() {
                                 it.data?.let { mediaItem ->
                                     showSuccess()
                                     bindUI(mediaItem)
+                                    setupVisual(mediaItem)
                                     viewModel.updateMediaDetails(mediaItem)
                                     setupSimilarAndRecommendations(mediaItem)
 
