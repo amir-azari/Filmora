@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.detail.PosterFragment">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_poster"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:orientation="horizontal"
+        android:visibility="visible"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:listitem="@layout/item_poster" />
+    <Button
+        android:id="@+id/btn_allPosters"
+        android:layout_width="@dimen/_90mdp"
+        android:layout_height="@dimen/_30mdp"
+        android:layout_marginEnd="@dimen/_12mdp"
+        android:background="@drawable/transparent_button_with_border"
+        android:text="@string/all_posters"
+        android:layout_marginTop="@dimen/_9mdp"
+        android:textAllCaps="false"
+        android:textColor="@color/textColor"
+        android:textSize="@dimen/_8font_mdp"
+        android:textStyle="bold"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rv_poster" />
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
