@@ -2,21 +2,10 @@ package azari.amirhossein.filmora.data.repository
 
 import azari.amirhossein.filmora.data.source.RemoteDataSource
 import azari.amirhossein.filmora.models.detail.DetailMediaItem
-import azari.amirhossein.filmora.models.detail.ResponseMovieRecommendations
-import azari.amirhossein.filmora.models.detail.ResponseMovieSimilar
-import azari.amirhossein.filmora.models.detail.ResponseTvRecommendations
-import azari.amirhossein.filmora.models.detail.ResponseTvSimilar
-import azari.amirhossein.filmora.utils.Constants
-import azari.amirhossein.filmora.utils.NetworkRequest
-import azari.amirhossein.filmora.utils.NetworkResponse
-import azari.amirhossein.filmora.utils.Quadruple
+import azari.amirhossein.filmora.utils.*
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.zip
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.*
 import javax.inject.Inject
-
 
 class DetailsRepository @Inject constructor(private val remote: RemoteDataSource) {
 
@@ -48,12 +37,33 @@ class DetailsRepository @Inject constructor(private val remote: RemoteDataSource
                                 NetworkResponse(recommendationsResponse).handleNetworkResponse()
                             )
                         }
-                        .zip(flow { emit(remote.getLanguage()) }) { (details, credits, similar, recommendations), languageResponse ->
+                        .zip(flow { emit(remote.getMovieVideos(id)) }) { (details, credits, similar, recommendations), videosResponse ->
+                            Quintuple(
+                                details,
+                                credits,
+                                similar,
+                                recommendations,
+                                NetworkResponse(videosResponse).handleNetworkResponse()
+                            )
+                        }
+                        .zip(flow { emit(remote.getMovieImages(id)) }) { (details, credits, similar, recommendations, videos), imagesResponse ->
+                            Sixtuple(
+                                details,
+                                credits,
+                                similar,
+                                recommendations,
+                                videos,
+                                NetworkResponse(imagesResponse).handleNetworkResponse()
+                            )
+                        }
+                        .zip(flow { emit(remote.getLanguage()) }) { (details, credits, similar, recommendations, videos, images), languageResponse ->
                             DetailMediaItem(
                                 movie = (details as? NetworkRequest.Success)?.data,
                                 credits = (credits as? NetworkRequest.Success)?.data,
                                 similar = (similar as? NetworkRequest.Success)?.data,
                                 recommendations = (recommendations as? NetworkRequest.Success)?.data,
+                                videos = (videos as? NetworkRequest.Success)?.data,
+                                images = (images as? NetworkRequest.Success)?.data,
                                 language = (NetworkResponse(languageResponse).handleNetworkResponse() as? NetworkRequest.Success)?.data
                             )
                         }
@@ -85,12 +95,33 @@ class DetailsRepository @Inject constructor(private val remote: RemoteDataSource
                                 NetworkResponse(recommendationsResponse).handleNetworkResponse()
                             )
                         }
-                        .zip(flow { emit(remote.getLanguage()) }) { (details, credits, similar, recommendations), languageResponse ->
+                        .zip(flow { emit(remote.getTvVideos(id)) }) { (details, credits, similar, recommendations), videosResponse ->
+                            Quintuple(
+                                details,
+                                credits,
+                                similar,
+                                recommendations,
+                                NetworkResponse(videosResponse).handleNetworkResponse()
+                            )
+                        }
+                        .zip(flow { emit(remote.getTvImages(id)) }) { (details, credits, similar, recommendations, videos), imagesResponse ->
+                            Sixtuple(
+                                details,
+                                credits,
+                                similar,
+                                recommendations,
+                                videos,
+                                NetworkResponse(imagesResponse).handleNetworkResponse()
+                            )
+                        }
+                        .zip(flow { emit(remote.getLanguage()) }) { (details, credits, similar, recommendations, videos, images), languageResponse ->
                             DetailMediaItem(
                                 tv = (details as? NetworkRequest.Success)?.data,
                                 credits = (credits as? NetworkRequest.Success)?.data,
                                 tvSimilar = (similar as? NetworkRequest.Success)?.data,
                                 tvRecommendations = (recommendations as? NetworkRequest.Success)?.data,
+                                videos = (videos as? NetworkRequest.Success)?.data,
+                                images = (images as? NetworkRequest.Success)?.data,
                                 language = (NetworkResponse(languageResponse).handleNetworkResponse() as? NetworkRequest.Success)?.data
                             )
                         }
@@ -98,12 +129,9 @@ class DetailsRepository @Inject constructor(private val remote: RemoteDataSource
                             emit(NetworkRequest.Success(mediaItem))
                         }
                 }
-
-                else -> emit(NetworkRequest.Error(Constants.Message.INVALID_MEDIA_TYPE))
             }
         } catch (e: Exception) {
-            emit(NetworkRequest.Error(e.localizedMessage ?: Constants.Message.UNKNOWN_ERROR))
+            emit(NetworkRequest.Error(e.message ?: "An error occurred"))
         }
     }.flowOn(Dispatchers.IO)
 }
-
