@@ -1,0 +1,82 @@
+package azari.amirhossein.filmora.ui.detail
+
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.LinearLayoutManager
+import azari.amirhossein.filmora.adapter.PosterAdapter
+import azari.amirhossein.filmora.databinding.FragmentPosterBinding
+import azari.amirhossein.filmora.utils.NetworkRequest
+import azari.amirhossein.filmora.viewmodel.DetailsViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+
+@AndroidEntryPoint
+class PosterFragment : Fragment(){
+    //Binding
+    private var _binding: FragmentPosterBinding? = null
+    private val binding get() = _binding!!
+
+    private val viewModel: DetailsViewModel by viewModels({ requireParentFragment() })
+    private val posterAdapter by lazy { PosterAdapter() }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View {
+        // Inflate the layout for this fragment
+        _binding = FragmentPosterBinding.inflate(inflater, container, false)
+        return binding.root
+
+
+    }
+    private fun observePoster() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.images.collect { result ->
+                    when (result) {
+                        is NetworkRequest.Success -> {
+                            binding.btnAllPosters.visibility =View.GONE
+                            if (result.data?.posters?.size!! > 10){
+                                binding.btnAllPosters.visibility =View.VISIBLE
+                            }
+                            posterAdapter.submitList(result.data.posters)
+                        }
+
+                        else -> Unit
+                    }
+                }
+            }
+        }
+    }
+
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setupRecyclerView()
+        observePoster()
+
+    }
+    private fun setupRecyclerView() {
+        binding.rvPoster.apply {
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            adapter = posterAdapter
+            setHasFixedSize(false)
+
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+
+}
