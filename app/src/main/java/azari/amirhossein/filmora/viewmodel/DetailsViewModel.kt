@@ -4,10 +4,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import azari.amirhossein.filmora.data.repository.DetailsRepository
 import azari.amirhossein.filmora.models.detail.DetailMediaItem
+import azari.amirhossein.filmora.models.detail.ResponseImage
 import azari.amirhossein.filmora.models.detail.ResponseMovieRecommendations
 import azari.amirhossein.filmora.models.detail.ResponseMovieSimilar
 import azari.amirhossein.filmora.models.detail.ResponseTvRecommendations
 import azari.amirhossein.filmora.models.detail.ResponseTvSimilar
+import azari.amirhossein.filmora.models.detail.ResponseVideo
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.Event
 import azari.amirhossein.filmora.utils.NetworkChecker
@@ -39,6 +41,11 @@ class DetailsViewModel @Inject constructor(
     private val _tvRecommendations = MutableStateFlow<NetworkRequest<ResponseTvRecommendations>>(NetworkRequest.Loading())
     val tvRecommendations: StateFlow<NetworkRequest<ResponseTvRecommendations>> = _tvRecommendations
 
+    private val _videos = MutableStateFlow<NetworkRequest<ResponseVideo>>(NetworkRequest.Loading())
+    val videos: StateFlow<NetworkRequest<ResponseVideo>> = _videos
+
+    private val _images = MutableStateFlow<NetworkRequest<ResponseImage>>(NetworkRequest.Loading())
+    val images: StateFlow<NetworkRequest<ResponseImage>> = _images
 
     private var lastRequestedMediaId: Int? = null
     private var lastRequestedMediaType: String? = null
@@ -54,6 +61,8 @@ class DetailsViewModel @Inject constructor(
         mediaItem.recommendations?.let { _movieRecommendations.value = NetworkRequest.Success(it) }
         mediaItem.tvSimilar?.let { _tvSimilar.value = NetworkRequest.Success(it) }
         mediaItem.tvRecommendations?.let { _tvRecommendations.value = NetworkRequest.Success(it) }
+        mediaItem.videos?.let { _videos.value = NetworkRequest.Success(it) }
+        mediaItem.images?.let { _images.value = NetworkRequest.Success(it) }
     }
 
 
