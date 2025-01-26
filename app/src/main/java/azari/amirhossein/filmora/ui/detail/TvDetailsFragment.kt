@@ -7,6 +7,7 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -174,6 +175,7 @@ class TvDetailsFragment : Fragment() {
         val tabLayout = binding.tlVisualContent
         val viewPager = binding.vpVisualContent
         viewPager.isUserInputEnabled = false
+        viewPager.offscreenPageLimit = 1
 
         val visibleTabs = mutableListOf<Int>()
 

@@ -41,13 +41,11 @@ import azari.amirhossein.filmora.utils.toFormattedVoteAverage
 import azari.amirhossein.filmora.utils.toFormattedWithUnits
 import azari.amirhossein.filmora.utils.toSpokenLanguagesText
 import azari.amirhossein.filmora.viewmodel.DetailsViewModel
-import coil3.dispose
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.math.log
 
 @AndroidEntryPoint
 class MovieDetailFragment : Fragment() {
@@ -67,8 +65,8 @@ class MovieDetailFragment : Fragment() {
     @Inject
     lateinit var creditAdapter: CreditAdapter
 
-    private lateinit var similarAndRecommendationsPagerAdapter: SimilarMovieRecommendationsPagerAdapter
-    private lateinit var visualContentPagerAdapter: VisualContentPagerAdapter
+    private  val similarAndRecommendationsPagerAdapter by lazy {   SimilarMovieRecommendationsPagerAdapter(this) }
+    private var visualContentPagerAdapter: VisualContentPagerAdapter? = null
 
     // State variables for overview expansion and configuration
     private var isOverviewExpanded = false
@@ -146,7 +144,6 @@ class MovieDetailFragment : Fragment() {
         val similarAndRecommendationsTabLayout = binding.tlSimilarRecommendation
 
         // Initialize pagerAdapter property
-        similarAndRecommendationsPagerAdapter = SimilarMovieRecommendationsPagerAdapter(this)
         similarAndRecommendationsViewPager.adapter = similarAndRecommendationsPagerAdapter
         similarAndRecommendationsViewPager.isUserInputEnabled = false
         similarAndRecommendationsViewPager.offscreenPageLimit = 1
@@ -208,7 +205,7 @@ class MovieDetailFragment : Fragment() {
         val tabLayout = binding.tlVisualContent
         val viewPager = binding.vpVisualContent
         viewPager.isUserInputEnabled = false
-
+        viewPager.offscreenPageLimit = 1
 
         val visibleTabs = mutableListOf<Int>()
 

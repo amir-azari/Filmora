@@ -798,7 +798,7 @@
                 <androidx.viewpager2.widget.ViewPager2
                     android:id="@+id/vp_visual_content"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:paddingTop="@dimen/_9mdp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/txt_header_visual_content" />
@@ -851,7 +851,7 @@
                     <!-- ViewPager2 -->
                     <androidx.viewpager2.widget.ViewPager2
                         android:id="@+id/vp_similar_recommendation"
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingTop="@dimen/_9mdp"
                         app:layout_constraintStart_toStartOf="parent"
