@@ -20,6 +20,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingTop="@dimen/_4mdp"
             android:paddingBottom="@dimen/_5mdp"
             android:paddingHorizontal="@dimen/_4mdp">
             <!-- Poster Image -->
