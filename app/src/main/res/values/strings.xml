@@ -83,7 +83,8 @@
     <string name="backdrops">Backdrops</string>
     <string name="posters">Posters</string>
 
-
+    <string name="written_on_date">Written on %1$s</string>
+    <string name="review_rating">★ %1$s</string>
     <string name="video_thumbnail">Thumbnail image for the video</string>
     <string name="play_video">Play icon to indicate the video can be played</string>
     <string name="placeholder_video">Placeholder image for video thumbnail</string>
@@ -94,4 +95,5 @@
     <string name="all_backdrops">All Backdrops</string>
     <string name="all_videos">All Videos</string>
     <string name="all_posters">All Posters</string>
+    <string name="reviews">Reviews</string>
 </resources>

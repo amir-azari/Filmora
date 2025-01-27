@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -26,6 +27,7 @@ import azari.amirhossein.filmora.models.ResponseLanguage
 import azari.amirhossein.filmora.models.detail.DetailMediaItem
 import azari.amirhossein.filmora.models.detail.ResponseCredit
 import azari.amirhossein.filmora.models.detail.ResponseMovieDetails
+import azari.amirhossein.filmora.models.detail.ResponseReviews
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.NetworkRequest
 import azari.amirhossein.filmora.utils.customize
@@ -71,6 +73,7 @@ class MovieDetailFragment : Fragment() {
     // State variables for overview expansion and configuration
     private var isOverviewExpanded = false
     private val overviewMaxLines = Constants.Defaults.OVERVIEW_MAX_LINES
+    private val overviewReviewsMaxLines = 3
 
     private val viewModel: DetailsViewModel by viewModels()
 
@@ -115,6 +118,16 @@ class MovieDetailFragment : Fragment() {
             txtOverview = binding.txtOverview,
             imgExpand = binding.imgExpand,
             overviewMaxLines = overviewMaxLines,
+            isOverviewExpanded = false
+        ) { isExpanded ->
+
+            isOverviewExpanded = isExpanded
+        }
+
+        binding.reviewContainer.setupOverviewExpansion(
+            txtOverview = binding.tvReviewContent,
+            imgExpand = binding.imgReviewContentExpand,
+            overviewMaxLines = overviewReviewsMaxLines,
             isOverviewExpanded = false
         ) { isExpanded ->
 
@@ -351,11 +364,65 @@ class MovieDetailFragment : Fragment() {
         }
     }
 
+    private fun handleOverviewReviewsExpansion() {
+        binding.tvReviewContent.maxLines = overviewReviewsMaxLines
+        binding.tvReviewContent.ellipsize = TextUtils.TruncateAt.END
+
+        binding.tvReviewContent.post {
+            val isEllipsized = binding.tvReviewContent.layout?.let { layout ->
+                layout.getEllipsisCount(layout.lineCount - 1) > 0
+            } ?: false
+
+            binding.imgReviewContentExpand.visibility = if (isEllipsized) View.VISIBLE else View.INVISIBLE
+        }
+    }
+
     private fun bindUI(data: DetailMediaItem) {
         data.movie?.let { bindUiDetail(it) }
         data.credits?.let { bindUiCast(it) }
         data.language?.let { bindUiLanguage(it) }
+        data.reviews?.let { bindUiReview(it) }
     }
+
+    private fun bindUiReview(data: ResponseReviews) {
+        binding.apply {
+            if (data.results?.isEmpty() == true) {
+                cvReview.visibility = View.GONE
+            } else {
+                cvReview.visibility = View.VISIBLE
+
+                val posterFullPath = if (data.results?.get(0)?.authorDetails?.avatarPath.isNullOrEmpty()) {
+                    null
+                } else {
+                    baseUrl + Constants.ImageSize.ORIGINAL + data.results?.get(0)?.authorDetails?.avatarPath
+                }
+
+                ivProfileReviewAuthor.loadImageWithoutShimmer(
+                    posterFullPath,
+                    R.drawable.image_slash_small,
+                    R.drawable.image_small,
+                    originalScaleType,
+                    false
+                )
+                tvReviewAuthor.text = data.results?.get(0)?.author
+                val createdAt = data.results?.get(0)?.createdAt?.toFormattedDate()
+                tvReviewDate.text = getString(R.string.written_on_date, createdAt ?: "N/A")
+
+                val rating = data.results?.get(0)?.authorDetails?.rating?.toString()
+                tvReviewRating.text = getString(R.string.review_rating, rating ?: "N/A")
+
+               tvReviewContent.text = data.results?.get(0)?.content ?: ""
+                handleOverviewReviewsExpansion()
+                layoutSeeAllReviews.visibility = if (data.results?.size!! > 1) {
+                    View.VISIBLE
+                } else {
+                    View.GONE
+                }
+            }
+        }
+    }
+
+
 
     private fun bindUiDetail(data: ResponseMovieDetails) {
         binding.apply {
