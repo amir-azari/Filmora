@@ -12,5 +12,6 @@ data class DetailMediaItem(
     val tvSimilar: ResponseTvSimilar? = null,
     val tvRecommendations: ResponseTvRecommendations? = null,
     val videos: ResponseVideo? = null,
-    val images: ResponseImage? = null
+    val images: ResponseImage? = null,
+    val reviews: ResponseReviews? =null
 )

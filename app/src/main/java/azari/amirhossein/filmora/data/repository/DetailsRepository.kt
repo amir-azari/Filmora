@@ -57,6 +57,17 @@ class DetailsRepository @Inject constructor(private val remote: RemoteDataSource
                             )
                         }
                         .zip(flow { emit(remote.getLanguage()) }) { (details, credits, similar, recommendations, videos, images), languageResponse ->
+                            Septuple(
+                                details,
+                                credits,
+                                similar,
+                                recommendations,
+                                videos,
+                                images,
+                                NetworkResponse(languageResponse).handleNetworkResponse()
+                            )
+                        }
+                        .zip(flow { emit(remote.getMovieReviews(id)) }) { (details, credits, similar, recommendations, videos, images , language), reviewsResponse ->
                             DetailMediaItem(
                                 movie = (details as? NetworkRequest.Success)?.data,
                                 credits = (credits as? NetworkRequest.Success)?.data,
@@ -64,7 +75,8 @@ class DetailsRepository @Inject constructor(private val remote: RemoteDataSource
                                 recommendations = (recommendations as? NetworkRequest.Success)?.data,
                                 videos = (videos as? NetworkRequest.Success)?.data,
                                 images = (images as? NetworkRequest.Success)?.data,
-                                language = (NetworkResponse(languageResponse).handleNetworkResponse() as? NetworkRequest.Success)?.data
+                                language = (language as? NetworkRequest.Success)?.data,
+                                reviews = (NetworkResponse(reviewsResponse).handleNetworkResponse() as? NetworkRequest.Success)?.data
                             )
                         }
                         .collect { mediaItem ->
@@ -115,6 +127,18 @@ class DetailsRepository @Inject constructor(private val remote: RemoteDataSource
                             )
                         }
                         .zip(flow { emit(remote.getLanguage()) }) { (details, credits, similar, recommendations, videos, images), languageResponse ->
+                            Septuple(
+                                details,
+                                credits,
+                                similar,
+                                recommendations,
+                                videos,
+                                images,
+                                NetworkResponse(languageResponse).handleNetworkResponse()
+                            )
+                        }
+
+                        .zip(flow { emit(remote.getTvReviews(id)) }) { (details, credits, similar, recommendations, videos, images, language), reviewsResponse ->
                             DetailMediaItem(
                                 tv = (details as? NetworkRequest.Success)?.data,
                                 credits = (credits as? NetworkRequest.Success)?.data,
@@ -122,7 +146,8 @@ class DetailsRepository @Inject constructor(private val remote: RemoteDataSource
                                 tvRecommendations = (recommendations as? NetworkRequest.Success)?.data,
                                 videos = (videos as? NetworkRequest.Success)?.data,
                                 images = (images as? NetworkRequest.Success)?.data,
-                                language = (NetworkResponse(languageResponse).handleNetworkResponse() as? NetworkRequest.Success)?.data
+                                language = (language as? NetworkRequest.Success)?.data,
+                                reviews = (NetworkResponse(reviewsResponse).handleNetworkResponse() as? NetworkRequest.Success)?.data
                             )
                         }
                         .collect { mediaItem ->
