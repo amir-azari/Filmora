@@ -11,6 +11,7 @@ import azari.amirhossein.filmora.models.detail.ResponseCredit
 import azari.amirhossein.filmora.models.detail.ResponseImage
 import azari.amirhossein.filmora.models.detail.ResponseMovieDetails
 import azari.amirhossein.filmora.models.detail.ResponseMovieRecommendations
+import azari.amirhossein.filmora.models.detail.ResponseReviews
 import azari.amirhossein.filmora.models.detail.ResponseTvDetails
 import azari.amirhossein.filmora.models.detail.ResponseTvRecommendations
 import azari.amirhossein.filmora.models.detail.ResponseTvSimilar
@@ -85,6 +86,9 @@ interface ApiServices {
     @GET("movie/{movie_id}/images")
     suspend fun getMovieImages (@Path("movie_id")movieId: Int): Response<ResponseImage>
 
+    @GET("movie/{movie_id}/reviews")
+    suspend fun getMovieReviews (@Path("movie_id")movieId: Int): Response<ResponseReviews>
+
     //---------TVs---------
 
     // Search TV
@@ -121,6 +125,9 @@ interface ApiServices {
 
     @GET("tv/{series_id}/images")
     suspend fun getTvImages (@Path("series_id")seriesId: Int): Response<ResponseImage>
+
+    @GET("tv/{series_id}/reviews")
+    suspend fun getTvReviews (@Path("series_id")seriesId: Int): Response<ResponseReviews>
 
     //---------All(Movie , Tv , People)---------
 
