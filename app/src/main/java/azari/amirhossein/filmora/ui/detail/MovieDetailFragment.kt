@@ -67,7 +67,7 @@ class MovieDetailFragment : Fragment() {
     @Inject
     lateinit var creditAdapter: CreditAdapter
 
-    private  val similarAndRecommendationsPagerAdapter by lazy {   SimilarMovieRecommendationsPagerAdapter(this) }
+    private lateinit var similarAndRecommendationsPagerAdapter : SimilarMovieRecommendationsPagerAdapter
     private var visualContentPagerAdapter: VisualContentPagerAdapter? = null
 
     // State variables for overview expansion and configuration
@@ -99,7 +99,7 @@ class MovieDetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupViewPager()
+        setupViewPagersSimilarAndRecommendations()
 
         // Extract fragment arguments
         args = MovieDetailFragmentArgs.fromBundle(requireArguments())
@@ -123,7 +123,6 @@ class MovieDetailFragment : Fragment() {
 
             isOverviewExpanded = isExpanded
         }
-
         binding.reviewContainer.setupOverviewExpansion(
             txtOverview = binding.tvReviewContent,
             imgExpand = binding.imgReviewContentExpand,
@@ -133,7 +132,6 @@ class MovieDetailFragment : Fragment() {
 
             isOverviewExpanded = isExpanded
         }
-
         observeViewModel()
 
         viewLifecycleOwner.observeLoginStatus(
@@ -145,19 +143,28 @@ class MovieDetailFragment : Fragment() {
                 binding.cvMediaAction.visibility = View.VISIBLE
             }
         )
+        savedInstanceState?.getInt("scroll_position")?.let { scrollPosition ->
+            binding.nestedScrollView.post {
+                binding.nestedScrollView.scrollTo(0, scrollPosition)
+            }
+        }
 
+    }
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt("scroll_position", binding.nestedScrollView.scrollY)
     }
 
     private fun setupUI() {
         setupRecyclerViews()
     }
 
-    private fun setupViewPager() {
+    private fun setupViewPagersSimilarAndRecommendations() {
         val similarAndRecommendationsViewPager = binding.vpSimilarRecommendation
         val similarAndRecommendationsTabLayout = binding.tlSimilarRecommendation
 
         // Initialize pagerAdapter property
-        similarAndRecommendationsViewPager.adapter = similarAndRecommendationsPagerAdapter
+        similarAndRecommendationsViewPager.adapter = SimilarMovieRecommendationsPagerAdapter(this)
         similarAndRecommendationsViewPager.isUserInputEnabled = false
         similarAndRecommendationsViewPager.offscreenPageLimit = 1
         TabLayoutMediator(
@@ -221,16 +228,9 @@ class MovieDetailFragment : Fragment() {
         viewPager.offscreenPageLimit = 1
 
         val visibleTabs = mutableListOf<Int>()
-
-        if (hasVideos) {
-            visibleTabs.add(0) // Videos tab
-        }
-        if (hasBackdrops) {
-            visibleTabs.add(1) // Backdrops tab
-        }
-        if (hasPosters) {
-            visibleTabs.add(2) // Posters tab
-        }
+        if (hasVideos) visibleTabs.add(0)
+        if (hasBackdrops) visibleTabs.add(1)
+        if (hasPosters) visibleTabs.add(2)
 
         if (visibleTabs.size == 1) {
             tabLayout.visibility = View.GONE
@@ -242,7 +242,7 @@ class MovieDetailFragment : Fragment() {
                 2 -> binding.txtHeaderVisualContent.text = getString(R.string.posters)
             }
 
-            viewPager.setCurrentItem(0, false)
+            viewPager.setCurrentItem(0, true)
         } else {
             tabLayout.visibility = View.VISIBLE
             binding.txtHeaderVisualContent.visibility = View.GONE
@@ -411,7 +411,7 @@ class MovieDetailFragment : Fragment() {
                 val rating = data.results?.get(0)?.authorDetails?.rating?.toString()
                 tvReviewRating.text = getString(R.string.review_rating, rating ?: "N/A")
 
-               tvReviewContent.text = data.results?.get(0)?.content ?: ""
+                tvReviewContent.text = data.results?.get(0)?.content ?: ""
                 handleOverviewReviewsExpansion()
                 layoutSeeAllReviews.visibility = if (data.results?.size!! > 1) {
                     View.VISIBLE
@@ -538,5 +538,7 @@ class MovieDetailFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        visualContentPagerAdapter = null
+
     }
 }

@@ -2,12 +2,10 @@ package azari.amirhossein.filmora.ui.detail
 
 import android.os.Bundle
 import android.text.TextUtils
-import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewTreeObserver
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -16,11 +14,11 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.viewpager2.widget.ViewPager2
 import azari.amirhossein.filmora.R
 import azari.amirhossein.filmora.adapter.CreditAdapter
 import azari.amirhossein.filmora.adapter.GenresAdapter
 import azari.amirhossein.filmora.adapter.SeasonsAdapter
+import azari.amirhossein.filmora.adapter.SimilarMovieRecommendationsPagerAdapter
 import azari.amirhossein.filmora.adapter.SimilarTvRecommendationsPagerAdapter
 import azari.amirhossein.filmora.adapter.VisualContentPagerAdapter
 import azari.amirhossein.filmora.data.SessionManager
@@ -70,7 +68,7 @@ class TvDetailsFragment : Fragment() {
     lateinit var creditAdapter: CreditAdapter
 
     private lateinit var similarAndRecommendationsPagerAdapter: SimilarTvRecommendationsPagerAdapter
-    private lateinit var visualContentPagerAdapter: VisualContentPagerAdapter
+    private  var visualContentPagerAdapter: VisualContentPagerAdapter? = null
 
     // State variables for overview expansion and configuration
     private var isOverviewExpanded = false
@@ -100,7 +98,7 @@ class TvDetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupViewPager()
+        setupViewPagersSimilarAndRecommendations()
 
         // Extract fragment arguments
         args = MovieDetailFragmentArgs.fromBundle(requireArguments())
@@ -148,12 +146,21 @@ class TvDetailsFragment : Fragment() {
                 binding.cvMediaAction.visibility = View.VISIBLE
             }
         )
-    }
+        savedInstanceState?.getInt("scroll_position")?.let { scrollPosition ->
+            binding.nestedScrollView.post {
+                binding.nestedScrollView.scrollTo(0, scrollPosition)
+            }
+        }
 
+    }
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt("scroll_position", binding.nestedScrollView.scrollY)
+    }
     private fun setupUI() {
         setupRecyclerViews()
     }
-    private fun setupViewPager() {
+    private fun setupViewPagersSimilarAndRecommendations() {
         val similarAndRecommendationsViewPager = binding.vpSimilarRecommendation
         val similarAndRecommendationsTabLayout = binding.tlSimilarRecommendation
 
@@ -535,6 +542,7 @@ class TvDetailsFragment : Fragment() {
     }
     override fun onDestroyView() {
         super.onDestroyView()
+        visualContentPagerAdapter = null
         _binding = null
     }
 }
