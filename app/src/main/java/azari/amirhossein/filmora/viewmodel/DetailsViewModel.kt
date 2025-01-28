@@ -49,6 +49,7 @@ class DetailsViewModel @Inject constructor(
 
     private var lastRequestedMediaId: Int? = null
     private var lastRequestedMediaType: String? = null
+    private val mediaDetailsCache = mutableMapOf<String, DetailMediaItem>()
 
     init {
         networkChecker.startMonitoring()
@@ -88,9 +89,20 @@ class DetailsViewModel @Inject constructor(
             lastRequestedMediaId = id
             lastRequestedMediaType = type
 
+            // Check cache first
+            val cacheKey = "${type}_$id"
+            mediaDetailsCache[cacheKey]?.let { cachedDetails ->
+                _mediaDetails.value = Event(NetworkRequest.Success(cachedDetails))
+                return@launch
+            }
+
             if (networkChecker.isNetworkAvailable.value) {
                 repository.getMediaDetails(id, type)
                     .collect { result ->
+                        if (result is NetworkRequest.Success) {
+                            // Cache successful results
+                            result.data?.let { mediaDetailsCache[cacheKey] = it }
+                        }
                         _mediaDetails.value = Event(result)
                     }
             } else {
@@ -99,9 +111,9 @@ class DetailsViewModel @Inject constructor(
             }
         }
     }
-
     override fun onCleared() {
         super.onCleared()
+        mediaDetailsCache.clear()
         networkChecker.stopMonitoring()
     }
 }
