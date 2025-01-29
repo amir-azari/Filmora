@@ -328,13 +328,14 @@ class MovieDetailFragment : Fragment() {
 
     private fun showLoading() {
         binding.apply {
-            progressBar.visibility = View.VISIBLE
             mainContentContainer.visibility = View.GONE
             internetLay.visibility = View.GONE
+            progressBar.visibility = View.VISIBLE
         }
     }
 
     private fun showSuccess() {
+        binding.internetLay.visibility  =View.GONE
         binding.progressBar.visibility = View.GONE
         binding.mainContentContainer.visibility = View.VISIBLE
     }
