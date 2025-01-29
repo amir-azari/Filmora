@@ -1,5 +1,7 @@
 package azari.amirhossein.filmora.data.repository
 
+import azari.amirhossein.filmora.data.database.entity.DetailEntity
+import azari.amirhossein.filmora.data.source.LocalDataSource
 import azari.amirhossein.filmora.data.source.RemoteDataSource
 import azari.amirhossein.filmora.models.detail.DetailMediaItem
 import azari.amirhossein.filmora.utils.*
@@ -7,7 +9,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
-class DetailsRepository @Inject constructor(private val remote: RemoteDataSource) {
+class DetailsRepository @Inject constructor(private val remote: RemoteDataSource, private val local: LocalDataSource) {
 
     fun getMediaDetails(id: Int, type: String): Flow<NetworkRequest<DetailMediaItem>> = flow {
         emit(NetworkRequest.Loading())
@@ -80,6 +82,7 @@ class DetailsRepository @Inject constructor(private val remote: RemoteDataSource
                             )
                         }
                         .collect { mediaItem ->
+                            local.saveDetail(mediaItem.toEntity())
                             emit(NetworkRequest.Success(mediaItem))
                         }
                 }
@@ -151,6 +154,7 @@ class DetailsRepository @Inject constructor(private val remote: RemoteDataSource
                             )
                         }
                         .collect { mediaItem ->
+                            local.saveDetail(mediaItem.toEntity())
                             emit(NetworkRequest.Success(mediaItem))
                         }
                 }
@@ -159,4 +163,51 @@ class DetailsRepository @Inject constructor(private val remote: RemoteDataSource
             emit(NetworkRequest.Error(e.message ?: "An error occurred"))
         }
     }.flowOn(Dispatchers.IO)
+
+    fun DetailEntity.toDetailMediaItem() = DetailMediaItem(
+        movie = this.movie,
+        tv = this.tv,
+        credits = this.credits,
+        language = this.language,
+        similar = this.similar,
+        recommendations = this.recommendations,
+        tvSimilar = this.tvSimilar,
+        tvRecommendations = this.tvRecommendations,
+        videos = this.videos,
+        images = this.images,
+        reviews = this.reviews
+    )
+
+    fun DetailMediaItem.toEntity() = DetailEntity(
+        id = this.movie?.id ?: this.tv?.id ?: 0,
+        movie = this.movie,
+        tv = this.tv,
+        credits = this.credits,
+        language = this.language,
+        similar = this.similar,
+        recommendations = this.recommendations,
+        tvSimilar = this.tvSimilar,
+        tvRecommendations = this.tvRecommendations,
+        videos = this.videos,
+        images = this.images,
+        reviews = this.reviews
+    )
+    suspend fun deleteExpiredDetails(expirationTime: Long) {
+        local.deleteExpiredDetailData(expirationTime)
+    }
+
+    // Get cached data
+    suspend fun getCachedData(id :Int): NetworkRequest<DetailMediaItem> {
+        return try {
+            // Try to get cached data
+            val cachedData = local.getDetailById(id).firstOrNull()
+            if (cachedData != null) {
+                NetworkRequest.Success(cachedData.toDetailMediaItem())
+            } else {
+                NetworkRequest.Error(Constants.Message.NO_INTERNET_CONNECTION)
+            }
+        } catch (e: Exception) {
+            NetworkRequest.Error("Failed to load cached data: ${e.localizedMessage}")
+        }
+    }
 }
