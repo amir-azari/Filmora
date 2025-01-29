@@ -15,6 +15,7 @@ import azari.amirhossein.filmora.utils.Event
 import azari.amirhossein.filmora.utils.NetworkChecker
 import azari.amirhossein.filmora.utils.NetworkRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -56,7 +57,17 @@ class DetailsViewModel @Inject constructor(
         monitorNetworkChanges()
     }
 
+    private val cleanupJob = viewModelScope.launch {
+        while(true) {
+            cleanExpiredRecords()
+            delay(30 * 60 * 1000)
+        }
+    }
 
+    private suspend fun cleanExpiredRecords() {
+        val oneHourAgo = System.currentTimeMillis() - Constants.Database.DETAIL_EXPIRATION_TIME // 1 hour in milliseconds
+        repository.deleteExpiredDetails(oneHourAgo)
+    }
     fun updateMediaDetails(mediaItem: DetailMediaItem) {
         mediaItem.similar?.let { _movieSimilar.value = NetworkRequest.Success(it) }
         mediaItem.recommendations?.let { _movieRecommendations.value = NetworkRequest.Success(it) }
@@ -70,18 +81,42 @@ class DetailsViewModel @Inject constructor(
     private fun monitorNetworkChanges() {
         viewModelScope.launch {
             networkChecker.isNetworkAvailable.collect { isAvailable ->
-                if (isAvailable) {
-                    lastRequestedMediaId?.let { id ->
-                        lastRequestedMediaType?.let { type ->
-                            getMediaDetails(id, type)
-                        }
-                    }
-                } else {
-                    _mediaDetails.value =
-                        Event(NetworkRequest.Error(Constants.Message.NO_INTERNET_CONNECTION))
-                }
+                if (isAvailable) handleOnlineState()
+                else handleOfflineState()
             }
         }
+    }
+
+    private fun handleOnlineState() {
+        lastRequestedMediaId?.let { id ->
+            lastRequestedMediaType?.let { type ->
+                getMediaDetails(id, type)
+            }
+        }
+    }
+
+    private suspend fun handleOfflineState() {
+        lastRequestedMediaId?.let { id ->
+            val cacheKey = "${lastRequestedMediaType}_$id"
+            mediaDetailsCache[cacheKey]?.let { cachedDetails ->
+                _mediaDetails.value = Event(NetworkRequest.Success(cachedDetails))
+            } ?: run {
+                when (val cachedResult = repository.getCachedData(id)) {
+                    is NetworkRequest.Success -> {
+                        cachedResult.data?.let {
+                            mediaDetailsCache[cacheKey] = it
+                            _mediaDetails.value = Event(NetworkRequest.Success(it))
+                        } ?: setErrorState()
+                    }
+                    is NetworkRequest.Error -> _mediaDetails.value = Event(cachedResult)
+                    else -> setErrorState()
+                }
+            }
+        } ?: setErrorState()
+    }
+
+    private fun setErrorState() {
+        _mediaDetails.value = Event(NetworkRequest.Error(Constants.Message.NO_INTERNET_CONNECTION))
     }
 
     fun getMediaDetails(id: Int, type: String) {
@@ -89,7 +124,6 @@ class DetailsViewModel @Inject constructor(
             lastRequestedMediaId = id
             lastRequestedMediaType = type
 
-            // Check cache first
             val cacheKey = "${type}_$id"
             mediaDetailsCache[cacheKey]?.let { cachedDetails ->
                 _mediaDetails.value = Event(NetworkRequest.Success(cachedDetails))
@@ -97,22 +131,28 @@ class DetailsViewModel @Inject constructor(
             }
 
             if (networkChecker.isNetworkAvailable.value) {
-                repository.getMediaDetails(id, type)
-                    .collect { result ->
-                        if (result is NetworkRequest.Success) {
-                            // Cache successful results
-                            result.data?.let { mediaDetailsCache[cacheKey] = it }
+                repository.getMediaDetails(id, type).collect { result ->
+                    when (result) {
+                        is NetworkRequest.Success -> {
+                            result.data?.let {
+                                mediaDetailsCache[cacheKey] = it
+                                updateMediaDetails(it)
+                            }
+                            _mediaDetails.value = Event(result)
                         }
-                        _mediaDetails.value = Event(result)
+                        is NetworkRequest.Error -> _mediaDetails.value = Event(result)
+                        else -> Unit
                     }
+                }
             } else {
-                _mediaDetails.value =
-                    Event(NetworkRequest.Error(Constants.Message.NO_INTERNET_CONNECTION))
+                handleOfflineState()
             }
         }
     }
+
     override fun onCleared() {
         super.onCleared()
+        cleanupJob.cancel()
         mediaDetailsCache.clear()
         networkChecker.stopMonitoring()
     }

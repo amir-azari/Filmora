@@ -87,7 +87,7 @@ object Constants {
     }
     object Database{
         const val DATABASE_NAME = "filmora_database"
-
+        const val DETAIL_EXPIRATION_TIME = 60 * 60 * 1000L // 1 hour in milliseconds
         const val HOME_TABLE = "home_table"
         const val MOVIES_TABLE = "movies_table"
         const val DETAIL_TABLE = "detail_table"
@@ -106,4 +106,6 @@ object Constants {
         const val TV = "tv"
         const val MOVIE = "movie"
     }
+
+
 }
