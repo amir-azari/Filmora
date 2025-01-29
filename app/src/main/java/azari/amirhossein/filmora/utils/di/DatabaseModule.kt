@@ -33,6 +33,6 @@ object DatabaseModule {
     @Provides
     @Singleton
     fun provideDao(database: AppDatabase): AppDao {
-        return database.combinedDataDao()
+        return database.ado()
     }
 }
