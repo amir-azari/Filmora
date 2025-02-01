@@ -3,6 +3,7 @@ package azari.amirhossein.filmora.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import azari.amirhossein.filmora.data.repository.DetailsRepository
+import azari.amirhossein.filmora.models.HomePageData
 import azari.amirhossein.filmora.models.detail.DetailMediaItem
 import azari.amirhossein.filmora.models.detail.ResponseImage
 import azari.amirhossein.filmora.models.detail.ResponseMovieRecommendations
@@ -11,7 +12,6 @@ import azari.amirhossein.filmora.models.detail.ResponseTvRecommendations
 import azari.amirhossein.filmora.models.detail.ResponseTvSimilar
 import azari.amirhossein.filmora.models.detail.ResponseVideo
 import azari.amirhossein.filmora.utils.Constants
-import azari.amirhossein.filmora.utils.Event
 import azari.amirhossein.filmora.utils.NetworkChecker
 import azari.amirhossein.filmora.utils.NetworkRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,8 +27,8 @@ class DetailsViewModel @Inject constructor(
     private val networkChecker: NetworkChecker,
 ) : ViewModel() {
 
-    private val _mediaDetails = MutableStateFlow<Event<NetworkRequest<DetailMediaItem>>>(Event(NetworkRequest.Loading()))
-    val mediaDetails: StateFlow<Event<NetworkRequest<DetailMediaItem>>?> = _mediaDetails
+    private val _mediaDetails = MutableStateFlow<NetworkRequest<DetailMediaItem>>((NetworkRequest.Loading()))
+    val mediaDetails: StateFlow<NetworkRequest<DetailMediaItem>> = _mediaDetails
 
     private val _movieSimilar = MutableStateFlow<NetworkRequest<ResponseMovieSimilar>>(NetworkRequest.Loading())
     val movieSimilar: StateFlow<NetworkRequest<ResponseMovieSimilar>> = _movieSimilar
@@ -94,29 +94,19 @@ class DetailsViewModel @Inject constructor(
             }
         }
     }
-
     private suspend fun handleOfflineState() {
         lastRequestedMediaId?.let { id ->
             val cacheKey = "${lastRequestedMediaType}_$id"
             mediaDetailsCache[cacheKey]?.let { cachedDetails ->
-                _mediaDetails.value = Event(NetworkRequest.Success(cachedDetails))
+                _mediaDetails.value = NetworkRequest.Success(cachedDetails)
             } ?: run {
-                when (val cachedResult = repository.getCachedData(id)) {
-                    is NetworkRequest.Success -> {
-                        cachedResult.data?.let {
-                            mediaDetailsCache[cacheKey] = it
-                            _mediaDetails.value = Event(NetworkRequest.Success(it))
-                        } ?: setErrorState()
-                    }
-                    is NetworkRequest.Error -> _mediaDetails.value = Event(cachedResult)
-                    else -> setErrorState()
-                }
+                _mediaDetails.value = repository.getCachedData(id)
             }
-        } ?: setErrorState()
+        }
     }
 
     private fun setErrorState() {
-        _mediaDetails.value = Event(NetworkRequest.Error(Constants.Message.NO_INTERNET_CONNECTION))
+        _mediaDetails.value = NetworkRequest.Error(Constants.Message.NO_INTERNET_CONNECTION)
     }
 
     fun getMediaDetails(id: Int, type: String) {
@@ -126,7 +116,7 @@ class DetailsViewModel @Inject constructor(
 
             val cacheKey = "${type}_$id"
             mediaDetailsCache[cacheKey]?.let { cachedDetails ->
-                _mediaDetails.value = Event(NetworkRequest.Success(cachedDetails))
+                _mediaDetails.value = NetworkRequest.Success(cachedDetails)
                 return@launch
             }
 
@@ -138,9 +128,9 @@ class DetailsViewModel @Inject constructor(
                                 mediaDetailsCache[cacheKey] = it
                                 updateMediaDetails(it)
                             }
-                            _mediaDetails.value = Event(result)
+                            _mediaDetails.value = result
                         }
-                        is NetworkRequest.Error -> _mediaDetails.value = Event(result)
+                        is NetworkRequest.Error -> _mediaDetails.value = result
                         else -> Unit
                     }
                 }
