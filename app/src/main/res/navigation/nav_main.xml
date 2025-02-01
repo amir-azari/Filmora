@@ -175,5 +175,25 @@
         app:popEnterAnim="@anim/nav_fade_in"
         app:popExitAnim="@anim/nav_fade_out"
         />
+    <fragment
+        android:id="@+id/recommendationsMovieFragment"
+        android:name="azari.amirhossein.filmora.ui.detail.RecommendationsMovieFragment"
+        android:label="fragment_recommendations_movie"
+        tools:layout="@layout/fragment_recommendations_movie" />
+    <fragment
+        android:id="@+id/recommendationsTvFragment"
+        android:name="azari.amirhossein.filmora.ui.detail.RecommendationsTvFragment"
+        android:label="fragment_recommendations_tv"
+        tools:layout="@layout/fragment_recommendations_tv" />
+    <fragment
+        android:id="@+id/similarTvFragment"
+        android:name="azari.amirhossein.filmora.ui.detail.SimilarTvFragment"
+        android:label="fragment_similar_tv"
+        tools:layout="@layout/fragment_similar_tv" />
+    <fragment
+        android:id="@+id/similarMovieFragment"
+        android:name="azari.amirhossein.filmora.ui.detail.SimilarMovieFragment"
+        android:label="fragment_similar_movie"
+        tools:layout="@layout/fragment_similar_movie" />
 
 </navigation>

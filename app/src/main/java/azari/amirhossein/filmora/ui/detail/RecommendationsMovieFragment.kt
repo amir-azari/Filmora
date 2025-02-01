@@ -12,7 +12,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import azari.amirhossein.filmora.adapter.RecommendationMovieAdapter
-import azari.amirhossein.filmora.databinding.FragmentRecommendationsBinding
+import azari.amirhossein.filmora.databinding.FragmentRecommendationsMovieBinding
 import azari.amirhossein.filmora.models.detail.ResponseMovieRecommendations
 import azari.amirhossein.filmora.ui.home.HomeFragmentDirections
 import azari.amirhossein.filmora.utils.Constants
@@ -23,7 +23,7 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class RecommendationsMovieFragment : Fragment() {
-    private var _binding: FragmentRecommendationsBinding? = null
+    private var _binding: FragmentRecommendationsMovieBinding? = null
     private val binding get() = _binding!!
 
     private val viewModel: DetailsViewModel by viewModels({ requireParentFragment() })
@@ -33,7 +33,7 @@ class RecommendationsMovieFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        _binding = FragmentRecommendationsBinding.inflate(inflater, container, false)
+        _binding = FragmentRecommendationsMovieBinding.inflate(inflater, container, false)
         return binding.root
 
     }
@@ -70,7 +70,7 @@ class RecommendationsMovieFragment : Fragment() {
     }
 
     private val clickMovie = { movie: ResponseMovieRecommendations.Result ->
-        val action = HomeFragmentDirections.actionToMovieDetail(Constants.MediaType.MOVIE, movie.id)
+        val action = RecommendationsMovieFragmentDirections.actionToMovieDetail(Constants.MediaType.MOVIE, movie.id)
         findNavController().navigate(action)
 
     }

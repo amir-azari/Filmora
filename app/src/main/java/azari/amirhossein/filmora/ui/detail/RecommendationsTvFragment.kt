@@ -12,7 +12,8 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import azari.amirhossein.filmora.adapter.RecommendationTvAdapter
-import azari.amirhossein.filmora.databinding.FragmentRecommendationsBinding
+import azari.amirhossein.filmora.databinding.FragmentRecommendationsTvBinding
+import azari.amirhossein.filmora.databinding.FragmentSimilarTvBinding
 import azari.amirhossein.filmora.models.detail.ResponseTvRecommendations
 import azari.amirhossein.filmora.models.detail.ResponseTvSimilar
 import azari.amirhossein.filmora.ui.home.HomeFragmentDirections
@@ -24,7 +25,7 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class RecommendationsTvFragment : Fragment() {
-    private var _binding: FragmentRecommendationsBinding? = null
+    private var _binding: FragmentRecommendationsTvBinding? = null
     private val binding get() = _binding!!
 
     private val viewModel: DetailsViewModel by viewModels({ requireParentFragment() })
@@ -35,7 +36,7 @@ class RecommendationsTvFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentRecommendationsBinding.inflate(inflater, container, false)
+        _binding = FragmentRecommendationsTvBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -69,7 +70,7 @@ class RecommendationsTvFragment : Fragment() {
     }
     //Click media
     private val clickTv = { tv: ResponseTvRecommendations.Result ->
-        val action = HomeFragmentDirections.actionToTvDetail(Constants.MediaType.TV,tv.id)
+        val action = RecommendationsTvFragmentDirections.actionToTvDetail(Constants.MediaType.TV,tv.id)
         findNavController().navigate(action)
 
     }

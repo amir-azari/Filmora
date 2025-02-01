@@ -12,7 +12,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import azari.amirhossein.filmora.adapter.SimilarTvAdapter
-import azari.amirhossein.filmora.databinding.FragmentSimilarBinding
+import azari.amirhossein.filmora.databinding.FragmentSimilarTvBinding
 import azari.amirhossein.filmora.models.detail.ResponseTvSimilar
 import azari.amirhossein.filmora.ui.home.HomeFragmentDirections
 import azari.amirhossein.filmora.utils.Constants
@@ -23,7 +23,7 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class SimilarTvFragment : Fragment() {
-    private var _binding: FragmentSimilarBinding? = null
+    private var _binding: FragmentSimilarTvBinding? = null
     private val binding get() = _binding!!
 
     private val viewModel: DetailsViewModel by viewModels({ requireParentFragment() })
@@ -34,7 +34,7 @@ class SimilarTvFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentSimilarBinding.inflate(inflater, container, false)
+        _binding = FragmentSimilarTvBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -68,7 +68,7 @@ class SimilarTvFragment : Fragment() {
     }
     //Click media
     private val clickTv = { tv: ResponseTvSimilar.Result ->
-        val action = HomeFragmentDirections.actionToTvDetail(Constants.MediaType.TV,tv.id)
+        val action = SimilarTvFragmentDirections.actionToTvDetail(Constants.MediaType.TV,tv.id)
         findNavController().navigate(action)
 
     }
