@@ -298,7 +298,7 @@ class TvDetailsFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.mediaDetails.collect { result ->
-                    result?.getContentIfNotHandled()?.let { it ->
+                    result.let { it ->
                         when (it) {
                             is NetworkRequest.Loading -> {
                                 showLoading()
