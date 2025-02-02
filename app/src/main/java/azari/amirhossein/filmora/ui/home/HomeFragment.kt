@@ -67,7 +67,11 @@ class HomeFragment : Fragment() {
         mayLikeMovieAdapter.setOnItemClickListener(clickMovie)
         mayLikeTvAdapter.setOnItemClickListener(clickTv)
         trendingAdapter.setOnItemClickListener(clickTrending)
+
+        binding.txtSeeAllMovies.setOnClickListener {
+            findNavController().navigate(R.id.actionHomeToMayLikeMovies)
         }
+    }
 
     // Setup recyclerView
     private fun setupRecyclerViews() {
