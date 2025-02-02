@@ -160,8 +160,7 @@
         app:exitAnim="@anim/nav_fade_out"
         app:popEnterAnim="@anim/nav_fade_in"
         app:popExitAnim="@anim/nav_fade_out"
-        app:popUpTo="@id/mayLikeMoviesFragment"
-        app:popUpToInclusive="false" />
+     />
     <fragment
         android:id="@+id/tvDetailsFragment"
         android:name="azari.amirhossein.filmora.ui.detail.TvDetailsFragment"
