@@ -96,7 +96,8 @@ dependencies {
     implementation(libs.lottie)
     //Shimmer
     implementation(libs.shimmer)
-
+    //Pagination:
+    implementation(libs.androidx.paging.runtime)
     implementation(libs.carouselrecyclerview)
 }
 kapt {
