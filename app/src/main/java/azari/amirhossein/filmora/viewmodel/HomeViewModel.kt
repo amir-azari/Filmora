@@ -22,8 +22,10 @@ class HomeViewModel @Inject constructor(
     private val networkChecker: NetworkChecker,
 ) : ViewModel() {
 
-    private val _homePageData = MutableStateFlow<NetworkRequest<HomePageData>>(NetworkRequest.Loading())
-    val homePageData: StateFlow<NetworkRequest<HomePageData>> = _homePageData
+    private val _homePageData by lazy {
+        MutableStateFlow<NetworkRequest<HomePageData>?>(null)
+    }
+    val homePageData: StateFlow<NetworkRequest<HomePageData>?> = _homePageData
 
     private val _randomMoviePoster = MutableStateFlow<String?>(null)
     val randomMoviePoster: StateFlow<String?> = _randomMoviePoster
@@ -64,11 +66,13 @@ class HomeViewModel @Inject constructor(
 
     private fun selectRandomPosters(data: HomePageData?) {
         val baseUrl = Constants.Network.IMAGE_BASE_URL
-        val movieResults = data?.recommendedMovies?.data?.results.orEmpty()
-        val tvResults = data?.recommendedTvs?.data?.results.orEmpty()
+        _randomMoviePoster.value = data?.recommendedMovies?.data?.results
+            ?.randomOrNull()?.backdropPath
+            ?.let { "$baseUrl${Constants.ImageSize.ORIGINAL}$it" }
 
-        _randomMoviePoster.value = movieResults.randomOrNull()?.backdropPath?.let { baseUrl + Constants.ImageSize.ORIGINAL + it }
-        _randomTvPoster.value = tvResults.randomOrNull()?.backdropPath?.let { baseUrl + Constants.ImageSize.ORIGINAL + it }
+        _randomTvPoster.value = data?.recommendedTvs?.data?.results
+            ?.randomOrNull()?.backdropPath
+            ?.let { "$baseUrl${Constants.ImageSize.ORIGINAL}$it" }
     }
 
     private fun filterTrendingMovies(data: HomePageData?) {
