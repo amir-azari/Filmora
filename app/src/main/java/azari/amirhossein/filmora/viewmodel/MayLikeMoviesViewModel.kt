@@ -28,6 +28,8 @@ class MayLikeMoviesViewModel @Inject constructor(
     private val _movies = MutableStateFlow<NetworkRequest<PagingData<ResponseMoviesList.Result>>>(NetworkRequest.Loading())
     val movies: StateFlow<NetworkRequest<PagingData<ResponseMoviesList.Result>>> = _movies
 
+    private var cachedMovies: PagingData<ResponseMoviesList.Result>? = null
+
     init {
         observeNetworkAndFetchMovies()
     }
@@ -38,7 +40,7 @@ class MayLikeMoviesViewModel @Inject constructor(
                 if (isAvailable) {
                     fetchMovies()
                 } else {
-                    _movies.value = NetworkRequest.Error(Constants.Message.NO_INTERNET_CONNECTION)
+                    handleOfflineState()
                 }
             }
         }
@@ -47,16 +49,27 @@ class MayLikeMoviesViewModel @Inject constructor(
     private fun fetchMovies() {
         viewModelScope.launch {
             repository.getMovies()
-                .cachedIn(viewModelScope) // Cache the flow
+                .cachedIn(viewModelScope)
                 .collectLatest { result ->
+                    cachedMovies = result
                     _movies.value = NetworkRequest.Success(result)
                 }
         }
     }
 
+    private fun handleOfflineState() {
+        if (cachedMovies != null) {
+            _movies.value = NetworkRequest.Success(cachedMovies!!)
+        } else {
+            _movies.value = NetworkRequest.Error(Constants.Message.NO_INTERNET_CONNECTION)
+        }
+    }
+
     override fun onCleared() {
         super.onCleared()
+        cachedMovies = null
         networkChecker.stopMonitoring()
     }
 }
+
 

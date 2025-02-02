@@ -72,7 +72,7 @@ class MayLikeMoviesFragment : Fragment() {
             }
         }
         // Collecting the movies
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch  {
             viewModel.movies.collect { state ->
                 when (state) {
                     is NetworkRequest.Loading -> {
