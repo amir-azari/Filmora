@@ -115,6 +115,7 @@ class MayLikeMoviesFragment : Fragment() {
     }
 
     private fun showSuccess() {
+        binding.internetLay.visibility  = View.GONE
         binding.progressBar.visibility = View.GONE
         binding.rvMovies.visibility = View.VISIBLE
 
