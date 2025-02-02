@@ -68,7 +68,7 @@ class HomeFragment : Fragment() {
         mayLikeTvAdapter.setOnItemClickListener(clickTv)
         trendingAdapter.setOnItemClickListener(clickTrending)
 
-        binding.txtSeeAllMovies.setOnClickListener {
+        binding.layoutSeeAllMovies.setOnClickListener {
             findNavController().navigate(R.id.actionHomeToMayLikeMovies)
         }
     }
