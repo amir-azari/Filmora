@@ -114,7 +114,14 @@
         android:label="@string/home"
         tools:layout="@layout/fragment_home" >
 
-
+        <action
+            android:id="@+id/actionHomeToMayLikeMovies"
+            app:destination="@id/mayLikeMoviesFragment"
+            app:enterAnim="@anim/nav_fade_in"
+            app:exitAnim="@anim/nav_fade_out"
+            app:popEnterAnim="@anim/nav_fade_in"
+            app:popExitAnim="@anim/nav_fade_out"
+            />
     </fragment>
 
 
@@ -153,7 +160,8 @@
         app:exitAnim="@anim/nav_fade_out"
         app:popEnterAnim="@anim/nav_fade_in"
         app:popExitAnim="@anim/nav_fade_out"
-        />
+        app:popUpTo="@id/mayLikeMoviesFragment"
+        app:popUpToInclusive="false" />
     <fragment
         android:id="@+id/tvDetailsFragment"
         android:name="azari.amirhossein.filmora.ui.detail.TvDetailsFragment"
@@ -175,6 +183,11 @@
         app:popEnterAnim="@anim/nav_fade_in"
         app:popExitAnim="@anim/nav_fade_out"
         />
+    <fragment
+        android:id="@+id/mayLikeMoviesFragment"
+        android:name="azari.amirhossein.filmora.ui.home.MayLikeMoviesFragment"
+        android:label="Movies you may like"
+        tools:layout="@layout/fragment_may_like_movies" />
     <fragment
         android:id="@+id/recommendationsMovieFragment"
         android:name="azari.amirhossein.filmora.ui.detail.RecommendationsMovieFragment"
