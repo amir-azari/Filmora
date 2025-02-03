@@ -122,6 +122,14 @@
             app:popEnterAnim="@anim/nav_fade_in"
             app:popExitAnim="@anim/nav_fade_out"
             />
+        <action
+            android:id="@+id/actionHomeToMayLikeTvs"
+            app:destination="@id/mayLikeTvsFragment"
+            app:enterAnim="@anim/nav_fade_in"
+            app:exitAnim="@anim/nav_fade_out"
+            app:popEnterAnim="@anim/nav_fade_in"
+            app:popExitAnim="@anim/nav_fade_out"
+            />
     </fragment>
 
 
@@ -207,5 +215,10 @@
         android:name="azari.amirhossein.filmora.ui.detail.SimilarMovieFragment"
         android:label="fragment_similar_movie"
         tools:layout="@layout/fragment_similar_movie" />
+    <fragment
+        android:id="@+id/mayLikeTvsFragment"
+        android:name="azari.amirhossein.filmora.ui.home.MayLikeTvsFragment"
+        android:label="fragment_may_like_tvs"
+        tools:layout="@layout/fragment_may_like_tvs" />
 
 </navigation>
