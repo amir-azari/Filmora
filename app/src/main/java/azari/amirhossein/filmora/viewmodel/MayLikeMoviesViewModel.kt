@@ -48,6 +48,7 @@ class MayLikeMoviesViewModel @Inject constructor(
 
     private fun fetchMovies() {
         viewModelScope.launch {
+            _movies.value = NetworkRequest.Loading()
             repository.getMovies()
                 .cachedIn(viewModelScope)
                 .collectLatest { result ->

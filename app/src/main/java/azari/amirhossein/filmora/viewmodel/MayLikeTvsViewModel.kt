@@ -47,6 +47,7 @@ class MayLikeTvsViewModel @Inject constructor(
 
     private fun fetchMovies() {
         viewModelScope.launch {
+            _tvs.value = NetworkRequest.Loading()
             repository.getTvs()
                 .cachedIn(viewModelScope) // Cache the flow
                 .collectLatest { result ->

@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import azari.amirhossein.filmora.R
 import azari.amirhossein.filmora.adapter.MoviesAdapter
@@ -23,6 +24,7 @@ import azari.amirhossein.filmora.utils.customize
 import azari.amirhossein.filmora.viewmodel.MayLikeMoviesViewModel
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -76,7 +78,13 @@ class MayLikeMoviesFragment : Fragment() {
             viewModel.movies.collect { state ->
                 when (state) {
                     is NetworkRequest.Loading -> {
-                        showLoading()
+                        adapterMovie.addLoadStateListener { loadState ->
+                            binding.progressBar.visibility =
+                                if (loadState.source.refresh is LoadState.Loading) View.VISIBLE else View.GONE
+
+                            binding.internetLay.visibility =
+                                if (loadState.source.refresh is LoadState.Error) View.VISIBLE else View.GONE
+                        }
                     }
                     is NetworkRequest.Success -> {
                         showSuccess()
