@@ -71,6 +71,9 @@ class HomeFragment : Fragment() {
         binding.layoutSeeAllMovies.setOnClickListener {
             findNavController().navigate(R.id.actionHomeToMayLikeMovies)
         }
+        binding.layoutSeeAllTVSeries.setOnClickListener {
+            findNavController().navigate(R.id.actionHomeToMayLikeTvs)
+        }
     }
 
     // Setup recyclerView
