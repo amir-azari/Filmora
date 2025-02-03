@@ -1,0 +1,133 @@
+package azari.amirhossein.filmora.ui.home
+
+import android.os.Bundle
+import android.view.Gravity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
+import azari.amirhossein.filmora.R
+import azari.amirhossein.filmora.adapter.DataLoadStateAdapter
+import azari.amirhossein.filmora.adapter.TvsAdapter
+import azari.amirhossein.filmora.databinding.FragmentMayLikeMoviesBinding
+import azari.amirhossein.filmora.models.prefences.tv.ResponseTvsList
+import azari.amirhossein.filmora.utils.Constants
+import azari.amirhossein.filmora.utils.NetworkRequest
+import azari.amirhossein.filmora.utils.customize
+import azari.amirhossein.filmora.viewmodel.MayLikeTvsViewModel
+import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import javax.inject.Inject
+
+@AndroidEntryPoint
+class MayLikeTvsFragment : Fragment() {
+    // Binding
+    private var _binding: FragmentMayLikeMoviesBinding? = null
+    private val binding get() = _binding!!
+
+    @Inject
+    lateinit var adapterTv:TvsAdapter
+
+    private val viewModel: MayLikeTvsViewModel by viewModels()
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View {
+        _binding = FragmentMayLikeMoviesBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    private fun setActionBarTitle(title: String?) {
+        (requireActivity() as AppCompatActivity).supportActionBar?.title = title
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setActionBarTitle("Series you may like")
+        adapterTv.setOnItemClickListener(clickTv)
+
+        val gridLayoutManager = GridLayoutManager(requireContext(), 3)
+        binding.rvMovies.layoutManager = gridLayoutManager
+
+        val concatAdapter = adapterTv.withLoadStateFooter(
+            footer = DataLoadStateAdapter { adapterTv.retry() }
+        )
+        binding.rvMovies.adapter = concatAdapter
+
+        gridLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+            override fun getSpanSize(position: Int): Int {
+                return when (concatAdapter.getItemViewType(position)) {
+                    DataLoadStateAdapter.VIEW_TYPE_LOAD_STATE -> 3
+                    else -> 1
+                }
+            }
+        }
+        // Collecting the Tvs
+        viewLifecycleOwner.lifecycleScope.launch  {
+            viewModel.tvs.collect { state ->
+                when (state) {
+                    is NetworkRequest.Loading -> {
+                        showLoading()
+                    }
+                    is NetworkRequest.Success -> {
+                        showSuccess()
+                        state.data?.let { adapterTv.submitData(it) }
+                    }
+                    is NetworkRequest.Error -> {
+                        showError()
+                        if (state.message == Constants.Message.NO_INTERNET_CONNECTION) {
+                            binding.internetLay.visibility = View.VISIBLE
+                        }
+                        showErrorSnackbar(binding.root, state.message.toString())
+                    }
+                }
+            }
+        }
+    }
+    //Click media
+    private val clickTv = { tv: ResponseTvsList.Result ->
+        val action = MayLikeTvsFragmentDirections.actionToTvDetail(Constants.MediaType.TV, tv.id)
+        findNavController().navigate(action)
+    }
+
+    private fun showErrorSnackbar(root: View, message: String) {
+        Snackbar.make(root, message, Snackbar.LENGTH_SHORT).apply {
+            customize(R.color.error, R.color.white, Gravity.TOP)
+            show()
+        }
+    }
+
+    private fun showLoading() {
+        binding.progressBar.visibility = View.VISIBLE
+        binding.rvMovies.visibility = View.GONE
+        binding.internetLay.visibility  = View.GONE
+
+
+    }
+
+    private fun showSuccess() {
+        binding.internetLay.visibility  = View.GONE
+        binding.progressBar.visibility = View.GONE
+        binding.rvMovies.visibility = View.VISIBLE
+
+
+    }
+
+    private fun showError() {
+        binding.progressBar.visibility = View.GONE
+        binding.rvMovies.visibility = View.GONE
+
+    }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+}
