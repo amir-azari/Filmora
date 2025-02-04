@@ -1,0 +1,10 @@
+package azari.amirhossein.filmora.models.movie
+
+import azari.amirhossein.filmora.models.prefences.ResponseGenresList
+import azari.amirhossein.filmora.utils.NetworkRequest
+
+data class MoviePageData(
+    val trending: NetworkRequest<ResponseTrendingMovie>,
+    val movieGenres: NetworkRequest<ResponseGenresList>,
+
+)
