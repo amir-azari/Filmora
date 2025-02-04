@@ -17,6 +17,7 @@ import azari.amirhossein.filmora.models.detail.ResponseTvRecommendations
 import azari.amirhossein.filmora.models.detail.ResponseTvSimilar
 import azari.amirhossein.filmora.models.detail.ResponseVideo
 import azari.amirhossein.filmora.models.home.ResponseTrendingList
+import azari.amirhossein.filmora.models.movie.ResponseTrendingMovie
 import azari.amirhossein.filmora.models.prefences.ResponseGenresList
 import azari.amirhossein.filmora.models.prefences.movie.ResponseMovieKeywordList
 import azari.amirhossein.filmora.models.prefences.movie.ResponseMoviesList
@@ -88,6 +89,9 @@ interface ApiServices {
 
     @GET("movie/{movie_id}/reviews")
     suspend fun getMovieReviews (@Path("movie_id")movieId: Int): Response<ResponseReviews>
+
+    @GET("trending/movie/{time_window}")
+    suspend fun getTrendingMovie(@Path("time_window") timeWindow: String): Response<ResponseTrendingMovie>
 
     //---------TVs---------
 
