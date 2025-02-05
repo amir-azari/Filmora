@@ -15,17 +15,13 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import azari.amirhossein.filmora.R
 import azari.amirhossein.filmora.adapter.MayLikeMovieAdapter
-import azari.amirhossein.filmora.adapter.TrendingAllAdapter
 import azari.amirhossein.filmora.adapter.TrendingMovieAdapter
 import azari.amirhossein.filmora.databinding.FragmentMovieBinding
 import azari.amirhossein.filmora.models.movie.ResponseTrendingMovie
 import azari.amirhossein.filmora.models.prefences.movie.ResponseMoviesList
-import azari.amirhossein.filmora.ui.home.HomeFragmentDirections
-import azari.amirhossein.filmora.ui.home.MayLikeMoviesFragment
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.NetworkRequest
 import azari.amirhossein.filmora.utils.customize
-import azari.amirhossein.filmora.viewmodel.HomeViewModel
 import azari.amirhossein.filmora.viewmodel.MovieViewModel
 import coil3.load
 import coil3.request.crossfade
@@ -48,6 +44,9 @@ class MovieFragment : Fragment() {
 
     @Inject
     lateinit var popularAdapter : MayLikeMovieAdapter
+
+    @Inject
+    lateinit var nowPlayingAdapter : MayLikeMovieAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -84,6 +83,11 @@ class MovieFragment : Fragment() {
                 adapter = popularAdapter
                 setHasFixedSize(true)
             }
+            rvNowPlaying.apply {
+                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+                adapter = nowPlayingAdapter
+                setHasFixedSize(true)
+            }
 
 
         }
@@ -105,10 +109,12 @@ class MovieFragment : Fragment() {
                                     // Update adapters with the new data
                                     trendingAdapter.differ.submitList(data.trending.data?.results)
                                     popularAdapter.differ.submitList(data.popular.data?.results)
+                                    nowPlayingAdapter.differ.submitList(data.nowPlaying.data?.results)
 
                                     data.movieGenres.data?.genres?.let { genres ->
                                         trendingAdapter.submitGenres(genres)
                                         popularAdapter.submitGenres(genres)
+                                        nowPlayingAdapter.submitGenres(genres)
                                     }
                                 }
                             }
