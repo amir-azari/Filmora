@@ -14,12 +14,14 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import azari.amirhossein.filmora.R
+import azari.amirhossein.filmora.adapter.MayLikeMovieAdapter
 import azari.amirhossein.filmora.adapter.TrendingAllAdapter
 import azari.amirhossein.filmora.adapter.TrendingMovieAdapter
 import azari.amirhossein.filmora.databinding.FragmentMovieBinding
 import azari.amirhossein.filmora.models.movie.ResponseTrendingMovie
 import azari.amirhossein.filmora.models.prefences.movie.ResponseMoviesList
 import azari.amirhossein.filmora.ui.home.HomeFragmentDirections
+import azari.amirhossein.filmora.ui.home.MayLikeMoviesFragment
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.NetworkRequest
 import azari.amirhossein.filmora.utils.customize
@@ -44,6 +46,9 @@ class MovieFragment : Fragment() {
     @Inject
     lateinit var trendingAdapter : TrendingMovieAdapter
 
+    @Inject
+    lateinit var popularAdapter : MayLikeMovieAdapter
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -61,6 +66,7 @@ class MovieFragment : Fragment() {
         observeViewModel()
 
         trendingAdapter.setOnItemClickListener(clickTrending)
+        popularAdapter.setOnItemClickListener(clickMovie)
 
     }
 
@@ -71,6 +77,11 @@ class MovieFragment : Fragment() {
                 layoutManager =
                     LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
                 adapter = trendingAdapter
+                setHasFixedSize(true)
+            }
+            rvPopular.apply {
+                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+                adapter = popularAdapter
                 setHasFixedSize(true)
             }
 
@@ -93,9 +104,11 @@ class MovieFragment : Fragment() {
                                 state.data?.let { data ->
                                     // Update adapters with the new data
                                     trendingAdapter.differ.submitList(data.trending.data?.results)
+                                    popularAdapter.differ.submitList(data.popular.data?.results)
 
                                     data.movieGenres.data?.genres?.let { genres ->
                                         trendingAdapter.submitGenres(genres)
+                                        popularAdapter.submitGenres(genres)
                                     }
                                 }
                             }
@@ -129,6 +142,11 @@ class MovieFragment : Fragment() {
         val action = MovieFragmentDirections.actionToMovieDetail(Constants.MediaType.MOVIE,movie.id)
         findNavController().navigate(action)
 
+    }
+
+    private val clickMovie = { movie: ResponseMoviesList.Result ->
+        val action = MovieFragmentDirections.actionToMovieDetail(Constants.MediaType.MOVIE,movie.id)
+        findNavController().navigate(action)
     }
     private fun loadImage(url: String?, imageView: ImageView) {
         imageView.load(url) {
