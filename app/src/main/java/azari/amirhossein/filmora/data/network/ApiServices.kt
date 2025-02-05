@@ -93,6 +93,9 @@ interface ApiServices {
     @GET("trending/movie/{time_window}")
     suspend fun getTrendingMovie(@Path("time_window") timeWindow: String): Response<ResponseTrendingMovie>
 
+    @GET("movie/popular")
+    suspend fun getPopularMovie(): Response<ResponseMoviesList>
+
     //---------TVs---------
 
     // Search TV
