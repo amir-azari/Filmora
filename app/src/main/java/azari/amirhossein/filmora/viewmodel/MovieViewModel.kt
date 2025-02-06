@@ -29,15 +29,19 @@ class MovieViewModel @Inject constructor(
 
     private val _randomMoviePoster = MutableStateFlow<String?>(null)
     val randomMoviePoster: StateFlow<String?> = _randomMoviePoster
+
+    private var cachedData: MoviePageData? = null
+
     init {
         networkChecker.startMonitoring()
         monitorNetworkChanges()
 
     }
+
     private fun monitorNetworkChanges() {
         viewModelScope.launch {
             networkChecker.isNetworkAvailable.collect { isAvailable ->
-                if (isAvailable) handleOnlineState()
+                if (isAvailable) handleOnlineState() else handleOfflineState()
 
             }
         }
@@ -47,7 +51,8 @@ class MovieViewModel @Inject constructor(
     private fun handleOnlineState() {
         repository.getRemoteData()
             .catch { error ->
-                _moviePageData.value = NetworkRequest.Error(error.message ?: Constants.Message.NO_INTERNET_CONNECTION)
+                _moviePageData.value =
+                    NetworkRequest.Error(error.message ?: Constants.Message.NO_INTERNET_CONNECTION)
             }
             .onEach { result ->
                 updateHomePageData(result)
@@ -71,6 +76,16 @@ class MovieViewModel @Inject constructor(
             ?.let { "$baseUrl${Constants.ImageSize.ORIGINAL}$it" }
 
     }
+
+    //-----Local-----
+    private suspend fun handleOfflineState() {
+        cachedData?.let {
+            _moviePageData.value = NetworkRequest.Success(it)
+        } ?: run {
+            _moviePageData.value = repository.getCachedData()
+        }
+    }
+
     override fun onCleared() {
         super.onCleared()
         networkChecker.stopMonitoring()
