@@ -6,6 +6,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import azari.amirhossein.filmora.data.database.entity.DetailEntity
 import azari.amirhossein.filmora.data.database.entity.HomeEntity
+import azari.amirhossein.filmora.data.database.entity.MovieEntity
 import azari.amirhossein.filmora.utils.Constants
 import kotlinx.coroutines.flow.Flow
 
@@ -17,6 +18,13 @@ interface AppDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun saveHomeData(data: HomeEntity)
+
+    //Movie
+    @Query("SELECT * FROM ${Constants.Database.MOVIES_TABLE} WHERE id = 0 LIMIT 1")
+    fun getMovieData(): Flow<MovieEntity>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun saveMovieData(data: MovieEntity)
 
     // Detail
     @Query("SELECT * FROM ${Constants.Database.DETAIL_TABLE} WHERE id = :id")
