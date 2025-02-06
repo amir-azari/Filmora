@@ -13,6 +13,7 @@ import azari.amirhossein.filmora.models.detail.ResponseTvRecommendations
 import azari.amirhossein.filmora.models.detail.ResponseTvSimilar
 import azari.amirhossein.filmora.models.detail.ResponseVideo
 import azari.amirhossein.filmora.models.home.ResponseTrendingList
+import azari.amirhossein.filmora.models.movie.ResponseTrendingMovie
 import azari.amirhossein.filmora.models.prefences.ResponseGenresList
 import azari.amirhossein.filmora.models.prefences.movie.ResponseMoviesList
 import azari.amirhossein.filmora.models.prefences.tv.ResponseTvsList
@@ -169,4 +170,15 @@ class ResponseTypeConverter {
     fun toReviews(value: String): ResponseReviews? {
         return gson.fromJson(value, ResponseReviews::class.java)
     }
+
+    @TypeConverter
+    fun fromTrendingMovie(value: ResponseTrendingMovie?): String {
+        return gson.toJson(value)
+    }
+
+    @TypeConverter
+    fun toTrendingMovie(value: String): ResponseTrendingMovie? {
+        return gson.fromJson(value, ResponseTrendingMovie::class.java)
+    }
+
 }
