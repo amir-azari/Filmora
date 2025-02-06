@@ -8,6 +8,7 @@ data class MoviePageData(
     val trending: NetworkRequest<ResponseTrendingMovie>,
     val movieGenres: NetworkRequest<ResponseGenresList>,
     val popular : NetworkRequest<ResponseMoviesList>,
-    val nowPlaying : NetworkRequest<ResponseMoviesList>
+    val nowPlaying : NetworkRequest<ResponseMoviesList>,
+    val topRated : NetworkRequest<ResponseMoviesList>
 
 )
