@@ -12,9 +12,11 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import azari.amirhossein.filmora.R
 import azari.amirhossein.filmora.adapter.MayLikeMovieAdapter
+import azari.amirhossein.filmora.adapter.TopRatedMovieAdapter
 import azari.amirhossein.filmora.adapter.TrendingMovieAdapter
 import azari.amirhossein.filmora.databinding.FragmentMovieBinding
 import azari.amirhossein.filmora.models.movie.ResponseTrendingMovie
@@ -48,6 +50,9 @@ class MovieFragment : Fragment() {
     @Inject
     lateinit var nowPlayingAdapter : MayLikeMovieAdapter
 
+    @Inject
+    lateinit var topRatedAdapter : TopRatedMovieAdapter
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -66,6 +71,7 @@ class MovieFragment : Fragment() {
 
         trendingAdapter.setOnItemClickListener(clickTrending)
         popularAdapter.setOnItemClickListener(clickMovie)
+        topRatedAdapter.setOnItemClickListener(clickMovie)
 
     }
 
@@ -89,6 +95,11 @@ class MovieFragment : Fragment() {
                 setHasFixedSize(true)
             }
 
+            rvTopRated.apply {
+                layoutManager = GridLayoutManager(requireContext(), 2, GridLayoutManager.HORIZONTAL, false)
+                adapter = topRatedAdapter
+                setHasFixedSize(true)
+            }
 
         }
     }
@@ -110,11 +121,13 @@ class MovieFragment : Fragment() {
                                     trendingAdapter.differ.submitList(data.trending.data?.results)
                                     popularAdapter.differ.submitList(data.popular.data?.results)
                                     nowPlayingAdapter.differ.submitList(data.nowPlaying.data?.results)
+                                    topRatedAdapter.differ.submitList(data.topRated.data?.results)
 
                                     data.movieGenres.data?.genres?.let { genres ->
                                         trendingAdapter.submitGenres(genres)
                                         popularAdapter.submitGenres(genres)
                                         nowPlayingAdapter.submitGenres(genres)
+                                        topRatedAdapter.submitGenres(genres)
                                     }
                                 }
                             }
