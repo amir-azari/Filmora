@@ -53,6 +53,9 @@ class MovieFragment : Fragment() {
     @Inject
     lateinit var topRatedAdapter : TopRatedMovieAdapter
 
+    @Inject
+    lateinit var upcomingAdapter : MayLikeMovieAdapter
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -72,6 +75,7 @@ class MovieFragment : Fragment() {
         trendingAdapter.setOnItemClickListener(clickTrending)
         popularAdapter.setOnItemClickListener(clickMovie)
         topRatedAdapter.setOnItemClickListener(clickMovie)
+        upcomingAdapter.setOnItemClickListener(clickMovie)
 
     }
 
@@ -100,7 +104,11 @@ class MovieFragment : Fragment() {
                 adapter = topRatedAdapter
                 setHasFixedSize(true)
             }
-
+            rvUpcoming.apply {
+                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+                adapter = upcomingAdapter
+                setHasFixedSize(true)
+            }
         }
     }
     private fun observeViewModel() {
@@ -122,12 +130,14 @@ class MovieFragment : Fragment() {
                                     popularAdapter.differ.submitList(data.popular.data?.results)
                                     nowPlayingAdapter.differ.submitList(data.nowPlaying.data?.results)
                                     topRatedAdapter.differ.submitList(data.topRated.data?.results)
+                                    upcomingAdapter.differ.submitList(data.upcoming.data?.results)
 
                                     data.movieGenres.data?.genres?.let { genres ->
                                         trendingAdapter.submitGenres(genres)
                                         popularAdapter.submitGenres(genres)
                                         nowPlayingAdapter.submitGenres(genres)
                                         topRatedAdapter.submitGenres(genres)
+                                        upcomingAdapter.submitGenres(genres)
                                     }
                                 }
                             }
