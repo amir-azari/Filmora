@@ -35,6 +35,7 @@ class MovieRepository @Inject constructor(
         val popular = remote.getPopularMovie()
         val nowPlaying = remote.getNowPlaying()
         val topRated = remote.getTopRated()
+        val upcoming = remote.getUpcoming()
 
 
         return MoviePageData(
@@ -42,7 +43,8 @@ class MovieRepository @Inject constructor(
             movieGenres = NetworkResponse(movieGenres).handleNetworkResponse(),
             popular = NetworkResponse(popular).handleNetworkResponse() ,
             nowPlaying = NetworkResponse(nowPlaying).handleNetworkResponse(),
-            topRated = NetworkResponse(topRated).handleNetworkResponse()
+            topRated = NetworkResponse(topRated).handleNetworkResponse(),
+            upcoming = NetworkResponse(upcoming).handleNetworkResponse()
             )
     }
 }
