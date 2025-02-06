@@ -99,6 +99,9 @@ interface ApiServices {
     @GET("movie/now_playing")
     suspend fun getNowPlaying(): Response<ResponseMoviesList>
 
+    @GET("movie/top_rated")
+    suspend fun getTopRated(): Response<ResponseMoviesList>
+
     //---------TVs---------
 
     // Search TV
