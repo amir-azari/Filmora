@@ -31,6 +31,8 @@
                 android:contentDescription="@string/poster_image"
                 tools:src="@drawable/user"
                 android:visibility="invisible"
+                app:strokeColor="@color/textColor_secondary"
+                app:strokeWidth="0.5dp"
                 app:layout_constraintDimensionRatio="2:3"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

@@ -46,7 +46,7 @@ class CelebrityAdapter @Inject constructor() :
                     R.drawable.user_medium,
                     R.drawable.user_medium,
                     originalScaleType,
-                    true,
+                    false,
                     imgShimmerContainer
                 )
 
