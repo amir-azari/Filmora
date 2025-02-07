@@ -8,6 +8,7 @@ import azari.amirhossein.filmora.models.authentication.ResponseGuestSession
 import azari.amirhossein.filmora.models.authentication.ResponseToken
 import azari.amirhossein.filmora.models.authentication.ResponseSession
 import azari.amirhossein.filmora.models.celebtiry.ResponsePopularCelebrity
+import azari.amirhossein.filmora.models.celebtiry.ResponseTrendingCelebrity
 import azari.amirhossein.filmora.models.detail.ResponseCredit
 import azari.amirhossein.filmora.models.detail.ResponseImage
 import azari.amirhossein.filmora.models.detail.ResponseMovieDetails
@@ -151,6 +152,8 @@ interface ApiServices {
     @GET("person/popular")
     suspend fun getPopularPeople(@Query("page") page: Int): Response<ResponsePopularCelebrity>
 
+    @GET("trending/person/{time_window}")
+    suspend fun geTrendingPeople(@Path("time_window") timeWindow: String ,@Query("page") page: Int): Response<ResponseTrendingCelebrity>
 
     //---------All(Movie , Tv , People)---------
 

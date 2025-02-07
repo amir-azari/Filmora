@@ -45,6 +45,7 @@ class RemoteDataSource @Inject constructor(private val api : ApiServices) {
 
     //---------Peoples---------
     suspend fun getPopularPeoples(page:Int) = api.getPopularPeople(page)
+    suspend fun getTrendingPeoples(timeWindow:String,page:Int) = api.geTrendingPeople(timeWindow,page)
 
 
     //---------All(Movie , Tv , People)---------
