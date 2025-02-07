@@ -30,12 +30,14 @@ class PeopleRepository @Inject constructor(
 
     private suspend fun fetchRemoteData(): PeoplePageData {
         // Call APIs
-        val popular1 = remote.getPopularPeoples(1)
+        val popular = remote.getPopularPeoples(1)
+        val trending = remote.getTrendingPeoples("day",1)
 
 
 
         return PeoplePageData(
-            popular1 = NetworkResponse(popular1).handleNetworkResponse(),
+            popular = NetworkResponse(popular).handleNetworkResponse(),
+            trending = NetworkResponse(trending).handleNetworkResponse()
         )
     }
 }
