@@ -1,5 +1,7 @@
 package azari.amirhossein.filmora.data.repository
 
+import azari.amirhossein.filmora.data.database.entity.MovieEntity
+import azari.amirhossein.filmora.data.database.entity.PeopleEntity
 import azari.amirhossein.filmora.data.source.LocalDataSource
 import azari.amirhossein.filmora.data.source.RemoteDataSource
 import azari.amirhossein.filmora.models.celebtiry.PeoplePageData
@@ -9,6 +11,7 @@ import azari.amirhossein.filmora.utils.NetworkRequest
 import azari.amirhossein.filmora.utils.NetworkResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
@@ -21,6 +24,8 @@ class PeopleRepository @Inject constructor(
         emit(NetworkRequest.Loading())
         try {
             val remoteData = fetchRemoteData()
+            local.savePeopleData(remoteData.toEntity())
+
             emit(NetworkRequest.Success(remoteData))
         } catch (e: Exception) {
             emit(NetworkRequest.Error(e.localizedMessage ?: Constants.Message.UNKNOWN_ERROR))
@@ -39,5 +44,32 @@ class PeopleRepository @Inject constructor(
             popular = NetworkResponse(popular).handleNetworkResponse(),
             trending = NetworkResponse(trending).handleNetworkResponse()
         )
+    }
+
+    private fun PeoplePageData.toEntity() = PeopleEntity(
+        popular = popular.data!!,
+        trending = trending.data!!
+    )
+
+
+    private fun PeopleEntity.toCombinedData() = PeoplePageData(
+        popular = NetworkRequest.Success(this.popular),
+        trending = NetworkRequest.Success(this.trending)
+
+    )
+
+    // Get cached data
+    suspend fun getCachedData(): NetworkRequest<PeoplePageData> {
+        return try {
+            // Try to get cached data
+            val cachedData = local.getPeopleData().firstOrNull()
+            if (cachedData != null) {
+                NetworkRequest.Success(cachedData.toCombinedData())
+            } else {
+                NetworkRequest.Error(Constants.Message.NO_INTERNET_CONNECTION)
+            }
+        } catch (e: Exception) {
+            NetworkRequest.Error("Failed to load cached data: ${e.localizedMessage}")
+        }
     }
 }
