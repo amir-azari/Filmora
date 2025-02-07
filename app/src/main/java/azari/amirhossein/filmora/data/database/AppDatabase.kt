@@ -6,11 +6,12 @@ import androidx.room.TypeConverters
 import azari.amirhossein.filmora.data.database.entity.DetailEntity
 import azari.amirhossein.filmora.data.database.entity.HomeEntity
 import azari.amirhossein.filmora.data.database.entity.MovieEntity
+import azari.amirhossein.filmora.data.database.entity.PeopleEntity
 
 
 @Database(
-    entities = [HomeEntity::class, MovieEntity::class, DetailEntity::class],
-    version = 5,
+    entities = [HomeEntity::class, MovieEntity::class, DetailEntity::class , PeopleEntity::class],
+    version = 6,
     exportSchema = false
 )
 @TypeConverters(ResponseTypeConverter::class)
