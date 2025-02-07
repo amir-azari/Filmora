@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import azari.amirhossein.filmora.R
 import azari.amirhossein.filmora.adapter.CelebrityAdapter
 import azari.amirhossein.filmora.adapter.MayLikeMovieAdapter
+import azari.amirhossein.filmora.adapter.TrendingCelebrityAdapter
 import azari.amirhossein.filmora.databinding.FragmentMovieBinding
 import azari.amirhossein.filmora.databinding.FragmentPeopleBinding
 import azari.amirhossein.filmora.utils.Constants
@@ -41,6 +42,9 @@ class PeopleFragment : Fragment() {
 
     @Inject
     lateinit var popular2Adapter : CelebrityAdapter
+
+    @Inject
+    lateinit var trendingAdapter : TrendingCelebrityAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?, ): View {
         // Inflate the layout for this fragment
@@ -69,6 +73,12 @@ class PeopleFragment : Fragment() {
                 adapter = popular2Adapter
                 setHasFixedSize(true)
             }
+
+            rvTrending.apply {
+                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+                adapter = trendingAdapter
+                setHasFixedSize(true)
+            }
         }
 
     }
@@ -87,8 +97,10 @@ class PeopleFragment : Fragment() {
                                 showSuccess()
                                 state.data?.let { data ->
                                     // Update adapters with the new data
-                                    data.popular1.data?.results?.let { popular1Adapter.submitFirstTen(it) }
-                                    data.popular1.data?.results?.let { popular2Adapter.submitSecondTen(it) }
+                                    data.popular.data?.results?.let { popular1Adapter.submitFirstTen(it) }
+                                    data.popular.data?.results?.let { popular2Adapter.submitSecondTen(it) }
+                                    trendingAdapter.differ.submitList(data.trending.data?.results)
+
                                 }
                             }
 
