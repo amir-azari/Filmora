@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import azari.amirhossein.filmora.data.repository.PeopleRepository
 import azari.amirhossein.filmora.models.celebtiry.PeoplePageData
+import azari.amirhossein.filmora.models.movie.MoviePageData
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.NetworkChecker
 import azari.amirhossein.filmora.utils.NetworkRequest
@@ -27,6 +28,7 @@ class PeopleViewModel @Inject constructor(
     }
     val peoplePageData: StateFlow<NetworkRequest<PeoplePageData>?> = _peoplePageData
 
+    private var cachedData: PeoplePageData? = null
 
     init {
         networkChecker.startMonitoring()
@@ -37,7 +39,7 @@ class PeopleViewModel @Inject constructor(
     private fun monitorNetworkChanges() {
         viewModelScope.launch {
             networkChecker.isNetworkAvailable.collect { isAvailable ->
-                if (isAvailable) handleOnlineState()
+                if (isAvailable) handleOnlineState() else handleOfflineState()
 
             }
         }
@@ -56,7 +58,14 @@ class PeopleViewModel @Inject constructor(
             }
             .launchIn(viewModelScope)
     }
-
+    //-----Local-----
+    private suspend fun handleOfflineState() {
+        cachedData?.let {
+            _peoplePageData.value = NetworkRequest.Success(it)
+        } ?: run {
+            _peoplePageData.value = repository.getCachedData()
+        }
+    }
     private fun updatePeoplePageData(newData: NetworkRequest<PeoplePageData>) {
         if (_peoplePageData.value != newData) {
             _peoplePageData.value = newData
