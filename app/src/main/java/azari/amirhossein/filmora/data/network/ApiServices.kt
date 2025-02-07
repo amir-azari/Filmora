@@ -7,6 +7,7 @@ import azari.amirhossein.filmora.models.authentication.RequestSession
 import azari.amirhossein.filmora.models.authentication.ResponseGuestSession
 import azari.amirhossein.filmora.models.authentication.ResponseToken
 import azari.amirhossein.filmora.models.authentication.ResponseSession
+import azari.amirhossein.filmora.models.celebtiry.ResponsePopularCelebrity
 import azari.amirhossein.filmora.models.detail.ResponseCredit
 import azari.amirhossein.filmora.models.detail.ResponseImage
 import azari.amirhossein.filmora.models.detail.ResponseMovieDetails
@@ -144,6 +145,12 @@ interface ApiServices {
 
     @GET("tv/{series_id}/reviews")
     suspend fun getTvReviews (@Path("series_id")seriesId: Int): Response<ResponseReviews>
+
+    //---------People---------
+
+    @GET("person/popular")
+    suspend fun getPopularPeople(@Query("page") page: Int): Response<ResponsePopularCelebrity>
+
 
     //---------All(Movie , Tv , People)---------
 
