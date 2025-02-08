@@ -1,10 +1,8 @@
 package azari.amirhossein.filmora.data.repository
 
-import azari.amirhossein.filmora.data.database.entity.HomeEntity
 import azari.amirhossein.filmora.data.database.entity.MovieEntity
 import azari.amirhossein.filmora.data.source.LocalDataSource
 import azari.amirhossein.filmora.data.source.RemoteDataSource
-import azari.amirhossein.filmora.models.HomePageData
 import azari.amirhossein.filmora.models.movie.MoviePageData
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.NetworkRequest
@@ -38,7 +36,7 @@ class MovieRepository @Inject constructor(
         val movieGenres = remote.getMovieGenres()
         val popular = remote.getPopularMovie()
         val nowPlaying = remote.getNowPlaying()
-        val topRated = remote.getTopRated()
+        val topRated = remote.getTopRatedMovie()
         val upcoming = remote.getUpcoming()
 
 

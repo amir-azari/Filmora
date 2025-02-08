@@ -103,7 +103,7 @@ interface ApiServices {
     suspend fun getNowPlaying(): Response<ResponseMoviesList>
 
     @GET("movie/top_rated")
-    suspend fun getTopRated(): Response<ResponseMoviesList>
+    suspend fun getTopRatedMovie(): Response<ResponseMoviesList>
 
     @GET("movie/upcoming")
     suspend fun getUpcoming(): Response<ResponseMoviesList>
@@ -150,7 +150,6 @@ interface ApiServices {
 
     @GET("trending/tv/{time_window}")
     suspend fun getTrendingTv(@Path("time_window") timeWindow: String): Response<ResponseTrendingTv>
-
 
     //---------People---------
 
