@@ -151,6 +151,18 @@ interface ApiServices {
     @GET("trending/tv/{time_window}")
     suspend fun getTrendingTv(@Path("time_window") timeWindow: String): Response<ResponseTrendingTv>
 
+    @GET("tv/popular")
+    suspend fun getPopularTv(): Response<ResponseTvsList>
+
+    @GET("tv/airing_today")
+    suspend fun getNowAiringToday(): Response<ResponseTvsList>
+
+    @GET("tv/top_rated")
+    suspend fun getTopRatedTv(): Response<ResponseTvsList>
+
+    @GET("tv/on_the_air")
+    suspend fun getOnTheAir(): Response<ResponseTvsList>
+
     //---------People---------
 
     @GET("person/popular")
