@@ -34,12 +34,21 @@ class TvRepository @Inject constructor(
         // Call APIs
         val trending = remote.getTrendingTv("day")
         val tvGenres = remote.getTvGenres()
+        val popular = remote.getPopularTv()
+        val airingToday = remote.getNowAiringToday()
+        val topRated = remote.getTopRatedTv()
+        val onTheAir = remote.getOnTheAir()
 
 
 
         return TvPageData(
             trending = NetworkResponse(trending).handleNetworkResponse(),
-            tvGenres = NetworkResponse(tvGenres).handleNetworkResponse()
+            tvGenres = NetworkResponse(tvGenres).handleNetworkResponse(),
+            popular = NetworkResponse(popular).handleNetworkResponse(),
+            airingToday = NetworkResponse(airingToday).handleNetworkResponse(),
+            topRated = NetworkResponse(topRated).handleNetworkResponse(),
+            onTheAir = NetworkResponse(onTheAir).handleNetworkResponse()
+
         )
     }
 
