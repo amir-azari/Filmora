@@ -99,4 +99,7 @@
     <string name="trending">Trending</string>
     <string name="popular">Popular</string>
     <string name="playing_in_theatres">Playing In Theatres</string>
+    <string name="airing_today">Airing Today</string>
+    <string name="top_rated">Top Rated</string>
+    <string name="on_tv">On TV</string>
 </resources>

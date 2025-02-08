@@ -1,14 +1,384 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.tvs.TvFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+    <!-- Loading State -->
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:indeterminateTint="@color/md_theme_primary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-</FrameLayout>
+    <!--Internet Error-->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/internetLay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_gravity="center_vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <include
+            layout="@layout/internet_error"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_editor_absoluteX="0dp" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:saveEnabled="true"
+        android:id="@+id/nestedScrollView"
+        android:layout_height="match_parent"
+        android:clipToPadding="false">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/mainContentContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <!-- Trending Section Container -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/trendingSection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_12mdp"
+                app:layout_constraintTop_toTopOf="parent">
+                <!-- Poster Image -->
+                <ImageView
+                    android:id="@+id/img_movie_poster"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="@dimen/_3mdp"
+                    android:layout_marginBottom="@dimen/_20mdp"
+                    android:scaleType="centerCrop"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:src="@tools:sample/backgrounds/scenic" />
+
+                <!-- Shadow for the movie poster -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="@dimen/_3mdp"
+                    android:layout_marginBottom="@dimen/_20mdp"
+                    android:background="@drawable/background_shadow"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <!-- Header -->
+                <TextView
+                    android:id="@+id/txt_trending"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_12mdp"
+                    android:text="@string/trending"
+                    android:textSize="@dimen/_13mdp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <!-- See All Button -->
+                <LinearLayout
+                    android:id="@+id/layoutSeeAllTrending"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/_12mdp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    app:layout_constraintBottom_toBottomOf="@id/txt_trending"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/txt_trending">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/_4mdp"
+                        android:text="@string/see_all"
+                        android:textSize="@dimen/_10mdp" />
+
+                    <ImageView
+                        android:layout_width="@dimen/_12mdp"
+                        android:layout_height="@dimen/_12mdp"
+                        android:src="@drawable/angle_right"
+                        app:tint="@color/white" />
+                </LinearLayout>
+
+                <!-- List -->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_trending"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clipToPadding="false"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/_8mdp"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintTop_toBottomOf="@id/txt_trending"
+                    tools:listitem="@layout/item_media_large" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <!-- Popular Section Container -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/PopularSection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_12mdp"
+                app:layout_constraintTop_toBottomOf="@id/trendingSection">
+
+                <!-- Header -->
+                <TextView
+                    android:id="@+id/txt_recommended_popular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_12mdp"
+                    android:text="@string/popular"
+                    android:textSize="@dimen/_13mdp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <!-- See All Button -->
+                <LinearLayout
+                    android:id="@+id/layoutSeeAllPopular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/_12mdp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    app:layout_constraintBottom_toBottomOf="@id/txt_recommended_popular"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/txt_recommended_popular">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/_4mdp"
+                        android:text="@string/see_all"
+                        android:textSize="@dimen/_10mdp" />
+
+                    <ImageView
+                        android:layout_width="@dimen/_12mdp"
+                        android:layout_height="@dimen/_12mdp"
+                        android:src="@drawable/angle_right"
+                        app:tint="@color/white" />
+                </LinearLayout>
+
+                <!-- List -->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_popular"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clipToPadding="false"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/_8mdp"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintTop_toBottomOf="@id/txt_recommended_popular"
+                    tools:listitem="@layout/item_media" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <!-- Airing today Section Container -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/AiringTodaySection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_12mdp"
+                app:layout_constraintTop_toBottomOf="@id/PopularSection">
+
+                <!-- Header -->
+                <TextView
+                    android:id="@+id/txt_airingToday"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_12mdp"
+                    android:text="@string/airing_today"
+                    android:textSize="@dimen/_13mdp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <!-- See All Button -->
+                <LinearLayout
+                    android:id="@+id/layoutSeeAllAiringToday"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/_12mdp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    app:layout_constraintBottom_toBottomOf="@id/txt_airingToday"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/txt_airingToday">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/_4mdp"
+                        android:text="@string/see_all"
+                        android:textSize="@dimen/_10mdp" />
+
+                    <ImageView
+                        android:layout_width="@dimen/_12mdp"
+                        android:layout_height="@dimen/_12mdp"
+                        android:src="@drawable/angle_right"
+                        app:tint="@color/white" />
+                </LinearLayout>
+
+                <!-- List -->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_airingToday"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clipToPadding="false"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/_8mdp"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintTop_toBottomOf="@id/txt_airingToday"
+                    tools:listitem="@layout/item_media" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <!-- TopRated Section Container -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/TopRatedSection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_12mdp"
+                app:layout_constraintTop_toBottomOf="@id/AiringTodaySection">
+
+                <!-- Header -->
+                <TextView
+                    android:id="@+id/txt_recommended_topRated"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_12mdp"
+                    android:text="@string/top_rated"
+                    android:textSize="@dimen/_13mdp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <!-- See All Button -->
+                <LinearLayout
+                    android:id="@+id/layoutSeeAllTopRated"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/_12mdp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    app:layout_constraintBottom_toBottomOf="@id/txt_recommended_topRated"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/txt_recommended_topRated">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/_4mdp"
+                        android:text="See all"
+                        android:textSize="@dimen/_10mdp" />
+
+                    <ImageView
+                        android:layout_width="@dimen/_12mdp"
+                        android:layout_height="@dimen/_12mdp"
+                        android:src="@drawable/angle_right"
+                        app:tint="@color/white" />
+                </LinearLayout>
+
+                <!-- List -->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_TopRated"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clipToPadding="false"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/_8mdp"
+                    tools:itemCount="20"
+                    app:spanCount="2"
+                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                    app:layout_constraintTop_toBottomOf="@id/txt_recommended_topRated"
+                    tools:listitem="@layout/item_media_small" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <!-- On The Air Section Container -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/OnTheAirSection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_12mdp"
+                app:layout_constraintTop_toBottomOf="@id/TopRatedSection">
+
+                <!-- Header -->
+                <TextView
+                    android:id="@+id/txt_onTheAir"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_12mdp"
+                    android:text="@string/on_tv"
+                    android:textSize="@dimen/_13mdp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <!-- See All Button -->
+                <LinearLayout
+                    android:id="@+id/layoutSeeAllOnTheAir"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/_12mdp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    app:layout_constraintBottom_toBottomOf="@id/txt_onTheAir"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/txt_onTheAir">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/_4mdp"
+                        android:text="@string/see_all"
+                        android:textSize="@dimen/_10mdp" />
+
+                    <ImageView
+                        android:layout_width="@dimen/_12mdp"
+                        android:layout_height="@dimen/_12mdp"
+                        android:src="@drawable/angle_right"
+                        app:tint="@color/white" />
+                </LinearLayout>
+
+                <!-- List -->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_onTheAir"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clipToPadding="false"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/_8mdp"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintTop_toBottomOf="@id/txt_onTheAir"
+                    tools:listitem="@layout/item_media" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
