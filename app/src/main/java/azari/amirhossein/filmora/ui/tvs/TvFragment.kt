@@ -11,8 +11,13 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import azari.amirhossein.filmora.R
+import azari.amirhossein.filmora.adapter.MayLikeMovieAdapter
+import azari.amirhossein.filmora.adapter.MayLikeTvAdapter
+import azari.amirhossein.filmora.adapter.TopRatedMovieAdapter
+import azari.amirhossein.filmora.adapter.TopRatedTvAdapter
 import azari.amirhossein.filmora.adapter.TrendingTvAdapter
 import azari.amirhossein.filmora.databinding.FragmentTvBinding
 import azari.amirhossein.filmora.utils.Constants
@@ -38,6 +43,18 @@ class TvFragment : Fragment() {
     @Inject
     lateinit var trendingAdapter : TrendingTvAdapter
 
+    @Inject
+    lateinit var popularAdapter : MayLikeTvAdapter
+
+    @Inject
+    lateinit var topRatedAdapter : TopRatedTvAdapter
+
+    @Inject
+    lateinit var airingTodayAdapter : MayLikeTvAdapter
+
+    @Inject
+    lateinit var onTheAirAdapter : MayLikeTvAdapter
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle? ): View {
         // Inflate the layout for this fragment
         _binding = FragmentTvBinding.inflate(inflater, container, false)
@@ -59,6 +76,28 @@ class TvFragment : Fragment() {
                 adapter = trendingAdapter
                 setHasFixedSize(true)
             }
+            rvPopular.apply {
+                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+                adapter = popularAdapter
+                setHasFixedSize(true)
+            }
+
+            rvTopRated.apply {
+                layoutManager = GridLayoutManager(requireContext(), 2, GridLayoutManager.HORIZONTAL, false)
+                adapter = topRatedAdapter
+                setHasFixedSize(true)
+            }
+            rvAiringToday.apply {
+                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+                adapter = airingTodayAdapter
+                setHasFixedSize(true)
+            }
+            rvOnTheAir.apply {
+                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+                adapter = onTheAirAdapter
+                setHasFixedSize(true)
+            }
+
         }
 
     }
@@ -79,10 +118,18 @@ class TvFragment : Fragment() {
                                 state.data?.let { data ->
                                     // Update adapters with the new data
                                     trendingAdapter.differ.submitList(data.trending.data?.results)
+                                    popularAdapter.differ.submitList(data.popular.data?.results)
+                                    topRatedAdapter.differ.submitList(data.topRated.data?.results)
+                                    airingTodayAdapter.differ.submitList(data.airingToday.data?.results)
+                                    onTheAirAdapter.differ.submitList(data.onTheAir.data?.results)
 
 
                                     data.tvGenres.data?.genres?.let { genres ->
                                         trendingAdapter.submitGenres(genres)
+                                        popularAdapter.submitGenres(genres)
+                                        topRatedAdapter.submitGenres(genres)
+                                        airingTodayAdapter.submitGenres(genres)
+                                        onTheAirAdapter.submitGenres(genres)
 
                                     }
                                 }
