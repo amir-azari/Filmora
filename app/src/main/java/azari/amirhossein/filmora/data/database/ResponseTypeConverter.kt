@@ -19,6 +19,7 @@ import azari.amirhossein.filmora.models.movie.ResponseTrendingMovie
 import azari.amirhossein.filmora.models.prefences.ResponseGenresList
 import azari.amirhossein.filmora.models.prefences.movie.ResponseMoviesList
 import azari.amirhossein.filmora.models.prefences.tv.ResponseTvsList
+import azari.amirhossein.filmora.models.tv.ResponseTrendingTv
 import com.google.gson.Gson
 
 class ResponseTypeConverter {
@@ -201,6 +202,16 @@ class ResponseTypeConverter {
     @TypeConverter
     fun toTrendingPeople(value: String): ResponseTrendingCelebrity? {
         return gson.fromJson(value, ResponseTrendingCelebrity::class.java)
+    }
+
+    @TypeConverter
+    fun fromTrendingTv(value: ResponseTrendingTv?): String {
+        return gson.toJson(value)
+    }
+
+    @TypeConverter
+    fun toTrendingTv(value: String): ResponseTrendingTv? {
+        return gson.fromJson(value, ResponseTrendingTv::class.java)
     }
 
 }
