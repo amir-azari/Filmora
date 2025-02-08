@@ -42,6 +42,7 @@ class RemoteDataSource @Inject constructor(private val api : ApiServices) {
     suspend fun getTvVideos(seriesId: Int) = api.getTvVideos(seriesId)
     suspend fun getTvImages(seriesId: Int) = api.getTvImages(seriesId)
     suspend fun getTvReviews(seriesId: Int) = api.getTvReviews(seriesId)
+    suspend fun getTrendingTv(timeWindow:String) = api.getTrendingTv(timeWindow)
 
     //---------Peoples---------
     suspend fun getPopularPeoples(page:Int) = api.getPopularPeople(page)

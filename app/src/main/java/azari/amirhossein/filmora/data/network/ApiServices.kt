@@ -25,6 +25,7 @@ import azari.amirhossein.filmora.models.prefences.movie.ResponseMovieKeywordList
 import azari.amirhossein.filmora.models.prefences.movie.ResponseMoviesList
 import azari.amirhossein.filmora.models.prefences.tv.ResponseTvKeywordList
 import azari.amirhossein.filmora.models.prefences.tv.ResponseTvsList
+import azari.amirhossein.filmora.models.tv.ResponseTrendingTv
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -146,6 +147,10 @@ interface ApiServices {
 
     @GET("tv/{series_id}/reviews")
     suspend fun getTvReviews (@Path("series_id")seriesId: Int): Response<ResponseReviews>
+
+    @GET("trending/tv/{time_window}")
+    suspend fun getTrendingTv(@Path("time_window") timeWindow: String): Response<ResponseTrendingTv>
+
 
     //---------People---------
 
