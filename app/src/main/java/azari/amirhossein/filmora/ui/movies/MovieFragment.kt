@@ -74,6 +74,7 @@ class MovieFragment : Fragment() {
 
         trendingAdapter.setOnItemClickListener(clickTrending)
         popularAdapter.setOnItemClickListener(clickMovie)
+        nowPlayingAdapter.setOnItemClickListener(clickMovie)
         topRatedAdapter.setOnItemClickListener(clickMovie)
         upcomingAdapter.setOnItemClickListener(clickMovie)
 

@@ -23,7 +23,7 @@ data class ResponseTrendingTv(
         @SerializedName("genre_ids")
         val genreIds: List<Int?>?,
         @SerializedName("id")
-        val id: Int?, // 233742
+        val id: Int, // 233742
         @SerializedName("media_type")
         val mediaType: String?, // tv
         @SerializedName("name")

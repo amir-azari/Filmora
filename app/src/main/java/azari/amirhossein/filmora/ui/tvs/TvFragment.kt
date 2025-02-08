@@ -11,15 +11,16 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import azari.amirhossein.filmora.R
-import azari.amirhossein.filmora.adapter.MayLikeMovieAdapter
 import azari.amirhossein.filmora.adapter.MayLikeTvAdapter
-import azari.amirhossein.filmora.adapter.TopRatedMovieAdapter
 import azari.amirhossein.filmora.adapter.TopRatedTvAdapter
 import azari.amirhossein.filmora.adapter.TrendingTvAdapter
 import azari.amirhossein.filmora.databinding.FragmentTvBinding
+import azari.amirhossein.filmora.models.prefences.tv.ResponseTvsList
+import azari.amirhossein.filmora.models.tv.ResponseTrendingTv
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.NetworkRequest
 import azari.amirhossein.filmora.utils.customize
@@ -66,6 +67,12 @@ class TvFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerViews()
         observeViewModel()
+
+        trendingAdapter.setOnItemClickListener(clickTrending)
+        popularAdapter.setOnItemClickListener(clickTv)
+        airingTodayAdapter.setOnItemClickListener(clickTv)
+        topRatedAdapter.setOnItemClickListener(clickTv)
+        onTheAirAdapter.setOnItemClickListener(clickTv)
     }
     // Setup recyclerView
     private fun setupRecyclerViews() {
@@ -193,6 +200,17 @@ class TvFragment : Fragment() {
         binding.progressBar.visibility = View.GONE
         binding.mainContentContainer.visibility = View.GONE
 
+    }
+    //Click media
+    private val clickTrending = { tv: ResponseTrendingTv.Result ->
+        val action = TvFragmentDirections.actionToTvDetail(Constants.MediaType.TV,tv.id)
+        findNavController().navigate(action)
+
+    }
+
+    private val clickTv = { tv: ResponseTvsList.Result ->
+        val action = TvFragmentDirections.actionToTvDetail(Constants.MediaType.TV,tv.id)
+        findNavController().navigate(action)
     }
     override fun onDestroyView() {
         super.onDestroyView()
