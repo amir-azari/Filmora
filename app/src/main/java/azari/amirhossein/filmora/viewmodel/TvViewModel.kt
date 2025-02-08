@@ -2,7 +2,6 @@ package azari.amirhossein.filmora.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import azari.amirhossein.filmora.data.repository.MovieRepository
 import azari.amirhossein.filmora.data.repository.TvRepository
 import azari.amirhossein.filmora.models.movie.MoviePageData
 import azari.amirhossein.filmora.models.tv.TvPageData
@@ -31,6 +30,8 @@ class TvViewModel @Inject constructor(
     private val _randomMoviePoster = MutableStateFlow<String?>(null)
     val randomMoviePoster: StateFlow<String?> = _randomMoviePoster
 
+    private var cachedData: TvPageData? = null
+
     init {
         networkChecker.startMonitoring()
         monitorNetworkChanges()
@@ -40,7 +41,7 @@ class TvViewModel @Inject constructor(
     private fun monitorNetworkChanges() {
         viewModelScope.launch {
             networkChecker.isNetworkAvailable.collect { isAvailable ->
-                if (isAvailable) handleOnlineState()
+                if (isAvailable) handleOnlineState() else handleOfflineState()
 
             }
         }
@@ -65,6 +66,14 @@ class TvViewModel @Inject constructor(
     private fun updateHomePageData(newData: NetworkRequest<TvPageData>) {
         if (_tvPageData.value != newData) {
             _tvPageData.value = newData
+        }
+    }
+    //-----Local-----
+    private suspend fun handleOfflineState() {
+        cachedData?.let {
+            _tvPageData.value = NetworkRequest.Success(it)
+        } ?: run {
+            _tvPageData.value = repository.getCachedData()
         }
     }
 
