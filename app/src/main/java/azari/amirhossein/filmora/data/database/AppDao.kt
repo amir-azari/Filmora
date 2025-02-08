@@ -8,6 +8,7 @@ import azari.amirhossein.filmora.data.database.entity.DetailEntity
 import azari.amirhossein.filmora.data.database.entity.HomeEntity
 import azari.amirhossein.filmora.data.database.entity.MovieEntity
 import azari.amirhossein.filmora.data.database.entity.PeopleEntity
+import azari.amirhossein.filmora.data.database.entity.TvEntity
 import azari.amirhossein.filmora.utils.Constants
 import kotlinx.coroutines.flow.Flow
 
@@ -26,6 +27,13 @@ interface AppDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun saveMovieData(data: MovieEntity)
+
+    // TV
+    @Query("SELECT * FROM ${Constants.Database.TV_SHOW_TABLE} WHERE id = 0 LIMIT 1")
+    fun getTvData(): Flow<TvEntity>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun saveTvData(data: TvEntity)
 
     // People
     @Query("SELECT * FROM ${Constants.Database.CELEBRITIES_TABLE} WHERE id = 0 LIMIT 1")

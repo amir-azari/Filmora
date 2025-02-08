@@ -5,6 +5,7 @@ import azari.amirhossein.filmora.data.database.entity.DetailEntity
 import azari.amirhossein.filmora.data.database.entity.HomeEntity
 import azari.amirhossein.filmora.data.database.entity.MovieEntity
 import azari.amirhossein.filmora.data.database.entity.PeopleEntity
+import azari.amirhossein.filmora.data.database.entity.TvEntity
 import javax.inject.Inject
 class LocalDataSource @Inject constructor(private val dao: AppDao) {
     // Home
@@ -14,6 +15,10 @@ class LocalDataSource @Inject constructor(private val dao: AppDao) {
     // Movie
     suspend fun saveMovieData(entity: MovieEntity) = dao.saveMovieData(entity)
     fun getMovieData() = dao.getMovieData()
+
+    // TV
+    suspend fun saveTvData(entity: TvEntity) = dao.saveTvData(entity)
+    fun getTvData() = dao.getTvData()
 
     // People
     suspend fun savePeopleData(entity: PeopleEntity) = dao.savePeopleData(entity)
