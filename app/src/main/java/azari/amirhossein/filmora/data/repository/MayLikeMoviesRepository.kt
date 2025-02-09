@@ -23,7 +23,7 @@ class MayLikeMoviesRepository @Inject constructor(
     fun getMovies(): Flow<PagingData<ResponseMoviesList.Result>> {
         return Pager(
             config = PagingConfig(
-                pageSize = 20,
+                pageSize = 1,
                 enablePlaceholders = false,
                 initialLoadSize = 20
             ),

@@ -25,7 +25,7 @@ class MayLikeTvsRepository @Inject constructor(
     fun getTvs(): Flow<PagingData<ResponseTvsList.Result>> {
         return Pager(
             config = PagingConfig(
-                pageSize = 20,
+                pageSize = 1,
                 enablePlaceholders = false,
                 initialLoadSize = 20
             ),
