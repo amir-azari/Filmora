@@ -7,7 +7,8 @@ import azari.amirhossein.filmora.models.prefences.TvAndMoviePreferences
 import kotlinx.coroutines.flow.firstOrNull
 
 abstract class BasePagingSource<T : Any>(
-    private val sessionManager: SessionManager
+    private val sessionManager: SessionManager,
+    private val mediaType: MediaType
 ) : PagingSource<Int, T>() {
 
     abstract suspend fun fetchData(page: Int, preferences: TvAndMoviePreferences): List<T>?
@@ -22,7 +23,12 @@ abstract class BasePagingSource<T : Any>(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, T> {
         return try {
             val page = params.key ?: 1
-            val preferences = sessionManager.getTvPreferences().firstOrNull() ?: TvAndMoviePreferences(
+            val preferencesFlow = when (mediaType) {
+                MediaType.TV -> sessionManager.getTvPreferences()
+                MediaType.MOVIE -> sessionManager.getMoviePreferences()
+            }
+
+            val preferences = preferencesFlow.firstOrNull() ?: TvAndMoviePreferences(
                 selectedIds = emptyList(),
                 favoriteGenres = emptySet(),
                 dislikedGenres = emptySet(),
@@ -41,3 +47,5 @@ abstract class BasePagingSource<T : Any>(
         }
     }
 }
+
+
