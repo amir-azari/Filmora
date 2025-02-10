@@ -7,6 +7,7 @@ import androidx.paging.cachedIn
 import azari.amirhossein.filmora.data.repository.MayLikeTvsRepository
 import azari.amirhossein.filmora.models.prefences.movie.ResponseMoviesList
 import azari.amirhossein.filmora.models.prefences.tv.ResponseTvsList
+import azari.amirhossein.filmora.models.tv.ResponseTvType
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.NetworkChecker
 import azari.amirhossein.filmora.utils.NetworkRequest
@@ -23,10 +24,10 @@ class MayLikeTvsViewModel @Inject constructor(
     private val networkChecker: NetworkChecker
 ) : ViewModel() {
 
-    private val _tvs = MutableStateFlow<NetworkRequest<PagingData<ResponseTvsList.Result>>>(NetworkRequest.Loading())
-    val tvs: StateFlow<NetworkRequest<PagingData<ResponseTvsList.Result>>> = _tvs
+    private val _tvs = MutableStateFlow<NetworkRequest<PagingData<ResponseTvType>>>(NetworkRequest.Loading())
+    val tvs: StateFlow<NetworkRequest<PagingData<ResponseTvType>>> = _tvs
 
-    private var cachedTvs: PagingData<ResponseTvsList.Result>? = null
+    private var cachedTvs: PagingData<ResponseTvType>? = null
 
     init {
         observeNetworkAndFetchMovies()

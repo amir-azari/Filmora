@@ -7,6 +7,7 @@ import azari.amirhossein.filmora.data.SessionManager
 import azari.amirhossein.filmora.data.source.RemoteDataSource
 import azari.amirhossein.filmora.models.prefences.movie.ResponseMoviesList
 import azari.amirhossein.filmora.models.prefences.tv.ResponseTvsList
+import azari.amirhossein.filmora.models.tv.ResponseTvType
 import azari.amirhossein.filmora.paging.MayLikeMoviesPagingSource
 import azari.amirhossein.filmora.paging.MayLikeTvsPagingSource
 import azari.amirhossein.filmora.utils.Constants
@@ -22,7 +23,7 @@ class MayLikeTvsRepository @Inject constructor(
     private val sessionManager: SessionManager,
     private val remote: RemoteDataSource
 ) {
-    fun getTvs(): Flow<PagingData<ResponseTvsList.Result>> {
+    fun getTvs(): Flow<PagingData<ResponseTvType>> {
         return Pager(
             config = PagingConfig(
                 pageSize = 1,

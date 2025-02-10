@@ -4,18 +4,19 @@ import azari.amirhossein.filmora.data.SessionManager
 import azari.amirhossein.filmora.data.source.RemoteDataSource
 import azari.amirhossein.filmora.models.prefences.TvAndMoviePreferences
 import azari.amirhossein.filmora.models.prefences.tv.ResponseTvsList
+import azari.amirhossein.filmora.models.tv.ResponseTvType
 import azari.amirhossein.filmora.utils.Constants
 import javax.inject.Inject
 
 class MayLikeTvsPagingSource @Inject constructor(
     private val remote: RemoteDataSource,
     sessionManager: SessionManager
-) : BasePagingSource<ResponseTvsList.Result>(sessionManager,MediaType.TV) {
+) : BasePagingSource<ResponseTvType>(sessionManager,MediaType.TV) {
 
-    override suspend fun fetchData(page: Int, preferences: TvAndMoviePreferences): List<ResponseTvsList.Result>? {
+    override suspend fun fetchData(page: Int, preferences: TvAndMoviePreferences): List<ResponseTvType>? {
         val response = remote.discoverTvShows(buildMediaParams(preferences, page))
         return if (response.isSuccessful) {
-            response.body()?.results
+            response.body()?.results?.map { ResponseTvType.Tvs(it) }
         } else {
             null
         }
