@@ -78,6 +78,50 @@ class MovieFragment : Fragment() {
         topRatedAdapter.setOnItemClickListener(clickMovie)
         upcomingAdapter.setOnItemClickListener(clickMovie)
 
+        binding.layoutSeeAllTrending.setOnClickListener {
+            findNavController().navigate(
+                R.id.actionToMovieSectionFragment,
+                Bundle().apply {
+                putString(Constants.SectionType.SECTION_TYPE, Constants.SectionType.TRENDING_MOVIE)
+                }
+            )
+        }
+
+        binding.layoutSeeAllPopular.setOnClickListener {
+            findNavController().navigate(
+                R.id.actionToMovieSectionFragment,
+                Bundle().apply {
+                    putString(Constants.SectionType.SECTION_TYPE, Constants.SectionType.POPULAR_MOVIE)
+                }
+            )
+        }
+
+        binding.layoutSeeAllNowPlaying.setOnClickListener {
+            findNavController().navigate(
+                R.id.actionToMovieSectionFragment,
+                Bundle().apply {
+                    putString(Constants.SectionType.SECTION_TYPE, Constants.SectionType.NOW_PLAYING)
+                }
+            )
+        }
+
+        binding.layoutSeeAllTopRated.setOnClickListener {
+            findNavController().navigate(
+                R.id.actionToMovieSectionFragment,
+                Bundle().apply {
+                    putString(Constants.SectionType.SECTION_TYPE, Constants.SectionType.TOP_RATED_MOVIE)
+                }
+            )
+        }
+
+        binding.layoutSeeAllUpcoming.setOnClickListener {
+            findNavController().navigate(
+                R.id.actionToMovieSectionFragment,
+                Bundle().apply {
+                    putString(Constants.SectionType.SECTION_TYPE, Constants.SectionType.UPCOMING)
+                }
+            )
+        }
     }
 
     // Setup recyclerView

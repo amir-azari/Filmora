@@ -137,7 +137,16 @@
         android:id="@+id/movieFragment"
         android:name="azari.amirhossein.filmora.ui.movies.MovieFragment"
         android:label="@string/movies"
-        tools:layout="@layout/fragment_movie" />
+        tools:layout="@layout/fragment_movie" >
+        <action
+            android:id="@+id/actionToMovieSectionFragment"
+            app:destination="@id/movieSectionFragment"
+            app:enterAnim="@anim/nav_fade_in"
+            app:exitAnim="@anim/nav_fade_out"
+            app:popEnterAnim="@anim/nav_fade_in"
+            app:popExitAnim="@anim/nav_fade_out"
+            />
+    </fragment>
     <fragment
         android:id="@+id/tvFragment"
         android:name="azari.amirhossein.filmora.ui.tvs.TvFragment"
@@ -220,5 +229,14 @@
         android:name="azari.amirhossein.filmora.ui.home.MayLikeTvsFragment"
         android:label="fragment_may_like_tvs"
         tools:layout="@layout/fragment_may_like_tvs" />
+    <fragment
+        android:id="@+id/movieSectionFragment"
+        android:name="azari.amirhossein.filmora.ui.movies.MovieSectionFragment"
+        tools:layout="@layout/fragment_movie_section">
+        <argument
+            android:name="sectionType"
+            app:argType="string" />
+
+    </fragment>
 
 </navigation>
