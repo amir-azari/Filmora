@@ -151,7 +151,15 @@
         android:id="@+id/tvFragment"
         android:name="azari.amirhossein.filmora.ui.tvs.TvFragment"
         android:label="@string/tv_shows"
-        tools:layout="@layout/fragment_tv" />
+        tools:layout="@layout/fragment_tv" >
+        <action
+            android:id="@+id/actionToTvSectionFragment"
+            app:enterAnim="@anim/nav_fade_in"
+            app:exitAnim="@anim/nav_fade_out"
+            app:popEnterAnim="@anim/nav_fade_in"
+            app:popExitAnim="@anim/nav_fade_out"
+            app:destination="@id/tvSectionFragment" />
+    </fragment>
     <fragment
         android:id="@+id/peopleFragment"
         android:name="azari.amirhossein.filmora.ui.people.PeopleFragment"
@@ -238,5 +246,9 @@
             app:argType="string" />
 
     </fragment>
+    <fragment
+        android:id="@+id/tvSectionFragment"
+        android:name="azari.amirhossein.filmora.ui.tvs.TvSectionFragment"
+        tools:layout="@layout/fragment_tv_section" />
 
 </navigation>
