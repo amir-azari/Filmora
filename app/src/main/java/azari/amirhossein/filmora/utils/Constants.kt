@@ -106,6 +106,13 @@ object Constants {
         const val TV = "tv"
         const val MOVIE = "movie"
     }
-
+    object SectionType {
+        const val POPULAR_MOVIE = "Popular Movie"
+        const val NOW_PLAYING = "Now Playing"
+        const val TOP_RATED_MOVIE = "Top Rated Movie"
+        const val UPCOMING = "Upcoming"
+        const val TRENDING_MOVIE = "trending"
+        const val SECTION_TYPE = "sectionType"
+    }
 
 }
