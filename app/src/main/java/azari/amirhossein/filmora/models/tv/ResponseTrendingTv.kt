@@ -7,7 +7,7 @@ data class ResponseTrendingTv(
     @SerializedName("page")
     val page: Int?, // 1
     @SerializedName("results")
-    val results: List<Result?>?,
+    val results: List<Result>,
     @SerializedName("total_pages")
     val totalPages: Int?, // 500
     @SerializedName("total_results")

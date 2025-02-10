@@ -149,19 +149,19 @@ interface ApiServices {
     suspend fun getTvReviews (@Path("series_id")seriesId: Int): Response<ResponseReviews>
 
     @GET("trending/tv/{time_window}")
-    suspend fun getTrendingTv(@Path("time_window") timeWindow: String): Response<ResponseTrendingTv>
+    suspend fun getTrendingTv(@Path("time_window") timeWindow: String , @Query("page") page: Int): Response<ResponseTrendingTv>
 
     @GET("tv/popular")
-    suspend fun getPopularTv(): Response<ResponseTvsList>
+    suspend fun getPopularTv(@Query("page") page: Int): Response<ResponseTvsList>
 
     @GET("tv/airing_today")
-    suspend fun getNowAiringToday(): Response<ResponseTvsList>
+    suspend fun getNowAiringToday(@Query("page") page: Int): Response<ResponseTvsList>
 
     @GET("tv/top_rated")
-    suspend fun getTopRatedTv(): Response<ResponseTvsList>
+    suspend fun getTopRatedTv(@Query("page") page: Int): Response<ResponseTvsList>
 
     @GET("tv/on_the_air")
-    suspend fun getOnTheAir(): Response<ResponseTvsList>
+    suspend fun getOnTheAir(@Query("page") page: Int): Response<ResponseTvsList>
 
     //---------People---------
 

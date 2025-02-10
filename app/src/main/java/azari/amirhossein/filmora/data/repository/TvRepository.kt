@@ -34,12 +34,12 @@ class TvRepository @Inject constructor(
 
     private suspend fun fetchRemoteData(): TvPageData {
         // Call APIs
-        val trending = remote.getTrendingTv("day")
+        val trending = remote.getTrendingTv("day" ,1)
         val tvGenres = remote.getTvGenres()
-        val popular = remote.getPopularTv()
-        val airingToday = remote.getNowAiringToday()
-        val topRated = remote.getTopRatedTv()
-        val onTheAir = remote.getOnTheAir()
+        val popular = remote.getPopularTv(1)
+        val airingToday = remote.getNowAiringToday(1)
+        val topRated = remote.getTopRatedTv(1)
+        val onTheAir = remote.getOnTheAir(1)
 
 
 
