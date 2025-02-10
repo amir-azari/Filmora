@@ -73,6 +73,51 @@ class TvFragment : Fragment() {
         airingTodayAdapter.setOnItemClickListener(clickTv)
         topRatedAdapter.setOnItemClickListener(clickTv)
         onTheAirAdapter.setOnItemClickListener(clickTv)
+
+        binding.layoutSeeAllTrending.setOnClickListener {
+            findNavController().navigate(
+                R.id.actionToTvSectionFragment,
+                Bundle().apply {
+                    putString(Constants.SectionType.SECTION_TYPE, Constants.SectionType.TRENDING_TV)
+                }
+            )
+        }
+
+        binding.layoutSeeAllPopular.setOnClickListener {
+            findNavController().navigate(
+                R.id.actionToTvSectionFragment,
+                Bundle().apply {
+                    putString(Constants.SectionType.SECTION_TYPE, Constants.SectionType.POPULAR_TV)
+                }
+            )
+        }
+
+        binding.layoutSeeAllAiringToday.setOnClickListener {
+            findNavController().navigate(
+                R.id.actionToTvSectionFragment,
+                Bundle().apply {
+                    putString(Constants.SectionType.SECTION_TYPE, Constants.SectionType.AIRING_TODAY)
+                }
+            )
+        }
+
+        binding.layoutSeeAllTopRated.setOnClickListener {
+            findNavController().navigate(
+                R.id.actionToTvSectionFragment,
+                Bundle().apply {
+                    putString(Constants.SectionType.SECTION_TYPE, Constants.SectionType.TOP_RATED_TV)
+                }
+            )
+        }
+
+        binding.layoutSeeAllOnTheAir.setOnClickListener {
+            findNavController().navigate(
+                R.id.actionToTvSectionFragment,
+                Bundle().apply {
+                    putString(Constants.SectionType.SECTION_TYPE, Constants.SectionType.ON_THE_AIR)
+                }
+            )
+        }
     }
     // Setup recyclerView
     private fun setupRecyclerViews() {
