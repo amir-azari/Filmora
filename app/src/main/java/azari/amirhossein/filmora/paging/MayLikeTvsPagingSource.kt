@@ -10,7 +10,7 @@ import javax.inject.Inject
 class MayLikeTvsPagingSource @Inject constructor(
     private val remote: RemoteDataSource,
     sessionManager: SessionManager
-) : BasePagingSource<ResponseTvsList.Result>(sessionManager) {
+) : BasePagingSource<ResponseTvsList.Result>(sessionManager,MediaType.TV) {
 
     override suspend fun fetchData(page: Int, preferences: TvAndMoviePreferences): List<ResponseTvsList.Result>? {
         val response = remote.discoverTvShows(buildMediaParams(preferences, page))
