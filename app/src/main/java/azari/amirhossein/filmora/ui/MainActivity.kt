@@ -95,7 +95,7 @@ class MainActivity : AppCompatActivity() {
                 supportActionBar?.setDisplayHomeAsUpEnabled(false)
             }
 
-            R.id.movieDetailFragment, R.id.tvDetailsFragment , R.id.mayLikeMoviesFragment , R.id.mayLikeTvsFragment -> {
+            R.id.movieDetailFragment, R.id.tvDetailsFragment , R.id.mayLikeMoviesFragment , R.id.mayLikeTvsFragment ,R.id.movieSectionFragment-> {
                 hideBottomNavWithFade()
                 showToolbar()
                 hideProfileSection()
@@ -117,7 +117,7 @@ class MainActivity : AppCompatActivity() {
         return true
     }
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
-        val hiddenFragments = listOf(R.id.movieDetailFragment, R.id.tvDetailsFragment ,  R.id.mayLikeMoviesFragment , R.id.mayLikeTvsFragment)
+        val hiddenFragments = listOf(R.id.movieDetailFragment, R.id.tvDetailsFragment ,  R.id.mayLikeMoviesFragment , R.id.mayLikeTvsFragment , R.id.movieSectionFragment)
         val currentDestinationId = navController.currentDestination?.id
 
         for (i in 0 until menu.size()) {
