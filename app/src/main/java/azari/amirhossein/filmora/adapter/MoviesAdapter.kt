@@ -18,11 +18,12 @@ import javax.inject.Inject
 class MoviesAdapter @Inject constructor() :
     PagingDataAdapter<ResponseMovieType, MoviesAdapter.ViewHolder>(DIFF_CALLBACK) {
 
-    private var onItemClickListener: ((ResponseMoviesList.Result) -> Unit)? = null
+    private var onItemClickListener: ((Int) -> Unit)? = null
 
-    fun setOnItemClickListener(listener: (ResponseMoviesList.Result) -> Unit) {
+    fun setOnItemClickListener(listener: (Int) -> Unit) {
         onItemClickListener = listener
     }
+
 
     inner class ViewHolder(private val binding: ItemSimilarRemommendationBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -59,8 +60,10 @@ class MoviesAdapter @Inject constructor() :
                 txtYear.text = item.releaseDate?.split("-")?.get(0) ?: "N/A"
                 txtRating.text = String.format("%.1f", item.voteAverage)
 
+
                 root.setOnClickListener {
-                    onItemClickListener?.let { it(item) }
+                    onItemClickListener?.invoke(item.id)
+
                 }
             }
         }
@@ -86,6 +89,13 @@ class MoviesAdapter @Inject constructor() :
                 txtTitle.text = item.title
                 txtYear.text = item.releaseDate?.split("-")?.get(0) ?: "N/A"
                 txtRating.text = String.format("%.1f", item.voteAverage)
+
+
+                root.setOnClickListener {
+                    onItemClickListener?.invoke(item.id)
+
+                }
+
             }
         }
     }

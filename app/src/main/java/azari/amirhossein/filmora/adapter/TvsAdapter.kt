@@ -20,9 +20,9 @@ import javax.inject.Inject
 class TvsAdapter @Inject constructor() :
     PagingDataAdapter<ResponseTvType, TvsAdapter.ViewHolder>(DIFF_CALLBACK) {
 
-    private var onItemClickListener: ((ResponseTvsList.Result) -> Unit)? = null
+    private var onItemClickListener: ((Int) -> Unit)? = null
 
-    fun setOnItemClickListener(listener: (ResponseTvsList.Result) -> Unit) {
+    fun setOnItemClickListener(listener: (Int) -> Unit) {
         onItemClickListener = listener
     }
 
@@ -62,7 +62,7 @@ class TvsAdapter @Inject constructor() :
                 txtRating.text = String.format("%.1f", item.voteAverage)
 
                 root.setOnClickListener {
-                    onItemClickListener?.let { it(item) }
+                    onItemClickListener?.invoke(item.id)
                 }
             }
         }
@@ -88,6 +88,11 @@ class TvsAdapter @Inject constructor() :
                 txtTitle.text = item.name
                 txtYear.text = item.firstAirDate?.split("-")?.get(0) ?: "N/A"
                 txtRating.text = String.format("%.1f", item.voteAverage)
+
+
+                root.setOnClickListener {
+                    onItemClickListener?.invoke(item.id)
+                }
             }
         }
     }

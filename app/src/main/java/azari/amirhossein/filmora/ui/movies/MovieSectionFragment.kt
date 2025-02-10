@@ -109,8 +109,8 @@ class MovieSectionFragment : Fragment() {
     }
 
     // Click media
-    private val clickMovie = { movie: ResponseMoviesList.Result ->
-        val action = MovieSectionFragmentDirections.actionToMovieDetail(Constants.MediaType.MOVIE, movie.id)
+    private val clickMovie = { movieId : Int ->
+        val action = MovieSectionFragmentDirections.actionToMovieDetail(Constants.MediaType.MOVIE, movieId)
         findNavController().navigate(action)
     }
 

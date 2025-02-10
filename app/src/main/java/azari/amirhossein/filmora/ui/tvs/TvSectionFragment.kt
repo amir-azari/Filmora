@@ -111,11 +111,10 @@ class TvSectionFragment : Fragment() {
     }
 
     // Click media
-    private val clickTv = { tv: ResponseTvsList.Result ->
-        val action = MovieSectionFragmentDirections.actionToTvDetail(Constants.MediaType.TV, tv.id)
+    private val clickTv = { tvId: Int ->
+        val action = MovieSectionFragmentDirections.actionToTvDetail(Constants.MediaType.TV, tvId)
         findNavController().navigate(action)
     }
-
 
     private fun showErrorSnackbar(root: View, message: String) {
         Snackbar.make(root, message, Snackbar.LENGTH_SHORT).apply {

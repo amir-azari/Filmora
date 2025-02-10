@@ -17,6 +17,7 @@ import azari.amirhossein.filmora.adapter.DataLoadStateAdapter
 import azari.amirhossein.filmora.adapter.TvsAdapter
 import azari.amirhossein.filmora.databinding.FragmentMayLikeMoviesBinding
 import azari.amirhossein.filmora.models.prefences.tv.ResponseTvsList
+import azari.amirhossein.filmora.ui.movies.MovieSectionFragmentDirections
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.NetworkRequest
 import azari.amirhossein.filmora.utils.customize
@@ -103,8 +104,8 @@ class MayLikeTvsFragment : Fragment() {
         }
     }
     //Click media
-    private val clickTv = { tv: ResponseTvsList.Result ->
-        val action = MayLikeTvsFragmentDirections.actionToTvDetail(Constants.MediaType.TV, tv.id)
+    private val clickTv = { tvId: Int ->
+        val action = MovieSectionFragmentDirections.actionToTvDetail(Constants.MediaType.TV, tvId)
         findNavController().navigate(action)
     }
 
