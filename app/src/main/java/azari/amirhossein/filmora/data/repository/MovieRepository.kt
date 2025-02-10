@@ -32,12 +32,12 @@ class MovieRepository @Inject constructor(
 
     private suspend fun fetchRemoteData(): MoviePageData {
         // Call APIs
-        val trending = remote.getTrendingMovie("day")
+        val trending = remote.getTrendingMovie("day" , 1)
         val movieGenres = remote.getMovieGenres()
-        val popular = remote.getPopularMovie()
-        val nowPlaying = remote.getNowPlaying()
-        val topRated = remote.getTopRatedMovie()
-        val upcoming = remote.getUpcoming()
+        val popular = remote.getPopularMovie(1)
+        val nowPlaying = remote.getNowPlaying(1)
+        val topRated = remote.getTopRatedMovie(1)
+        val upcoming = remote.getUpcoming(1)
 
 
         return MoviePageData(
