@@ -2,13 +2,10 @@ package azari.amirhossein.filmora.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.fragment.findNavController
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import azari.amirhossein.filmora.data.repository.MayLikeMoviesRepository
-import azari.amirhossein.filmora.models.detail.ResponseTvSimilar
-import azari.amirhossein.filmora.models.prefences.movie.ResponseMoviesList
-import azari.amirhossein.filmora.ui.home.HomeFragmentDirections
+import azari.amirhossein.filmora.models.movie.ResponseMovieType
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.NetworkChecker
 import azari.amirhossein.filmora.utils.NetworkRequest
@@ -25,10 +22,10 @@ class MayLikeMoviesViewModel @Inject constructor(
     private val networkChecker: NetworkChecker
 ) : ViewModel() {
 
-    private val _movies = MutableStateFlow<NetworkRequest<PagingData<ResponseMoviesList.Result>>>(NetworkRequest.Loading())
-    val movies: StateFlow<NetworkRequest<PagingData<ResponseMoviesList.Result>>> = _movies
+    private val _movies = MutableStateFlow<NetworkRequest<PagingData<ResponseMovieType>>>(NetworkRequest.Loading())
+    val movies: StateFlow<NetworkRequest<PagingData<ResponseMovieType>>> = _movies
 
-    private var cachedMovies: PagingData<ResponseMoviesList.Result>? = null
+    private var cachedMovies: PagingData<ResponseMovieType>? = null
 
     init {
         observeNetworkAndFetchMovies()
