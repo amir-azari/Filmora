@@ -1,5 +1,6 @@
 package azari.amirhossein.filmora.data.source
 
+import android.graphics.pdf.PdfDocument.Page
 import azari.amirhossein.filmora.data.network.ApiServices
 import azari.amirhossein.filmora.models.authentication.RequestLogin
 import azari.amirhossein.filmora.models.authentication.RequestSession
@@ -23,11 +24,11 @@ class RemoteDataSource @Inject constructor(private val api : ApiServices) {
     suspend fun getMovieVideos(movieId: Int) = api.getMovieVideos(movieId)
     suspend fun getMovieImages(movieId: Int) = api.getMovieImages(movieId)
     suspend fun getMovieReviews(movieId: Int) = api.getMovieReviews(movieId)
-    suspend fun getTrendingMovie(timeWindow:String) = api.getTrendingMovie(timeWindow)
-    suspend fun getPopularMovie() = api.getPopularMovie()
-    suspend fun getNowPlaying() = api.getNowPlaying()
-    suspend fun getTopRatedMovie() = api.getTopRatedMovie()
-    suspend fun getUpcoming() = api.getUpcoming()
+    suspend fun getTrendingMovie(timeWindow:String ,page : Int) = api.getTrendingMovie(timeWindow , page)
+    suspend fun getPopularMovie(page : Int) = api.getPopularMovie(page)
+    suspend fun getNowPlaying(page : Int) = api.getNowPlaying(page)
+    suspend fun getTopRatedMovie(page : Int) = api.getTopRatedMovie(page)
+    suspend fun getUpcoming(page : Int) = api.getUpcoming(page)
 
     //---------TVs---------
 

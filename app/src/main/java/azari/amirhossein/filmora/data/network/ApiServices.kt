@@ -94,19 +94,19 @@ interface ApiServices {
     suspend fun getMovieReviews (@Path("movie_id")movieId: Int): Response<ResponseReviews>
 
     @GET("trending/movie/{time_window}")
-    suspend fun getTrendingMovie(@Path("time_window") timeWindow: String): Response<ResponseTrendingMovie>
+    suspend fun getTrendingMovie(@Path("time_window") timeWindow: String , @Query("page") page: Int): Response<ResponseTrendingMovie>
 
     @GET("movie/popular")
-    suspend fun getPopularMovie(): Response<ResponseMoviesList>
+    suspend fun getPopularMovie(@Query("page") page: Int): Response<ResponseMoviesList>
 
     @GET("movie/now_playing")
-    suspend fun getNowPlaying(): Response<ResponseMoviesList>
+    suspend fun getNowPlaying(@Query("page") page: Int): Response<ResponseMoviesList>
 
     @GET("movie/top_rated")
-    suspend fun getTopRatedMovie(): Response<ResponseMoviesList>
+    suspend fun getTopRatedMovie(@Query("page") page: Int): Response<ResponseMoviesList>
 
     @GET("movie/upcoming")
-    suspend fun getUpcoming(): Response<ResponseMoviesList>
+    suspend fun getUpcoming(@Query("page") page: Int): Response<ResponseMoviesList>
 
     //---------TVs---------
 
