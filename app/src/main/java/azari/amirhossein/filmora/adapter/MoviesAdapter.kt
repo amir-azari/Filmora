@@ -8,14 +8,18 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import azari.amirhossein.filmora.R
 import azari.amirhossein.filmora.databinding.ItemSimilarRemommendationBinding
+import azari.amirhossein.filmora.models.movie.ResponseMovieType
+import azari.amirhossein.filmora.models.movie.ResponseTrendingMovie
 import azari.amirhossein.filmora.models.prefences.movie.ResponseMoviesList
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.loadImageWithShimmer
 import javax.inject.Inject
 
 class MoviesAdapter @Inject constructor() :
-    PagingDataAdapter<ResponseMoviesList.Result, MoviesAdapter.ViewHolder>(DIFF_CALLBACK) {
+    PagingDataAdapter<ResponseMovieType, MoviesAdapter.ViewHolder>(DIFF_CALLBACK) {
+
     private var onItemClickListener: ((ResponseMoviesList.Result) -> Unit)? = null
+
     fun setOnItemClickListener(listener: (ResponseMoviesList.Result) -> Unit) {
         onItemClickListener = listener
     }
@@ -24,9 +28,44 @@ class MoviesAdapter @Inject constructor() :
         RecyclerView.ViewHolder(binding.root) {
         private val originalScaleType: ImageView.ScaleType = binding.imgPoster.scaleType
 
-        fun bind(item: ResponseMoviesList.Result?) {
+        fun bind(item: ResponseMovieType?) {
             if (item == null) return
 
+            when (item) {
+                is ResponseMovieType.Movies -> bindMovie(item.result)
+                is ResponseMovieType.Trending -> bindTrending(item.result)
+            }
+        }
+
+        private fun bindMovie(item: ResponseMoviesList.Result) {
+            binding.apply {
+                val baseUrl = Constants.Network.IMAGE_BASE_URL
+                val fullPosterPath = if (item.posterPath.isNullOrEmpty()) {
+                    null
+                } else {
+                    baseUrl + Constants.ImageSize.ORIGINAL + item.posterPath
+                }
+
+                imgPoster.loadImageWithShimmer(
+                    fullPosterPath,
+                    R.drawable.image_slash_medium,
+                    R.drawable.image_medium,
+                    originalScaleType,
+                    true,
+                    imgShimmerContainer
+                )
+
+                txtTitle.text = item.title
+                txtYear.text = item.releaseDate?.split("-")?.get(0) ?: "N/A"
+                txtRating.text = String.format("%.1f", item.voteAverage)
+
+                root.setOnClickListener {
+                    onItemClickListener?.let { it(item) }
+                }
+            }
+        }
+
+        private fun bindTrending(item: ResponseTrendingMovie.Result) {
             binding.apply {
                 val baseUrl = Constants.Network.IMAGE_BASE_URL
                 val fullPosterPath = if (item.posterPath.isNullOrEmpty()) {
@@ -48,13 +87,9 @@ class MoviesAdapter @Inject constructor() :
                 txtYear.text = item.releaseDate?.split("-")?.get(0) ?: "N/A"
                 txtRating.text = String.format("%.1f", item.voteAverage)
             }
-            // Click
-            binding.root.setOnClickListener {
-                onItemClickListener?.let { it(item) }
-            }
-
         }
     }
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemSimilarRemommendationBinding.inflate(
@@ -69,12 +104,18 @@ class MoviesAdapter @Inject constructor() :
     }
 
     companion object {
-        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<ResponseMoviesList.Result>() {
-            override fun areItemsTheSame(oldItem: ResponseMoviesList.Result, newItem: ResponseMoviesList.Result): Boolean {
-                return oldItem.id == newItem.id
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<ResponseMovieType>() {
+            override fun areItemsTheSame(oldItem: ResponseMovieType, newItem: ResponseMovieType): Boolean {
+                return when {
+                    oldItem is ResponseMovieType.Movies && newItem is ResponseMovieType.Movies ->
+                        oldItem.result.id == newItem.result.id
+                    oldItem is ResponseMovieType.Trending && newItem is ResponseMovieType.Trending ->
+                        oldItem.result.id == newItem.result.id
+                    else -> false
+                }
             }
 
-            override fun areContentsTheSame(oldItem: ResponseMoviesList.Result, newItem: ResponseMoviesList.Result): Boolean {
+            override fun areContentsTheSame(oldItem: ResponseMovieType, newItem: ResponseMovieType): Boolean {
                 return oldItem == newItem
             }
         }
