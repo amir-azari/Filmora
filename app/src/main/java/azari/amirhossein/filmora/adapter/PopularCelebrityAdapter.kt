@@ -9,15 +9,13 @@ import androidx.recyclerview.widget.RecyclerView
 import azari.amirhossein.filmora.R
 import azari.amirhossein.filmora.databinding.ItemCelebrityRectangleBinding
 import azari.amirhossein.filmora.models.celebtiry.ResponsePopularCelebrity
-import azari.amirhossein.filmora.models.detail.ResponseCredit.Cast
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.HeightPayload
 import azari.amirhossein.filmora.utils.loadImageWithShimmer
-import azari.amirhossein.filmora.utils.loadImageWithoutShimmer
 import javax.inject.Inject
 
-class CelebrityAdapter @Inject constructor() :
-    RecyclerView.Adapter<CelebrityAdapter.ViewHolder>() {
+class PopularCelebrityAdapter @Inject constructor() :
+    RecyclerView.Adapter<PopularCelebrityAdapter.ViewHolder>() {
 
     private var maxItemHeight = 0
     private var isHeightCalculated = false
