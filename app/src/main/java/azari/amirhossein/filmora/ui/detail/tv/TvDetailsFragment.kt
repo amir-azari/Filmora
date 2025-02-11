@@ -77,7 +77,7 @@ class TvDetailsFragment : Fragment() {
     private val viewModel: DetailsViewModel by viewModels()
 
     // Arguments passed to the fragment
-    private lateinit var args: MovieDetailFragmentArgs
+    private lateinit var args: TvDetailsFragmentArgs
     private var mediaId: Int = -1
     private var mediaType: String = ""
 
@@ -100,7 +100,7 @@ class TvDetailsFragment : Fragment() {
         setupViewPagersSimilarAndRecommendations()
 
         // Extract fragment arguments
-        args = MovieDetailFragmentArgs.fromBundle(requireArguments())
+        args = TvDetailsFragmentArgs.fromBundle(requireArguments())
         mediaId = args.id
         mediaType = args.mediaType
 
