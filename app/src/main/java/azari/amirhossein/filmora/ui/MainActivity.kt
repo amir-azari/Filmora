@@ -10,16 +10,13 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.navOptions
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import azari.amirhossein.filmora.R
 import azari.amirhossein.filmora.databinding.ActivityMainBinding
-import azari.amirhossein.filmora.viewmodel.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -95,7 +92,7 @@ class MainActivity : AppCompatActivity() {
                 supportActionBar?.setDisplayHomeAsUpEnabled(false)
             }
 
-            R.id.movieDetailFragment, R.id.tvDetailsFragment , R.id.mayLikeMoviesFragment , R.id.mayLikeTvsFragment ,R.id.movieSectionFragment-> {
+            R.id.movieDetailFragment, R.id.tvDetailsFragment, R.id.mayLikeMoviesFragment, R.id.mayLikeTvsFragment, R.id.movieSectionFragment, R.id.tvSectionFragment, R.id.peopleSectionFragment -> {
                 hideBottomNavWithFade()
                 showToolbar()
                 hideProfileSection()
@@ -104,7 +101,8 @@ class MainActivity : AppCompatActivity() {
             }
 
             R.id.splashFragment, R.id.loginFragment, R.id.moviePreferencesFragment,
-            R.id.tvPreferencesFragment, R.id.webViewFragment -> {
+            R.id.tvPreferencesFragment, R.id.webViewFragment,
+                -> {
                 hideBottomNav()
                 hideToolbar()
             }
@@ -116,8 +114,17 @@ class MainActivity : AppCompatActivity() {
         menuInflater.inflate(R.menu.toolbar_menu, menu)
         return true
     }
+
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
-        val hiddenFragments = listOf(R.id.movieDetailFragment, R.id.tvDetailsFragment ,  R.id.mayLikeMoviesFragment , R.id.mayLikeTvsFragment , R.id.movieSectionFragment)
+        val hiddenFragments = listOf(
+            R.id.movieDetailFragment,
+            R.id.tvDetailsFragment,
+            R.id.mayLikeMoviesFragment,
+            R.id.mayLikeTvsFragment,
+            R.id.movieSectionFragment,
+            R.id.tvSectionFragment,
+            R.id.peopleSectionFragment
+        )
         val currentDestinationId = navController.currentDestination?.id
 
         for (i in 0 until menu.size()) {
@@ -127,14 +134,13 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-
     private fun showProfileSection() {
-            binding.profileSection.visibility = View.VISIBLE
+        binding.profileSection.visibility = View.VISIBLE
 
     }
 
     private fun hideProfileSection() {
-            binding.profileSection.visibility = View.GONE
+        binding.profileSection.visibility = View.GONE
 
     }
 
@@ -147,22 +153,22 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun hideToolbar() {
-            binding.toolbar.visibility = View.GONE
+        binding.toolbar.visibility = View.GONE
 
     }
 
     private fun showToolbar() {
-            binding.toolbar.visibility = View.VISIBLE
+        binding.toolbar.visibility = View.VISIBLE
 
     }
 
     private fun hideBottomNav() {
-            binding.bottomNav.visibility = View.GONE
+        binding.bottomNav.visibility = View.GONE
 
     }
 
     private fun showBottomNav() {
-            binding.bottomNav.visibility = View.VISIBLE
+        binding.bottomNav.visibility = View.VISIBLE
 
     }
 
