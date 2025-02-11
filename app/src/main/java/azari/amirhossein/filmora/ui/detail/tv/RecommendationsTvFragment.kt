@@ -1,4 +1,4 @@
-package azari.amirhossein.filmora.ui.detail
+package azari.amirhossein.filmora.ui.detail.tv
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,10 +11,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import azari.amirhossein.filmora.adapter.SimilarMovieAdapter
-import azari.amirhossein.filmora.databinding.FragmentSimilarMovieBinding
-import azari.amirhossein.filmora.models.detail.ResponseMovieSimilar
-import azari.amirhossein.filmora.ui.home.HomeFragmentDirections
+import azari.amirhossein.filmora.adapter.RecommendationTvAdapter
+import azari.amirhossein.filmora.databinding.FragmentRecommendationsTvBinding
+import azari.amirhossein.filmora.models.detail.ResponseTvRecommendations
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.NetworkRequest
 import azari.amirhossein.filmora.viewmodel.DetailsViewModel
@@ -22,36 +21,36 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class SimilarMovieFragment : Fragment() {
-    private var _binding: FragmentSimilarMovieBinding? = null
+class RecommendationsTvFragment : Fragment() {
+    private var _binding: FragmentRecommendationsTvBinding? = null
     private val binding get() = _binding!!
 
     private val viewModel: DetailsViewModel by viewModels({ requireParentFragment() })
-    private val similarMovieAdapter by lazy { SimilarMovieAdapter() }
-
+    private val recommendationsTvAdapter by lazy { RecommendationTvAdapter() }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentSimilarMovieBinding.inflate(inflater, container, false)
+        _binding = FragmentRecommendationsTvBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerView()
-        observeSimilarMovies()
-        similarMovieAdapter.setOnItemClickListener(clickMovie)
-    }
+        observeRecommendationTvs()
+        recommendationsTvAdapter.setOnItemClickListener(clickTv)
 
-    private fun observeSimilarMovies() {
+    }
+    private fun observeRecommendationTvs() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.movieSimilar.collect { result ->
+                viewModel.tvRecommendations.collect { result ->
                     when (result) {
                         is NetworkRequest.Success -> {
-                            similarMovieAdapter.differ.submitList(result.data?.results)
+                            recommendationsTvAdapter.differ.submitList(result.data?.results)
                         }
 
                         else -> Unit
@@ -60,26 +59,20 @@ class SimilarMovieFragment : Fragment() {
             }
         }
     }
-
     private fun setupRecyclerView() {
-        binding.rvSimilar.apply {
+        binding.rvRecommendations.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-            adapter = similarMovieAdapter
+            adapter = recommendationsTvAdapter
         }
     }
-
-    private val clickMovie = { movie: ResponseMovieSimilar.Result ->
-        val action = SimilarMovieFragmentDirections.actionToMovieDetail(Constants.MediaType.MOVIE, movie.id)
+    //Click media
+    private val clickTv = { tv: ResponseTvRecommendations.Result ->
+        val action = RecommendationsTvFragmentDirections.actionToTvDetail(Constants.MediaType.TV,tv.id)
         findNavController().navigate(action)
 
     }
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
 }
-
-
-
-

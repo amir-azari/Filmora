@@ -2,8 +2,8 @@ package azari.amirhossein.filmora.adapter
 
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import azari.amirhossein.filmora.ui.detail.RecommendationsMovieFragment
-import azari.amirhossein.filmora.ui.detail.SimilarMovieFragment
+import azari.amirhossein.filmora.ui.detail.movie.RecommendationsMovieFragment
+import azari.amirhossein.filmora.ui.detail.movie.SimilarMovieFragment
 
 class SimilarMovieRecommendationsPagerAdapter(
     fragment: Fragment,

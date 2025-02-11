@@ -1,4 +1,4 @@
-package azari.amirhossein.filmora.ui.detail
+package azari.amirhossein.filmora.ui.detail.movie
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,12 +11,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import azari.amirhossein.filmora.adapter.RecommendationTvAdapter
-import azari.amirhossein.filmora.databinding.FragmentRecommendationsTvBinding
-import azari.amirhossein.filmora.databinding.FragmentSimilarTvBinding
-import azari.amirhossein.filmora.models.detail.ResponseTvRecommendations
-import azari.amirhossein.filmora.models.detail.ResponseTvSimilar
-import azari.amirhossein.filmora.ui.home.HomeFragmentDirections
+import azari.amirhossein.filmora.adapter.RecommendationMovieAdapter
+import azari.amirhossein.filmora.databinding.FragmentRecommendationsMovieBinding
+import azari.amirhossein.filmora.models.detail.ResponseMovieRecommendations
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.NetworkRequest
 import azari.amirhossein.filmora.viewmodel.DetailsViewModel
@@ -24,36 +21,37 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class RecommendationsTvFragment : Fragment() {
-    private var _binding: FragmentRecommendationsTvBinding? = null
+class RecommendationsMovieFragment : Fragment() {
+    private var _binding: FragmentRecommendationsMovieBinding? = null
     private val binding get() = _binding!!
 
     private val viewModel: DetailsViewModel by viewModels({ requireParentFragment() })
-    private val recommendationsTvAdapter by lazy { RecommendationTvAdapter() }
+    private val recommendationsMovieAdapter by lazy { RecommendationMovieAdapter() }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?,
     ): View {
-        _binding = FragmentRecommendationsTvBinding.inflate(inflater, container, false)
+        _binding = FragmentRecommendationsMovieBinding.inflate(inflater, container, false)
         return binding.root
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerView()
-        observeRecommendationTvs()
-        recommendationsTvAdapter.setOnItemClickListener(clickTv)
+        observeRecommendationMovies()
+        recommendationsMovieAdapter.setOnItemClickListener(clickMovie)
 
     }
-    private fun observeRecommendationTvs() {
+
+    private fun observeRecommendationMovies() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.tvRecommendations.collect { result ->
+                viewModel.movieRecommendations.collect { result ->
                     when (result) {
                         is NetworkRequest.Success -> {
-                            recommendationsTvAdapter.differ.submitList(result.data?.results)
+                            recommendationsMovieAdapter.differ.submitList(result.data?.results)
                         }
 
                         else -> Unit
@@ -62,18 +60,20 @@ class RecommendationsTvFragment : Fragment() {
             }
         }
     }
+
     private fun setupRecyclerView() {
         binding.rvRecommendations.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-            adapter = recommendationsTvAdapter
+            adapter = recommendationsMovieAdapter
         }
     }
-    //Click media
-    private val clickTv = { tv: ResponseTvRecommendations.Result ->
-        val action = RecommendationsTvFragmentDirections.actionToTvDetail(Constants.MediaType.TV,tv.id)
+
+    private val clickMovie = { movie: ResponseMovieRecommendations.Result ->
+        val action = RecommendationsMovieFragmentDirections.actionToMovieDetail(Constants.MediaType.MOVIE, movie.id)
         findNavController().navigate(action)
 
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

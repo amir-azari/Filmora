@@ -176,7 +176,7 @@
 
     <fragment
         android:id="@+id/movieDetailFragment"
-        android:name="azari.amirhossein.filmora.ui.detail.MovieDetailFragment"
+        android:name="azari.amirhossein.filmora.ui.detail.movie.MovieDetailFragment"
         android:label="fragment_detail"
         tools:layout="@layout/fragment_movie_detail" >
         <argument
@@ -196,7 +196,7 @@
      />
     <fragment
         android:id="@+id/tvDetailsFragment"
-        android:name="azari.amirhossein.filmora.ui.detail.TvDetailsFragment"
+        android:name="azari.amirhossein.filmora.ui.detail.tv.TvDetailsFragment"
         android:label="fragment_tv_details"
         tools:layout="@layout/fragment_tv_details">
 
@@ -222,22 +222,22 @@
         tools:layout="@layout/fragment_may_like_movies" />
     <fragment
         android:id="@+id/recommendationsMovieFragment"
-        android:name="azari.amirhossein.filmora.ui.detail.RecommendationsMovieFragment"
+        android:name="azari.amirhossein.filmora.ui.detail.movie.RecommendationsMovieFragment"
         android:label="fragment_recommendations_movie"
         tools:layout="@layout/fragment_recommendations_movie" />
     <fragment
         android:id="@+id/recommendationsTvFragment"
-        android:name="azari.amirhossein.filmora.ui.detail.RecommendationsTvFragment"
+        android:name="azari.amirhossein.filmora.ui.detail.tv.RecommendationsTvFragment"
         android:label="fragment_recommendations_tv"
         tools:layout="@layout/fragment_recommendations_tv" />
     <fragment
         android:id="@+id/similarTvFragment"
-        android:name="azari.amirhossein.filmora.ui.detail.SimilarTvFragment"
+        android:name="azari.amirhossein.filmora.ui.detail.tv.SimilarTvFragment"
         android:label="fragment_similar_tv"
         tools:layout="@layout/fragment_similar_tv" />
     <fragment
         android:id="@+id/similarMovieFragment"
-        android:name="azari.amirhossein.filmora.ui.detail.SimilarMovieFragment"
+        android:name="azari.amirhossein.filmora.ui.detail.movie.SimilarMovieFragment"
         android:label="fragment_similar_movie"
         tools:layout="@layout/fragment_similar_movie" />
     <fragment

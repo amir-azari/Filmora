@@ -1,4 +1,4 @@
-package azari.amirhossein.filmora.ui.detail
+package azari.amirhossein.filmora.ui.detail.tv
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,10 +11,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import azari.amirhossein.filmora.adapter.RecommendationMovieAdapter
-import azari.amirhossein.filmora.databinding.FragmentRecommendationsMovieBinding
-import azari.amirhossein.filmora.models.detail.ResponseMovieRecommendations
-import azari.amirhossein.filmora.ui.home.HomeFragmentDirections
+import azari.amirhossein.filmora.adapter.SimilarTvAdapter
+import azari.amirhossein.filmora.databinding.FragmentSimilarTvBinding
+import azari.amirhossein.filmora.models.detail.ResponseTvSimilar
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.NetworkRequest
 import azari.amirhossein.filmora.viewmodel.DetailsViewModel
@@ -22,37 +21,36 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class RecommendationsMovieFragment : Fragment() {
-    private var _binding: FragmentRecommendationsMovieBinding? = null
+class SimilarTvFragment : Fragment() {
+    private var _binding: FragmentSimilarTvBinding? = null
     private val binding get() = _binding!!
 
     private val viewModel: DetailsViewModel by viewModels({ requireParentFragment() })
-    private val recommendationsMovieAdapter by lazy { RecommendationMovieAdapter() }
+    private val similarTvAdapter by lazy { SimilarTvAdapter() }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentRecommendationsMovieBinding.inflate(inflater, container, false)
+        _binding = FragmentSimilarTvBinding.inflate(inflater, container, false)
         return binding.root
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerView()
-        observeRecommendationMovies()
-        recommendationsMovieAdapter.setOnItemClickListener(clickMovie)
-
+        observeSimilarTvs()
+        similarTvAdapter.setOnItemClickListener(clickTv)
     }
 
-    private fun observeRecommendationMovies() {
+    private fun observeSimilarTvs() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.movieRecommendations.collect { result ->
+                viewModel.tvSimilar.collect { result ->
                     when (result) {
                         is NetworkRequest.Success -> {
-                            recommendationsMovieAdapter.differ.submitList(result.data?.results)
+                            similarTvAdapter.differ.submitList(result.data?.results)
                         }
 
                         else -> Unit
@@ -61,16 +59,15 @@ class RecommendationsMovieFragment : Fragment() {
             }
         }
     }
-
     private fun setupRecyclerView() {
-        binding.rvRecommendations.apply {
+        binding.rvSimilar.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-            adapter = recommendationsMovieAdapter
+            adapter = similarTvAdapter
         }
     }
-
-    private val clickMovie = { movie: ResponseMovieRecommendations.Result ->
-        val action = RecommendationsMovieFragmentDirections.actionToMovieDetail(Constants.MediaType.MOVIE, movie.id)
+    //Click media
+    private val clickTv = { tv: ResponseTvSimilar.Result ->
+        val action = SimilarTvFragmentDirections.actionToTvDetail(Constants.MediaType.TV,tv.id)
         findNavController().navigate(action)
 
     }

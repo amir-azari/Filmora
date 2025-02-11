@@ -1,4 +1,4 @@
-package azari.amirhossein.filmora.ui.detail
+package azari.amirhossein.filmora.ui.detail.movie
 
 import android.os.Bundle
 import android.text.TextUtils
@@ -19,15 +19,14 @@ import azari.amirhossein.filmora.adapter.CreditAdapter
 import azari.amirhossein.filmora.adapter.GenresAdapter
 import azari.amirhossein.filmora.adapter.SeasonsAdapter
 import azari.amirhossein.filmora.adapter.SimilarMovieRecommendationsPagerAdapter
-import azari.amirhossein.filmora.adapter.SimilarTvRecommendationsPagerAdapter
 import azari.amirhossein.filmora.adapter.VisualContentPagerAdapter
 import azari.amirhossein.filmora.data.SessionManager
-import azari.amirhossein.filmora.databinding.FragmentTvDetailsBinding
+import azari.amirhossein.filmora.databinding.FragmentMovieDetailBinding
 import azari.amirhossein.filmora.models.ResponseLanguage
 import azari.amirhossein.filmora.models.detail.DetailMediaItem
 import azari.amirhossein.filmora.models.detail.ResponseCredit
+import azari.amirhossein.filmora.models.detail.ResponseMovieDetails
 import azari.amirhossein.filmora.models.detail.ResponseReviews
-import azari.amirhossein.filmora.models.detail.ResponseTvDetails
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.NetworkRequest
 import azari.amirhossein.filmora.utils.customize
@@ -37,10 +36,10 @@ import azari.amirhossein.filmora.utils.observeLoginStatus
 import azari.amirhossein.filmora.utils.setupOverviewExpansion
 import azari.amirhossein.filmora.utils.toCompanyNames
 import azari.amirhossein.filmora.utils.toCountryNames
-import azari.amirhossein.filmora.utils.toCreatorNames
 import azari.amirhossein.filmora.utils.toFormattedDate
+import azari.amirhossein.filmora.utils.toFormattedRuntime
 import azari.amirhossein.filmora.utils.toFormattedVoteAverage
-import azari.amirhossein.filmora.utils.toNetworkNames
+import azari.amirhossein.filmora.utils.toFormattedWithUnits
 import azari.amirhossein.filmora.utils.toSpokenLanguagesText
 import azari.amirhossein.filmora.viewmodel.DetailsViewModel
 import com.google.android.material.snackbar.Snackbar
@@ -50,9 +49,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class TvDetailsFragment : Fragment() {
+class MovieDetailFragment : Fragment() {
     //Binding
-    private var _binding: FragmentTvDetailsBinding? = null
+    private var _binding: FragmentMovieDetailBinding? = null
     private val binding get() = _binding!!
 
     @Inject
@@ -67,8 +66,8 @@ class TvDetailsFragment : Fragment() {
     @Inject
     lateinit var creditAdapter: CreditAdapter
 
-    private lateinit var similarAndRecommendationsPagerAdapter: SimilarTvRecommendationsPagerAdapter
-    private  var visualContentPagerAdapter: VisualContentPagerAdapter? = null
+    private lateinit var similarAndRecommendationsPagerAdapter : SimilarMovieRecommendationsPagerAdapter
+    private var visualContentPagerAdapter: VisualContentPagerAdapter? = null
 
     // State variables for overview expansion and configuration
     private var isOverviewExpanded = false
@@ -84,6 +83,7 @@ class TvDetailsFragment : Fragment() {
 
     // Base URL for loading images
     val baseUrl = Constants.Network.IMAGE_BASE_URL
+
     private lateinit var originalScaleType: ImageView.ScaleType
 
     override fun onCreateView(
@@ -92,7 +92,7 @@ class TvDetailsFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View {
         // Inflate the layout for this fragment
-        _binding = FragmentTvDetailsBinding.inflate(inflater, container, false)
+        _binding = FragmentMovieDetailBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -109,10 +109,8 @@ class TvDetailsFragment : Fragment() {
         setActionBarTitle("")
 
         // Fetch media details
-        viewModel.getMediaDetails(mediaId, Constants.MediaType.TV)
-
+        viewModel.getMediaDetails(mediaId, Constants.MediaType.MOVIE)
         originalScaleType = binding.imgPoster.scaleType
-
 
         setupUI()
         binding.overviewContainer.setupOverviewExpansion(
@@ -124,7 +122,6 @@ class TvDetailsFragment : Fragment() {
 
             isOverviewExpanded = isExpanded
         }
-
         binding.reviewContainer.setupOverviewExpansion(
             txtOverview = binding.tvReviewContent,
             imgExpand = binding.imgReviewContentExpand,
@@ -134,7 +131,6 @@ class TvDetailsFragment : Fragment() {
 
             isOverviewExpanded = isExpanded
         }
-
         observeViewModel()
 
         viewLifecycleOwner.observeLoginStatus(
@@ -157,21 +153,25 @@ class TvDetailsFragment : Fragment() {
         super.onSaveInstanceState(outState)
         outState.putInt("scroll_position", binding.nestedScrollView.scrollY)
     }
+
     private fun setupUI() {
         setupRecyclerViews()
     }
+
     private fun setupViewPagersSimilarAndRecommendations() {
         val similarAndRecommendationsViewPager = binding.vpSimilarRecommendation
         val similarAndRecommendationsTabLayout = binding.tlSimilarRecommendation
 
         // Initialize pagerAdapter property
-        similarAndRecommendationsPagerAdapter = SimilarTvRecommendationsPagerAdapter(this)
-        similarAndRecommendationsViewPager.adapter = similarAndRecommendationsPagerAdapter
+        similarAndRecommendationsViewPager.adapter = SimilarMovieRecommendationsPagerAdapter(this)
         similarAndRecommendationsViewPager.isUserInputEnabled = false
-
-        TabLayoutMediator(similarAndRecommendationsTabLayout, similarAndRecommendationsViewPager) { tab, position ->
+        similarAndRecommendationsViewPager.offscreenPageLimit = 1
+        TabLayoutMediator(
+            similarAndRecommendationsTabLayout,
+            similarAndRecommendationsViewPager
+        ) { tab, position ->
             when (position) {
-                0 -> tab.text = getString(R.string.similar_tv_show)
+                0 -> tab.text = getString(R.string.similar_movies)
 
                 1 -> tab.text = getString(R.string.recommendations)
 
@@ -179,76 +179,10 @@ class TvDetailsFragment : Fragment() {
         }.attach()
 
     }
-    private fun setupVisual(mediaItem: DetailMediaItem) {
-        val hasVideos = !mediaItem.videos?.results.isNullOrEmpty()
-        val hasBackdrops = !mediaItem.images?.backdrops.isNullOrEmpty()
-        val hasPosters = !mediaItem.images?.posters.isNullOrEmpty()
-
-        if (!hasVideos && !hasBackdrops && !hasPosters) {
-            binding.cvVisualContent.visibility = View.GONE
-            return
-        }
-
-        binding.cvVisualContent.visibility = View.VISIBLE
-
-        val tabLayout = binding.tlVisualContent
-        val viewPager = binding.vpVisualContent
-        viewPager.isUserInputEnabled = false
-        viewPager.offscreenPageLimit = 1
-
-        val visibleTabs = mutableListOf<Int>()
-
-        if (hasVideos) {
-            visibleTabs.add(0) // Videos tab
-        }
-        if (hasBackdrops) {
-            visibleTabs.add(1) // Backdrops tab
-        }
-        if (hasPosters) {
-            visibleTabs.add(2) // Posters tab
-        }
-
-        if (visibleTabs.size == 1) {
-            tabLayout.visibility = View.GONE
-            binding.txtHeaderVisualContent.visibility = View.VISIBLE
-
-            when (visibleTabs[0]) {
-                0 -> binding.txtHeaderVisualContent.text = getString(R.string.videos)
-                1 -> binding.txtHeaderVisualContent.text = getString(R.string.backdrops)
-                2 -> binding.txtHeaderVisualContent.text = getString(R.string.posters)
-            }
-
-            viewPager.setCurrentItem(0, false)
-        } else {
-            tabLayout.visibility = View.VISIBLE
-            binding.txtHeaderVisualContent.visibility = View.GONE
-        }
-
-        visualContentPagerAdapter = VisualContentPagerAdapter(this, visibleTabs)
-        viewPager.adapter = visualContentPagerAdapter
-
-        for (i in 0 until tabLayout.tabCount) {
-            val tab = tabLayout.getTabAt(i)
-            if (tab != null && !visibleTabs.contains(i)) {
-                tabLayout.removeTab(tab)
-            }
-        }
-
-        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
-            when (visibleTabs[position]) {
-                0 -> tab.text = getString(R.string.videos)
-                1 -> tab.text = getString(R.string.backdrops)
-                2 -> tab.text = getString(R.string.posters)
-            }
-        }.attach()
-
-    }
-
-
 
     private fun setupSimilarAndRecommendations(mediaItem: DetailMediaItem) {
-        val hasSimilar = !mediaItem.tvSimilar?.results.isNullOrEmpty()
-        val hasRecommendations = !mediaItem.tvRecommendations?.results.isNullOrEmpty()
+        val hasSimilar = !mediaItem.similar?.results.isNullOrEmpty()
+        val hasRecommendations = !mediaItem.recommendations?.results.isNullOrEmpty()
 
         if (!hasRecommendations && !hasSimilar) {
             binding.cvSimilarRecommendations.visibility = View.GONE
@@ -275,22 +209,77 @@ class TvDetailsFragment : Fragment() {
         }
     }
 
+    private fun setupVisual(mediaItem: DetailMediaItem) {
+        val hasVideos = !mediaItem.videos?.results.isNullOrEmpty()
+        val hasBackdrops = !mediaItem.images?.backdrops.isNullOrEmpty()
+        val hasPosters = !mediaItem.images?.posters.isNullOrEmpty()
+
+        if (!hasVideos && !hasBackdrops && !hasPosters) {
+            binding.cvVisualContent.visibility = View.GONE
+            return
+        }
+
+        binding.cvVisualContent.visibility = View.VISIBLE
+
+        val tabLayout = binding.tlVisualContent
+        val viewPager = binding.vpVisualContent
+        viewPager.isUserInputEnabled = false
+        viewPager.offscreenPageLimit = 1
+
+        val visibleTabs = mutableListOf<Int>()
+        if (hasVideos) visibleTabs.add(0)
+        if (hasBackdrops) visibleTabs.add(1)
+        if (hasPosters) visibleTabs.add(2)
+
+        if (visibleTabs.size == 1) {
+            tabLayout.visibility = View.GONE
+            binding.txtHeaderVisualContent.visibility = View.VISIBLE
+
+            when (visibleTabs[0]) {
+                0 -> binding.txtHeaderVisualContent.text = getString(R.string.videos)
+                1 -> binding.txtHeaderVisualContent.text = getString(R.string.backdrops)
+                2 -> binding.txtHeaderVisualContent.text = getString(R.string.posters)
+            }
+
+            viewPager.setCurrentItem(0, true)
+        } else {
+            tabLayout.visibility = View.VISIBLE
+            binding.txtHeaderVisualContent.visibility = View.GONE
+        }
+
+        visualContentPagerAdapter = VisualContentPagerAdapter(this, visibleTabs)
+        viewPager.adapter = visualContentPagerAdapter
+
+        for (i in 0 until tabLayout.tabCount) {
+            val tab = tabLayout.getTabAt(i)
+            if (tab != null && !visibleTabs.contains(i)) {
+                tabLayout.removeTab(tab)
+            }
+        }
+
+        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+            when (visibleTabs[position]) {
+                0 -> tab.text = getString(R.string.videos)
+                1 -> tab.text = getString(R.string.backdrops)
+                2 -> tab.text = getString(R.string.posters)
+            }
+        }.attach()
+    }
+
     private fun setupRecyclerViews() {
         // Set up the RecyclerView for displaying genres
         binding.rvGenre.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             adapter = genresAdapter
-        }
-        binding.rvTvSeasons.apply {
-            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-            adapter = seasonsAdapter
+            isNestedScrollingEnabled = false
+
         }
 
         binding.rvCastAndCrew.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             adapter = creditAdapter
-            setHasFixedSize(true)
         }
+
     }
 
 
@@ -308,10 +297,9 @@ class TvDetailsFragment : Fragment() {
                                 it.data?.let { mediaItem ->
                                     showSuccess()
                                     bindUI(mediaItem)
-                                    setupVisual(mediaItem)
                                     viewModel.updateMediaDetails(mediaItem)
                                     setupSimilarAndRecommendations(mediaItem)
-
+                                    setupVisual(mediaItem)
                                 }
                             }
 
@@ -346,7 +334,7 @@ class TvDetailsFragment : Fragment() {
     }
 
     private fun showSuccess() {
-        binding.internetLay.visibility = View.GONE
+        binding.internetLay.visibility  =View.GONE
         binding.progressBar.visibility = View.GONE
         binding.mainContentContainer.visibility = View.VISIBLE
     }
@@ -358,7 +346,6 @@ class TvDetailsFragment : Fragment() {
             (requireActivity() as AppCompatActivity).supportActionBar?.title = ""
         }
     }
-
 
     private fun setActionBarTitle(title: String?) {
         (requireActivity() as AppCompatActivity).supportActionBar?.title = title
@@ -376,6 +363,7 @@ class TvDetailsFragment : Fragment() {
             binding.imgExpand.visibility = if (isEllipsized) View.VISIBLE else View.INVISIBLE
         }
     }
+
     private fun handleOverviewReviewsExpansion() {
         binding.tvReviewContent.maxLines = overviewReviewsMaxLines
         binding.tvReviewContent.ellipsize = TextUtils.TruncateAt.END
@@ -388,6 +376,14 @@ class TvDetailsFragment : Fragment() {
             binding.imgReviewContentExpand.visibility = if (isEllipsized) View.VISIBLE else View.INVISIBLE
         }
     }
+
+    private fun bindUI(data: DetailMediaItem) {
+        data.movie?.let { bindUiDetail(it) }
+        data.credits?.let { bindUiCast(it) }
+        data.language?.let { bindUiLanguage(it) }
+        data.reviews?.let { bindUiReview(it) }
+    }
+
     private fun bindUiReview(data: ResponseReviews) {
         binding.apply {
             if (data.results?.isEmpty() == true) {
@@ -410,10 +406,10 @@ class TvDetailsFragment : Fragment() {
                 )
                 tvReviewAuthor.text = data.results?.get(0)?.author
                 val createdAt = data.results?.get(0)?.createdAt?.toFormattedDate()
-                tvReviewDate.text = getString(R.string.written_on_date, createdAt ?: Constants.Defaults.NOT_APPLICABLE)
+                tvReviewDate.text = getString(R.string.written_on_date, createdAt ?: "N/A")
 
                 val rating = data.results?.get(0)?.authorDetails?.rating?.toString()
-                tvReviewRating.text = getString(R.string.review_rating, rating ?: Constants.Defaults.NOT_APPLICABLE)
+                tvReviewRating.text = getString(R.string.review_rating, rating ?: "N/A")
 
                 tvReviewContent.text = data.results?.get(0)?.content ?: ""
                 handleOverviewReviewsExpansion()
@@ -426,16 +422,18 @@ class TvDetailsFragment : Fragment() {
         }
     }
 
-    private fun bindUiDetail(data: ResponseTvDetails) {
+
+
+    private fun bindUiDetail(data: ResponseMovieDetails) {
         binding.apply {
             data.apply {
-                // Tv show name and overview
-                txtTitle.text = name ?: Constants.Defaults.NOT_APPLICABLE
-                setActionBarTitle(name)
+                // Movie name and overview
+                txtTitle.text = title ?: Constants.Defaults.NOT_APPLICABLE
+                setActionBarTitle(title)
                 txtOverview.text = overview ?: Constants.Defaults.OVERVIEW
                 handleOverviewExpansion()
 
-                // Vote details
+                // Vote average
                 txtVoteCount.text = voteCount?.toString() ?: Constants.Defaults.VOTE_COUNT
                 txtVoteAverage.text = voteAverage?.toFormattedVoteAverage()
                     ?: Constants.Defaults.VOTE_AVERAGE.toString()
@@ -444,8 +442,13 @@ class TvDetailsFragment : Fragment() {
                 genresAdapter.differ.submitList(genres)
 
                 // Load poster
+                val posterFullPath = if (posterPath.isNullOrEmpty()) {
+                    null
+                } else {
+                    baseUrl + Constants.ImageSize.ORIGINAL + posterPath
+                }
                 imgPoster.loadImageWithoutShimmer(
-                    baseUrl + Constants.ImageSize.ORIGINAL + posterPath,
+                    posterFullPath,
                     R.drawable.image_slash_medium,
                     R.drawable.image_medium,
                     originalScaleType,
@@ -454,53 +457,24 @@ class TvDetailsFragment : Fragment() {
 
 
                 // Load backdrop
+                val backdropFullPath = if (backdropPath.isNullOrEmpty()) {
+                    null
+                } else {
+                    baseUrl + Constants.ImageSize.ORIGINAL + backdropPath
+                }
                 imgBackdrop.loadImageWithoutShimmer(
-                    baseUrl + Constants.ImageSize.ORIGINAL + backdropPath,
+                    backdropFullPath,
                     R.drawable.image_slash_large,
                     R.drawable.image_large,
                     originalScaleType,
-                    false
-                )
-                // Seasons
-                if (seasons.isNullOrEmpty()){
-                    cvTvSeasons.visibility = View.GONE
-                }
-                seasonsAdapter.differ.submitList(seasons)
-
-                // Creators
-                if (createdBy.isNullOrEmpty()) {
-                    txtCreatorValue.visibility = View.GONE
-                    txtCreator.visibility = View.GONE
-                }
-                txtCreatorValue.text = createdBy.toCreatorNames()
-
-
-                // release
-                if (firstAirDate.isNullOrEmpty()) {
-                    txtReleaseValue.visibility = View.GONE
-                    txtRelease.visibility = View.GONE
-                }
-                txtReleaseValue.text = getString(
-                    R.string.release_value,
-                    firstAirDate?.toFormattedDate() ?: Constants.Defaults.NOT_APPLICABLE,
-                    status
+                    true
                 )
 
-                // Networks
-                txtNetworksValue.text = networks.toNetworkNames()
 
+                txtStatusValue.text = releaseDate.let { it?.toFormattedDate() }
                 txtLanguageValue.text = originalLanguage
-
-
-                // Spoken Languages
-                txtSpokenLanguagesValue.text = spokenLanguages.toSpokenLanguagesText()
-                txtSeasonsAndEpisodesValue.text = getString(
-                    R.string.seasons_and_episodes,
-                    numberOfSeasons?.toString() ?: Constants.Defaults.NOT_APPLICABLE,
-                    numberOfEpisodes?.toString() ?: Constants.Defaults.NOT_APPLICABLE
-                )
-
-                txtTypeValue.text = type
+                txtBudgetValue.text = if (budget == 0) "-" else budget.toFormattedWithUnits()
+                txtRevenueValue.text = if (revenue == 0) "-" else revenue.toFormattedWithUnits()
 
                 // Tagline
                 if (tagline.isNullOrEmpty()) {
@@ -509,26 +483,44 @@ class TvDetailsFragment : Fragment() {
                     txtTag.visibility = View.VISIBLE
                     txtTag.text = tagline
                 }
+                txtDurationValue.text = runtime.toFormattedRuntime()
+                txtSpokenLanguagesValue.text = spokenLanguages.toSpokenLanguagesText()
 
                 // Production companies and countries
                 txtProductionCountriesValue.text = productionCountries.toCountryNames()
                 txtProductionCompaniesValue.text = productionCompanies?.toCompanyNames()
-            }
+
+                // Collection
+                if (belongsToCollection?.id != null) {
+                    binding.cvCollection.visibility = View.VISIBLE
+                }
+
+                val collectionPosterFullPath =
+                    if (belongsToCollection?.posterPath.isNullOrEmpty()) {
+                        null
+                    } else {
+                        baseUrl + Constants.ImageSize.ORIGINAL + belongsToCollection?.posterPath
+                    }
+
+                imgCollection.loadImageWithoutShimmer(
+                    collectionPosterFullPath,
+                    R.drawable.image_slash_medium,
+                    R.drawable.image_medium,
+                    originalScaleType,
+                    true
+                )
+                tvCollectionName.text =
+                    getString(R.string.part_of_collection, belongsToCollection?.name)
 
             }
         }
 
-    private fun bindUI(data: DetailMediaItem) {
-        data.tv?.let {  bindUiDetail(it) }
-        data.credits?.let { bindUiCast(it) }
-        data.language?.let { bindUiLanguage(it) }
-        data.reviews?.let { bindUiReview(it) }
-
     }
 
-    private fun bindUiCast(data : ResponseCredit){
+
+    private fun bindUiCast(data: ResponseCredit) {
         data.cast?.let { cast ->
-            if (cast.isNotEmpty()){
+            if (cast.isNotEmpty()) {
                 binding.cvCastAndCrew.visibility = View.VISIBLE
             }
             creditAdapter.submitList(
@@ -536,14 +528,17 @@ class TvDetailsFragment : Fragment() {
             )
         }
     }
-    private fun bindUiLanguage(data: ResponseLanguage){
+
+    private fun bindUiLanguage(data: ResponseLanguage) {
         val originalLanguage = binding.txtLanguageValue.text.toString()
         originalLanguage.getFullLanguageName(data)
             .also { binding.txtLanguageValue.text = it }
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
-        visualContentPagerAdapter = null
         _binding = null
+        visualContentPagerAdapter = null
+
     }
 }
