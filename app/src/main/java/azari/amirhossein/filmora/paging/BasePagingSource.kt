@@ -26,9 +26,10 @@ abstract class BasePagingSource<T : Any>(
             val preferencesFlow = when (mediaType) {
                 MediaType.TV -> sessionManager.getTvPreferences()
                 MediaType.MOVIE -> sessionManager.getMoviePreferences()
+                MediaType.PEOPLE -> null
             }
 
-            val preferences = preferencesFlow.firstOrNull() ?: TvAndMoviePreferences(
+            val preferences = preferencesFlow?.firstOrNull() ?: TvAndMoviePreferences(
                 selectedIds = emptyList(),
                 favoriteGenres = emptySet(),
                 dislikedGenres = emptySet(),
