@@ -10,18 +10,15 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.recyclerview.widget.GridLayoutManager
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import azari.amirhossein.filmora.R
-import azari.amirhossein.filmora.adapter.CelebrityAdapter
-import azari.amirhossein.filmora.adapter.MayLikeMovieAdapter
+import azari.amirhossein.filmora.adapter.PopularCelebrityAdapter
 import azari.amirhossein.filmora.adapter.TrendingCelebrityAdapter
-import azari.amirhossein.filmora.databinding.FragmentMovieBinding
 import azari.amirhossein.filmora.databinding.FragmentPeopleBinding
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.NetworkRequest
 import azari.amirhossein.filmora.utils.customize
-import azari.amirhossein.filmora.viewmodel.MovieViewModel
 import azari.amirhossein.filmora.viewmodel.PeopleViewModel
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -38,10 +35,10 @@ class PeopleFragment : Fragment() {
     private val viewModel:PeopleViewModel by viewModels()
 
     @Inject
-    lateinit var popular1Adapter : CelebrityAdapter
+    lateinit var popular1Adapter : PopularCelebrityAdapter
 
     @Inject
-    lateinit var popular2Adapter : CelebrityAdapter
+    lateinit var popular2Adapter : PopularCelebrityAdapter
 
     @Inject
     lateinit var trendingAdapter : TrendingCelebrityAdapter
@@ -57,6 +54,24 @@ class PeopleFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerViews()
         observeViewModel()
+
+        binding.layoutSeeAllTrending.setOnClickListener {
+            findNavController().navigate(
+                R.id.actionToPeopleSectionFragment,
+                Bundle().apply {
+                    putString(Constants.SectionType.SECTION_TYPE, Constants.SectionType.TRENDING_PEOPLE)
+                }
+            )
+        }
+
+        binding.layoutSeeAllPopular.setOnClickListener {
+            findNavController().navigate(
+                R.id.actionToPeopleSectionFragment,
+                Bundle().apply {
+                    putString(Constants.SectionType.SECTION_TYPE, Constants.SectionType.POPULAR_PEOPLE)
+                }
+            )
+        }
     }
 
     // Setup recyclerView
