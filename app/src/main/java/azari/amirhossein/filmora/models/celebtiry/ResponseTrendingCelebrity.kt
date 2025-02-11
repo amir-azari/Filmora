@@ -19,7 +19,7 @@ data class ResponseTrendingCelebrity(
         @SerializedName("gender")
         val gender: Int?, // 2
         @SerializedName("id")
-        val id: Int?, // 57353
+        val id: Int, // 57353
         @SerializedName("known_for_department")
         val knownForDepartment: String?, // Acting
         @SerializedName("media_type")

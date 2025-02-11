@@ -20,7 +20,7 @@ data class ResponsePopularCelebrity(
         @SerializedName("gender")
         val gender: Int?, // 1
         @SerializedName("id")
-        val id: Int?, // 122822
+        val id: Int, // 122822
         @SerializedName("known_for")
         val knownFor: List<KnownFor?>?,
         @SerializedName("known_for_department")

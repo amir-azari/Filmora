@@ -105,16 +105,19 @@ object Constants {
     object MediaType {
         const val TV = "tv"
         const val MOVIE = "movie"
+        const val PEOPLE = "people"
     }
     object SectionType {
         const val POPULAR_MOVIE = "Popular Movie"
         const val POPULAR_TV = "Popular TV"
+        const val POPULAR_PEOPLE = "Popular People"
         const val NOW_PLAYING = "Now Playing"
         const val TOP_RATED_MOVIE = "Top Rated Movie"
         const val TOP_RATED_TV = "Top Rated TV"
         const val UPCOMING = "Upcoming"
         const val TRENDING_MOVIE = "Trending Movie"
         const val TRENDING_TV = "Trending TV"
+        const val TRENDING_PEOPLE = "Trending People"
         const val AIRING_TODAY = "Airing Today"
         const val ON_THE_AIR = "On The Air"
         const val SECTION_TYPE = "sectionType"
