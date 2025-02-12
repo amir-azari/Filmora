@@ -464,7 +464,7 @@
                         android:orientation="horizontal"
                         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                         app:layout_constraintTop_toBottomOf="@+id/txt_cast_and_crew"
-                        tools:listitem="@layout/item_credit" />
+                        tools:listitem="@layout/item_cast_and_crew" />
 
 
                 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -15,7 +15,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import azari.amirhossein.filmora.R
-import azari.amirhossein.filmora.adapter.CreditAdapter
+import azari.amirhossein.filmora.adapter.CastAndCrewAdapter
 import azari.amirhossein.filmora.adapter.GenresAdapter
 import azari.amirhossein.filmora.adapter.SeasonsAdapter
 import azari.amirhossein.filmora.adapter.SimilarMovieRecommendationsPagerAdapter
@@ -64,7 +64,7 @@ class MovieDetailFragment : Fragment() {
     lateinit var seasonsAdapter: SeasonsAdapter
 
     @Inject
-    lateinit var creditAdapter: CreditAdapter
+    lateinit var castAndCrewAdapter: CastAndCrewAdapter
 
     private lateinit var similarAndRecommendationsPagerAdapter : SimilarMovieRecommendationsPagerAdapter
     private var visualContentPagerAdapter: VisualContentPagerAdapter? = null
@@ -277,7 +277,7 @@ class MovieDetailFragment : Fragment() {
 
         binding.rvCastAndCrew.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-            adapter = creditAdapter
+            adapter = castAndCrewAdapter
         }
 
     }
@@ -523,7 +523,7 @@ class MovieDetailFragment : Fragment() {
             if (cast.isNotEmpty()) {
                 binding.cvCastAndCrew.visibility = View.VISIBLE
             }
-            creditAdapter.submitList(
+            castAndCrewAdapter.submitList(
                 cast.filterNotNull()
             )
         }

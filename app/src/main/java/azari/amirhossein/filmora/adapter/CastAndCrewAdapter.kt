@@ -1,23 +1,21 @@
 package azari.amirhossein.filmora.adapter
 
-import android.graphics.Rect
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import azari.amirhossein.filmora.R
-import azari.amirhossein.filmora.databinding.ItemCreditBinding
+import azari.amirhossein.filmora.databinding.ItemCastAndCrewBinding
 import azari.amirhossein.filmora.models.detail.ResponseCredit.Cast
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.HeightPayload
 import azari.amirhossein.filmora.utils.loadImageWithoutShimmer
 import javax.inject.Inject
 
-class CreditAdapter @Inject constructor() :
-    RecyclerView.Adapter<CreditAdapter.ViewHolder>() {
+class CastAndCrewAdapter @Inject constructor() :
+    RecyclerView.Adapter<CastAndCrewAdapter.ViewHolder>() {
 
     private var maxItemHeight = 0
     private var isHeightCalculated = false
@@ -28,7 +26,7 @@ class CreditAdapter @Inject constructor() :
         onItemClickListener = listener
     }
 
-    inner class ViewHolder(private val binding: ItemCreditBinding) :
+    inner class ViewHolder(private val binding: ItemCastAndCrewBinding) :
         RecyclerView.ViewHolder(binding.root) {
         private val originalScaleType: ImageView.ScaleType = binding.ivProfile.scaleType
 
@@ -88,7 +86,7 @@ class CreditAdapter @Inject constructor() :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding =
-            ItemCreditBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            ItemCastAndCrewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
 
