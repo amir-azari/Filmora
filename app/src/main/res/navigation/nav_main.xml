@@ -172,7 +172,16 @@
             app:popEnterAnim="@anim/nav_fade_in"
             app:popExitAnim="@anim/nav_fade_out"
             app:destination="@id/peopleSectionFragment" />
+
     </fragment>
+    <action
+        android:id="@+id/actionToPeopleDetailFragment"
+        app:destination="@id/peopleDetailFragment"
+        app:enterAnim="@anim/nav_fade_in"
+        app:exitAnim="@anim/nav_fade_out"
+        app:popEnterAnim="@anim/nav_fade_in"
+        app:popExitAnim="@anim/nav_fade_out"
+        />
 
     <fragment
         android:id="@+id/movieDetailFragment"
@@ -269,6 +278,15 @@
         <argument
             android:name="sectionType"
             app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/peopleDetailFragment"
+        android:name="azari.amirhossein.filmora.ui.detail.people.PeopleDetailFragment"
+        android:label="fragment_people_detail"
+        tools:layout="@layout/fragment_people_detail" >
+        <argument
+            android:name="id"
+            app:argType="integer" />
     </fragment>
 
 </navigation>

@@ -102,4 +102,12 @@
     <string name="airing_today">Airing Today</string>
     <string name="top_rated">Top Rated</string>
     <string name="on_tv">On TV</string>
+    <string name="profiles">Profiles</string>
+    <string name="known_for">Known For</string>
+    <string name="gender">Gender</string>
+    <string name="birthday">Birthday</string>
+    <string name="age">Age</string>
+    <string name="deathday">Deathday</string>
+    <string name="place_of_birth">Place of Birth</string>
+    <string name="about">About</string>
 </resources>

@@ -92,7 +92,7 @@ class MainActivity : AppCompatActivity() {
                 supportActionBar?.setDisplayHomeAsUpEnabled(false)
             }
 
-            R.id.movieDetailFragment, R.id.tvDetailsFragment, R.id.mayLikeMoviesFragment, R.id.mayLikeTvsFragment, R.id.movieSectionFragment, R.id.tvSectionFragment, R.id.peopleSectionFragment -> {
+            R.id.movieDetailFragment, R.id.tvDetailsFragment, R.id.mayLikeMoviesFragment, R.id.mayLikeTvsFragment, R.id.movieSectionFragment, R.id.tvSectionFragment, R.id.peopleSectionFragment , R.id.peopleDetailFragment-> {
                 hideBottomNavWithFade()
                 showToolbar()
                 hideProfileSection()
@@ -123,7 +123,8 @@ class MainActivity : AppCompatActivity() {
             R.id.mayLikeTvsFragment,
             R.id.movieSectionFragment,
             R.id.tvSectionFragment,
-            R.id.peopleSectionFragment
+            R.id.peopleSectionFragment,
+            R.id.peopleDetailFragment
         )
         val currentDestinationId = navController.currentDestination?.id
 
