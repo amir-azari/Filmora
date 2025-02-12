@@ -41,7 +41,7 @@ import azari.amirhossein.filmora.utils.toFormattedDate
 import azari.amirhossein.filmora.utils.toFormattedVoteAverage
 import azari.amirhossein.filmora.utils.toNetworkNames
 import azari.amirhossein.filmora.utils.toSpokenLanguagesText
-import azari.amirhossein.filmora.viewmodel.DetailsViewModel
+import azari.amirhossein.filmora.viewmodel.MediaDetailsViewModel
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
@@ -74,7 +74,7 @@ class TvDetailsFragment : Fragment() {
     private val overviewMaxLines = Constants.Defaults.OVERVIEW_MAX_LINES
     private val overviewReviewsMaxLines = 3
 
-    private val viewModel: DetailsViewModel by viewModels()
+    private val viewModel: MediaDetailsViewModel by viewModels()
 
     // Arguments passed to the fragment
     private lateinit var args: TvDetailsFragmentArgs

@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import azari.amirhossein.filmora.adapter.PosterAdapter
 import azari.amirhossein.filmora.databinding.FragmentPosterBinding
 import azari.amirhossein.filmora.utils.NetworkRequest
-import azari.amirhossein.filmora.viewmodel.DetailsViewModel
+import azari.amirhossein.filmora.viewmodel.MediaDetailsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -23,7 +23,7 @@ class PosterFragment : Fragment(){
     private var _binding: FragmentPosterBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: DetailsViewModel by viewModels({ requireParentFragment() })
+    private val viewModel: MediaDetailsViewModel by viewModels({ requireParentFragment() })
     private val posterAdapter by lazy { PosterAdapter() }
 
     override fun onCreateView(

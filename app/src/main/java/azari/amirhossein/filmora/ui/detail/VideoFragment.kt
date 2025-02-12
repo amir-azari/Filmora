@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import azari.amirhossein.filmora.adapter.VideoAdapter
 import azari.amirhossein.filmora.databinding.FragmentVideoBinding
 import azari.amirhossein.filmora.utils.NetworkRequest
-import azari.amirhossein.filmora.viewmodel.DetailsViewModel
+import azari.amirhossein.filmora.viewmodel.MediaDetailsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -23,7 +23,7 @@ class VideoFragment : Fragment() {
     private var _binding: FragmentVideoBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: DetailsViewModel by viewModels({ requireParentFragment() })
+    private val viewModel: MediaDetailsViewModel by viewModels({ requireParentFragment() })
     private val videoAdapter by lazy { VideoAdapter() }
 
     override fun onCreateView(

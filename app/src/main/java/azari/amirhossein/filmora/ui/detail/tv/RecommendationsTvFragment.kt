@@ -16,7 +16,7 @@ import azari.amirhossein.filmora.databinding.FragmentRecommendationsTvBinding
 import azari.amirhossein.filmora.models.detail.ResponseTvRecommendations
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.NetworkRequest
-import azari.amirhossein.filmora.viewmodel.DetailsViewModel
+import azari.amirhossein.filmora.viewmodel.MediaDetailsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -25,7 +25,7 @@ class RecommendationsTvFragment : Fragment() {
     private var _binding: FragmentRecommendationsTvBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: DetailsViewModel by viewModels({ requireParentFragment() })
+    private val viewModel: MediaDetailsViewModel by viewModels({ requireParentFragment() })
     private val recommendationsTvAdapter by lazy { RecommendationTvAdapter() }
 
     override fun onCreateView(

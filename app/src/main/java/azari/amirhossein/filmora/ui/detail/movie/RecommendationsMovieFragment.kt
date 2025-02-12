@@ -16,7 +16,7 @@ import azari.amirhossein.filmora.databinding.FragmentRecommendationsMovieBinding
 import azari.amirhossein.filmora.models.detail.ResponseMovieRecommendations
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.NetworkRequest
-import azari.amirhossein.filmora.viewmodel.DetailsViewModel
+import azari.amirhossein.filmora.viewmodel.MediaDetailsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -25,7 +25,7 @@ class RecommendationsMovieFragment : Fragment() {
     private var _binding: FragmentRecommendationsMovieBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: DetailsViewModel by viewModels({ requireParentFragment() })
+    private val viewModel: MediaDetailsViewModel by viewModels({ requireParentFragment() })
     private val recommendationsMovieAdapter by lazy { RecommendationMovieAdapter() }
 
     override fun onCreateView(

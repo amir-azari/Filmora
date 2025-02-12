@@ -4,7 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import azari.amirhossein.filmora.data.database.entity.DetailEntity
+import azari.amirhossein.filmora.data.database.entity.MediaDetailEntity
 import azari.amirhossein.filmora.data.database.entity.HomeEntity
 import azari.amirhossein.filmora.data.database.entity.MovieEntity
 import azari.amirhossein.filmora.data.database.entity.PeopleEntity
@@ -42,13 +42,13 @@ interface AppDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun savePeopleData(data: PeopleEntity)
 
-    // Detail
-    @Query("SELECT * FROM ${Constants.Database.DETAIL_TABLE} WHERE id = :id")
-    fun getDetailById(id: Int): Flow<DetailEntity?>
+    // Media Detail
+    @Query("SELECT * FROM ${Constants.Database.MEDIA_DETAIL_TABLE} WHERE id = :id")
+    fun getDetailById(id: Int): Flow<MediaDetailEntity?>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun saveDetail(detail: DetailEntity)
+    suspend fun saveDetail(detail: MediaDetailEntity)
 
-    @Query("DELETE FROM ${Constants.Database.DETAIL_TABLE} WHERE timestamp < :expirationTime")
+    @Query("DELETE FROM ${Constants.Database.MEDIA_DETAIL_TABLE} WHERE timestamp < :expirationTime")
     suspend fun deleteExpiredDetailData(expirationTime: Long)
 }

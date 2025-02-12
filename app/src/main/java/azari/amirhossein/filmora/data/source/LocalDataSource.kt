@@ -1,7 +1,7 @@
 package azari.amirhossein.filmora.data.source
 
 import azari.amirhossein.filmora.data.database.AppDao
-import azari.amirhossein.filmora.data.database.entity.DetailEntity
+import azari.amirhossein.filmora.data.database.entity.MediaDetailEntity
 import azari.amirhossein.filmora.data.database.entity.HomeEntity
 import azari.amirhossein.filmora.data.database.entity.MovieEntity
 import azari.amirhossein.filmora.data.database.entity.PeopleEntity
@@ -24,7 +24,7 @@ class LocalDataSource @Inject constructor(private val dao: AppDao) {
     suspend fun savePeopleData(entity: PeopleEntity) = dao.savePeopleData(entity)
     fun getPeopleData() = dao.getPeopleData()
     // Detail
-    suspend fun saveDetail(entity: DetailEntity) = dao.saveDetail(entity)
+    suspend fun saveDetail(entity: MediaDetailEntity) = dao.saveDetail(entity)
     fun getDetailById(id: Int) = dao.getDetailById(id)
     suspend fun deleteExpiredDetailData(expirationTime: Long) = dao.deleteExpiredDetailData(expirationTime)
 }

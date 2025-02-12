@@ -15,8 +15,8 @@ import azari.amirhossein.filmora.models.detail.ResponseTvSimilar
 import azari.amirhossein.filmora.models.detail.ResponseVideo
 import azari.amirhossein.filmora.utils.Constants
 
-@Entity(tableName = Constants.Database.DETAIL_TABLE)
-data class DetailEntity(
+@Entity(tableName = Constants.Database.MEDIA_DETAIL_TABLE)
+data class MediaDetailEntity(
     @PrimaryKey val id: Int = 0,
     val movie: ResponseMovieDetails? = null,
     val tv: ResponseTvDetails? = null,

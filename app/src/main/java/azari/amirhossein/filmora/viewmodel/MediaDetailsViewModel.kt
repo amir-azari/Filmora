@@ -2,8 +2,7 @@ package azari.amirhossein.filmora.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import azari.amirhossein.filmora.data.repository.DetailsRepository
-import azari.amirhossein.filmora.models.HomePageData
+import azari.amirhossein.filmora.data.repository.MediaDetailsRepository
 import azari.amirhossein.filmora.models.detail.DetailMediaItem
 import azari.amirhossein.filmora.models.detail.ResponseImage
 import azari.amirhossein.filmora.models.detail.ResponseMovieRecommendations
@@ -22,8 +21,8 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class DetailsViewModel @Inject constructor(
-    private val repository: DetailsRepository,
+class MediaDetailsViewModel @Inject constructor(
+    private val repository: MediaDetailsRepository,
     private val networkChecker: NetworkChecker,
 ) : ViewModel() {
 

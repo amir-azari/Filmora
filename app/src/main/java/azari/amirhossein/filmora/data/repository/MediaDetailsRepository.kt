@@ -1,6 +1,6 @@
 package azari.amirhossein.filmora.data.repository
 
-import azari.amirhossein.filmora.data.database.entity.DetailEntity
+import azari.amirhossein.filmora.data.database.entity.MediaDetailEntity
 import azari.amirhossein.filmora.data.source.LocalDataSource
 import azari.amirhossein.filmora.data.source.RemoteDataSource
 import azari.amirhossein.filmora.models.detail.DetailMediaItem
@@ -9,7 +9,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
-class DetailsRepository @Inject constructor(private val remote: RemoteDataSource, private val local: LocalDataSource) {
+class MediaDetailsRepository @Inject constructor(private val remote: RemoteDataSource, private val local: LocalDataSource) {
 
     fun getMediaDetails(id: Int, type: String): Flow<NetworkRequest<DetailMediaItem>> = flow {
         emit(NetworkRequest.Loading())
@@ -164,7 +164,7 @@ class DetailsRepository @Inject constructor(private val remote: RemoteDataSource
         }
     }.flowOn(Dispatchers.IO)
 
-    fun DetailEntity.toDetailMediaItem() = DetailMediaItem(
+    fun MediaDetailEntity.toDetailMediaItem() = DetailMediaItem(
         movie = this.movie,
         tv = this.tv,
         credits = this.credits,
@@ -178,7 +178,7 @@ class DetailsRepository @Inject constructor(private val remote: RemoteDataSource
         reviews = this.reviews
     )
 
-    fun DetailMediaItem.toEntity() = DetailEntity(
+    fun DetailMediaItem.toEntity() = MediaDetailEntity(
         id = this.movie?.id ?: this.tv?.id ?: 0,
         movie = this.movie,
         tv = this.tv,

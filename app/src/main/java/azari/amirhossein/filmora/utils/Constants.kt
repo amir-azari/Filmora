@@ -90,7 +90,8 @@ object Constants {
         const val DETAIL_EXPIRATION_TIME = 60 * 60 * 1000L // 1 hour in milliseconds
         const val HOME_TABLE = "home_table"
         const val MOVIES_TABLE = "movies_table"
-        const val DETAIL_TABLE = "detail_table"
+        const val MEDIA_DETAIL_TABLE = "media_detail_table"
+        const val PEOPLE_DETAIL_TABLE = "People_detail_table"
         const val TV_SHOW_TABLE = "tv_show_table"
         const val CELEBRITIES_TABLE = "celebrities_table"
     }
