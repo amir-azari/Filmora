@@ -48,21 +48,20 @@ class PeopleDetailFragment : Fragment() {
     lateinit var profileAdapter: ProfileAdapter
 
     // Base URL for loading images
-    val baseUrl = Constants.Network.IMAGE_BASE_URL
+    private val baseUrl = Constants.Network.IMAGE_BASE_URL
     private lateinit var originalScaleType: ImageView.ScaleType
 
     // Arguments passed to the fragment
     private lateinit var args: PeopleDetailFragmentArgs
     private var id: Int = -1
 
-    private val biographyMaxLines = 8
+    private val biographyMaxLines = Constants.Defaults.BIOGRAPHY_MAX_LINES
     private var isBiographyExpanded = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? {
-        // Inflate the layout for this fragment
+    ): View {
         _binding = FragmentPeopleDetailBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -73,11 +72,8 @@ class PeopleDetailFragment : Fragment() {
         args = PeopleDetailFragmentArgs.fromBundle(requireArguments())
         id = args.id
 
-
-        // Set an empty title initially
         setActionBarTitle("")
 
-        // Fetch media details
         viewModel.getPeopleDetails(id)
         originalScaleType = binding.imgPoster.scaleType
 
@@ -87,7 +83,6 @@ class PeopleDetailFragment : Fragment() {
             overviewMaxLines = biographyMaxLines,
             isOverviewExpanded = false
         ) { isExpanded ->
-
             isBiographyExpanded = isExpanded
         }
         observeViewModel()
@@ -102,35 +97,27 @@ class PeopleDetailFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.peopleDetails.collect { result ->
-                    result.let {
-                        when (it) {
-                            is NetworkRequest.Loading -> {
-                                showLoading()
-                            }
-
-                            is NetworkRequest.Success -> {
-                                it.data?.let { item ->
-                                    showSuccess()
-                                    bindUI(item)
-                                    if (item.images?.profiles.isNullOrEmpty()) {
-                                        binding.cvProfile.visibility = View.GONE
-                                    } else {
-                                        profileAdapter.differ.submitList(
-                                            item.images?.profiles
-                                        )
-                                    }
-
+                    when (result) {
+                        is NetworkRequest.Loading -> {
+                            showLoading()
+                        }
+                        is NetworkRequest.Success -> {
+                            result.data?.let { item ->
+                                showSuccess()
+                                bindUI(item)
+                                if (item.images?.profiles.isNullOrEmpty()) {
+                                    binding.cvProfile.visibility = View.GONE
+                                } else {
+                                    profileAdapter.differ.submitList(item.images?.profiles)
                                 }
                             }
-
-                            is NetworkRequest.Error -> {
-                                showError()
-                                if (it.message == Constants.Message.NO_INTERNET_CONNECTION) {
-                                    // Show no internet UI
-                                    binding.internetLay.visibility = View.VISIBLE
-                                }
-                                showErrorSnackbar(binding.root, it.message.toString())
+                        }
+                        is NetworkRequest.Error -> {
+                            showError()
+                            if (result.message == Constants.Message.NO_INTERNET_CONNECTION) {
+                                binding.internetLay.visibility = View.VISIBLE
                             }
+                            showErrorSnackbar(binding.root, result.message.toString())
                         }
                     }
                 }
@@ -143,12 +130,10 @@ class PeopleDetailFragment : Fragment() {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             adapter = profileAdapter
         }
-
     }
 
     private fun bindUI(personDetails: ResponsePeopleDetails) {
         binding.apply {
-            // Load poster
             val posterFullPath = if (personDetails.profilePath.isNullOrEmpty()) {
                 null
             } else {
@@ -161,39 +146,42 @@ class PeopleDetailFragment : Fragment() {
                 originalScaleType,
                 true
             )
-            txtName.text = personDetails.name ?: "Not available"
+
+            txtName.text = personDetails.name ?: Constants.Defaults.NOT_AVAILABLE
             setActionBarTitle(personDetails.name)
             txtBiography.text =
-                if (!personDetails.biography.isNullOrEmpty()) personDetails.biography else "No biography available !!"
+                if (!personDetails.biography.isNullOrEmpty()) personDetails.biography
+                else Constants.Defaults.NO_BIOGRAPHY
             handleOverviewExpansion()
 
             txtGenderValue.text = when (personDetails.gender) {
-                1 -> "Female"
-                2 -> "Male"
-                3 -> "Non-binary"
-                else -> "Not specified"
+                1 -> Constants.Gender.FEMALE
+                2 -> Constants.Gender.MALE
+                3 -> Constants.Gender.NON_BINARY
+                else -> Constants.Gender.NOT_SPECIFIED
             }
 
             val age = calculateAge(personDetails.birthday)
-            txtAgeValue.text = if (age != -1) age.toString() else "Age unknown"
-            txtKnownForValue.text = personDetails.knownForDepartment ?: "Not specified"
-            txtBirthdayValue.text =
-                personDetails.birthday.let { it?.toFormattedDate() } ?: "No birthday available"
+            txtAgeValue.text = if (age != -1) age.toString() else Constants.Defaults.AGE_UNKNOWN
 
-            txtDeathdayValue.text =
-                personDetails.deathday?.let { it.toFormattedDate() } ?: run {
-                    txtDeathdayValue.visibility = View.GONE
-                    txtDeathday.visibility = View.GONE
-                    ""
-                }
+            txtKnownForValue.text =
+                personDetails.knownForDepartment ?: Constants.Gender.NOT_SPECIFIED
+            txtBirthdayValue.text =
+                personDetails.birthday?.toFormattedDate() ?: Constants.Defaults.NO_BIRTHDAY_AVAILABLE
+
+            txtDeathdayValue.text = personDetails.deathday?.toFormattedDate() ?: run {
+                txtDeathdayValue.visibility = View.GONE
+                txtDeathday.visibility = View.GONE
+                ""
+            }
 
             txtPlaceOfBirthValue.text =
-                personDetails.placeOfBirth ?: "Place of birth not available"
+                personDetails.placeOfBirth ?: Constants.Defaults.PLACE_OF_BIRTH_NOT_AVAILABLE
 
             val movieDepartmentsMap = mutableMapOf<String, Int>().apply {
                 val actingCount = personDetails.movieCredits?.cast?.size ?: 0
                 if (actingCount > 0) {
-                    put("Acting", actingCount)
+                    put(Constants.Departments.ACTING, actingCount)
                 }
                 personDetails.movieCredits?.crew?.forEach { crew ->
                     crew?.department?.let { department ->
@@ -205,12 +193,11 @@ class PeopleDetailFragment : Fragment() {
                 llMovies.visibility = View.GONE
                 knownForSection.weightSum = 1f
             }
-            Log.d("TAG", movieDepartmentsMap.toString())
 
             val tvDepartmentsMap = mutableMapOf<String, Int>().apply {
                 val actingCount = personDetails.tvCredits?.cast?.size ?: 0
                 if (actingCount > 0) {
-                    put("Acting", actingCount)
+                    put(Constants.Departments.ACTING, actingCount)
                 }
                 personDetails.tvCredits?.crew?.forEach { crew ->
                     crew?.department?.let { department ->
@@ -223,12 +210,10 @@ class PeopleDetailFragment : Fragment() {
                 knownForSection.weightSum = 1f
             }
 
-            if (movieDepartmentsMap.size > tvDepartmentsMap.size ){
+            if (movieDepartmentsMap.size > tvDepartmentsMap.size) {
                 tvTvDepartment.minLines = movieDepartmentsMap.size
-
-            }else{
+            } else {
                 tvMovieDepartment.minLines = tvDepartmentsMap.size
-
             }
 
             tvMovieDepartment.text = buildDepartmentsText(movieDepartmentsMap)
@@ -243,18 +228,16 @@ class PeopleDetailFragment : Fragment() {
     private fun calculateAge(birthday: String?): Int {
         if (birthday.isNullOrEmpty()) return -1
 
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val dateFormat = SimpleDateFormat(Constants.Formats.DATE_YYYY_MM_DD, Locale.getDefault())
         val birthDate = dateFormat.parse(birthday) ?: return -1
 
         val today = Calendar.getInstance()
         val birthCalendar = Calendar.getInstance().apply { time = birthDate }
 
         var age = today.get(Calendar.YEAR) - birthCalendar.get(Calendar.YEAR)
-
         if (today.get(Calendar.DAY_OF_YEAR) < birthCalendar.get(Calendar.DAY_OF_YEAR)) {
             age--
         }
-
         return age
     }
 

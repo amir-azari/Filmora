@@ -101,6 +101,14 @@ object Constants {
         const val VOTE_COUNT = "0"
         const val VOTE_AVERAGE = 0.0
         const val OVERVIEW_MAX_LINES = 5
+
+        // PeopleDetailFragment
+        const val BIOGRAPHY_MAX_LINES = 8
+        const val NOT_AVAILABLE = "Not available"
+        const val NO_BIOGRAPHY = "No biography available !!"
+        const val AGE_UNKNOWN = "Age unknown"
+        const val NO_BIRTHDAY_AVAILABLE = "No birthday available"
+        const val PLACE_OF_BIRTH_NOT_AVAILABLE = "Place of birth not available"
     }
     object MediaType {
         const val TV = "tv"
@@ -122,5 +130,18 @@ object Constants {
         const val ON_THE_AIR = "On The Air"
         const val SECTION_TYPE = "sectionType"
     }
+    object Gender {
+        const val FEMALE = "Female"
+        const val MALE = "Male"
+        const val NON_BINARY = "Non-binary"
+        const val NOT_SPECIFIED = "Not specified"
+    }
 
+    object Formats {
+        const val DATE_YYYY_MM_DD = "yyyy-MM-dd"
+    }
+
+    object Departments {
+        const val ACTING = "Acting"
+    }
 }
