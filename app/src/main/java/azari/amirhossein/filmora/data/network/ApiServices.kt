@@ -1,18 +1,19 @@
 package azari.amirhossein.filmora.data.network
 
 import azari.amirhossein.filmora.models.ResponseLanguage
-import azari.amirhossein.filmora.models.detail.ResponseMovieSimilar
 import azari.amirhossein.filmora.models.authentication.RequestLogin
 import azari.amirhossein.filmora.models.authentication.RequestSession
 import azari.amirhossein.filmora.models.authentication.ResponseGuestSession
-import azari.amirhossein.filmora.models.authentication.ResponseToken
 import azari.amirhossein.filmora.models.authentication.ResponseSession
+import azari.amirhossein.filmora.models.authentication.ResponseToken
+import azari.amirhossein.filmora.models.celebtiry.ResponsePeopleDetails
 import azari.amirhossein.filmora.models.celebtiry.ResponsePopularCelebrity
 import azari.amirhossein.filmora.models.celebtiry.ResponseTrendingCelebrity
 import azari.amirhossein.filmora.models.detail.ResponseCredit
 import azari.amirhossein.filmora.models.detail.ResponseImage
 import azari.amirhossein.filmora.models.detail.ResponseMovieDetails
 import azari.amirhossein.filmora.models.detail.ResponseMovieRecommendations
+import azari.amirhossein.filmora.models.detail.ResponseMovieSimilar
 import azari.amirhossein.filmora.models.detail.ResponseReviews
 import azari.amirhossein.filmora.models.detail.ResponseTvDetails
 import azari.amirhossein.filmora.models.detail.ResponseTvRecommendations
@@ -170,6 +171,9 @@ interface ApiServices {
 
     @GET("trending/person/{time_window}")
     suspend fun geTrendingPeople(@Path("time_window") timeWindow: String ,@Query("page") page: Int): Response<ResponseTrendingCelebrity>
+
+    @GET("person/{person_id}")
+    suspend fun getPeopleDetails(@Path("person_id") personId: Int, @QueryMap params: Map<String, String>): Response<ResponsePeopleDetails>
 
     //---------All(Movie , Tv , People)---------
 

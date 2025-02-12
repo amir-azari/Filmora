@@ -1,6 +1,5 @@
 package azari.amirhossein.filmora.data.source
 
-import android.graphics.pdf.PdfDocument.Page
 import azari.amirhossein.filmora.data.network.ApiServices
 import azari.amirhossein.filmora.models.authentication.RequestLogin
 import azari.amirhossein.filmora.models.authentication.RequestSession
@@ -52,6 +51,7 @@ class RemoteDataSource @Inject constructor(private val api : ApiServices) {
     //---------Peoples---------
     suspend fun getPopularPeoples(page:Int) = api.getPopularPeople(page)
     suspend fun getTrendingPeoples(timeWindow:String,page:Int) = api.geTrendingPeople(timeWindow,page)
+    suspend fun getPeopleDetails(personId:Int,params: Map<String, String>) = api.getPeopleDetails(personId,params)
 
 
     //---------All(Movie , Tv , People)---------
