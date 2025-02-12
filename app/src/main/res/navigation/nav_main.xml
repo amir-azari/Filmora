@@ -282,7 +282,6 @@
     <fragment
         android:id="@+id/peopleDetailFragment"
         android:name="azari.amirhossein.filmora.ui.detail.people.PeopleDetailFragment"
-        android:label="fragment_people_detail"
         tools:layout="@layout/fragment_people_detail" >
         <argument
             android:name="id"
