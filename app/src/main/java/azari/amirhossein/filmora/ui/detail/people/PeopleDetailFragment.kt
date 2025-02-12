@@ -2,7 +2,6 @@ package azari.amirhossein.filmora.ui.detail.people
 
 import android.os.Bundle
 import android.text.TextUtils
-import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -25,7 +24,7 @@ import azari.amirhossein.filmora.utils.customize
 import azari.amirhossein.filmora.utils.loadImageWithoutShimmer
 import azari.amirhossein.filmora.utils.setupOverviewExpansion
 import azari.amirhossein.filmora.utils.toFormattedDate
-import azari.amirhossein.filmora.viewmodel.DetailsPeopleViewModel
+import azari.amirhossein.filmora.viewmodel.PeopleDetailsViewModel
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -42,7 +41,7 @@ class PeopleDetailFragment : Fragment() {
     private val binding get() = _binding!!
 
     // ViewModel
-    private val viewModel: DetailsPeopleViewModel by viewModels()
+    private val viewModel: PeopleDetailsViewModel by viewModels()
 
     @Inject
     lateinit var profileAdapter: ProfileAdapter
