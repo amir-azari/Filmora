@@ -37,7 +37,7 @@ data class ResponseReviews(
             @SerializedName("name")
             val name: String?, // CinemaSerf
             @SerializedName("rating")
-            val rating: Int?, // 6
+            val rating: Double?, // 6
             @SerializedName("username")
             val username: String? // Geronimo1967
         )
