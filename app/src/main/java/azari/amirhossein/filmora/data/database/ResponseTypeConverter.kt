@@ -2,6 +2,7 @@ package azari.amirhossein.filmora.data.database
 
 import androidx.room.TypeConverter
 import azari.amirhossein.filmora.models.ResponseLanguage
+import azari.amirhossein.filmora.models.celebtiry.ResponsePeopleDetails
 import azari.amirhossein.filmora.models.celebtiry.ResponsePopularCelebrity
 import azari.amirhossein.filmora.models.celebtiry.ResponseTrendingCelebrity
 import azari.amirhossein.filmora.models.detail.ResponseCredit
@@ -213,5 +214,16 @@ class ResponseTypeConverter {
     fun toTrendingTv(value: String): ResponseTrendingTv? {
         return gson.fromJson(value, ResponseTrendingTv::class.java)
     }
+
+    @TypeConverter
+    fun fromPeopleDetail(value: ResponsePeopleDetails?): String {
+        return gson.toJson(value)
+    }
+
+    @TypeConverter
+    fun toPeopleDetail(value: String): ResponsePeopleDetails? {
+        return gson.fromJson(value, ResponsePeopleDetails::class.java)
+    }
+
 
 }

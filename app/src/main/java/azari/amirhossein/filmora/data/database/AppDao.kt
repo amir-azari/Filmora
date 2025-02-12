@@ -7,6 +7,7 @@ import androidx.room.Query
 import azari.amirhossein.filmora.data.database.entity.MediaDetailEntity
 import azari.amirhossein.filmora.data.database.entity.HomeEntity
 import azari.amirhossein.filmora.data.database.entity.MovieEntity
+import azari.amirhossein.filmora.data.database.entity.PeopleDetailEntity
 import azari.amirhossein.filmora.data.database.entity.PeopleEntity
 import azari.amirhossein.filmora.data.database.entity.TvEntity
 import azari.amirhossein.filmora.utils.Constants
@@ -44,11 +45,22 @@ interface AppDao {
 
     // Media Detail
     @Query("SELECT * FROM ${Constants.Database.MEDIA_DETAIL_TABLE} WHERE id = :id")
-    fun getDetailById(id: Int): Flow<MediaDetailEntity?>
+    fun getMediaDetailById(id: Int): Flow<MediaDetailEntity?>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun saveDetail(detail: MediaDetailEntity)
+    suspend fun saveMediaDetail(detail: MediaDetailEntity)
 
     @Query("DELETE FROM ${Constants.Database.MEDIA_DETAIL_TABLE} WHERE timestamp < :expirationTime")
-    suspend fun deleteExpiredDetailData(expirationTime: Long)
+    suspend fun deleteExpiredMediaDetailData(expirationTime: Long)
+
+    // People Detail
+    @Query("SELECT * FROM ${Constants.Database.PEOPLE_DETAIL_TABLE} WHERE id = :id")
+    fun getPeopleDetailById(id: Int): Flow<PeopleDetailEntity?>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun savePeopleDetail(detail: PeopleDetailEntity)
+
+    @Query("DELETE FROM ${Constants.Database.PEOPLE_DETAIL_TABLE} WHERE timestamp < :expirationTime")
+    suspend fun deleteExpiredPeopleDetailData(expirationTime: Long)
+
 }
