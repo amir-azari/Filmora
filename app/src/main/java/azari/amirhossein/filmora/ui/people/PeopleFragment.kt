@@ -54,6 +54,9 @@ class PeopleFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerViews()
         observeViewModel()
+        popular1Adapter.setOnItemClickListener(click)
+        popular2Adapter.setOnItemClickListener(click)
+        trendingAdapter.setOnItemClickListener(click)
 
         binding.layoutSeeAllTrending.setOnClickListener {
             findNavController().navigate(
@@ -131,6 +134,12 @@ class PeopleFragment : Fragment() {
                 }
             }
         }
+
+    }
+
+    private val click = { id: Int ->
+        val action = PeopleFragmentDirections.actionToPeopleDetailFragment(id)
+        findNavController().navigate(action)
 
     }
     private fun showErrorSnackbar(root: View, message: String) {

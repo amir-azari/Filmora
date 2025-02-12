@@ -20,9 +20,9 @@ class PopularCelebrityAdapter @Inject constructor() :
     private var maxItemHeight = 0
     private var isHeightCalculated = false
 
-    private var onItemClickListener: ((ResponsePopularCelebrity.Result) -> Unit)? = null
+    private var onItemClickListener: ((Int) -> Unit)? = null
 
-    fun setOnItemClickListener(listener: (ResponsePopularCelebrity.Result) -> Unit) {
+    fun setOnItemClickListener(listener: (Int) -> Unit) {
         onItemClickListener = listener
     }
 
@@ -65,7 +65,7 @@ class PopularCelebrityAdapter @Inject constructor() :
 
                 // Click
                 root.setOnClickListener {
-                    onItemClickListener?.let { it(item) }
+                    onItemClickListener?.let { it(item.id) }
                 }
 
                 tvCharacterName.text = item.name
