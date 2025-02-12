@@ -82,7 +82,7 @@ class MediaDetailsRepository @Inject constructor(private val remote: RemoteDataS
                             )
                         }
                         .collect { mediaItem ->
-                            local.saveDetail(mediaItem.toEntity())
+                            local.saveMediaDetail(mediaItem.toEntity())
                             emit(NetworkRequest.Success(mediaItem))
                         }
                 }
@@ -154,7 +154,7 @@ class MediaDetailsRepository @Inject constructor(private val remote: RemoteDataS
                             )
                         }
                         .collect { mediaItem ->
-                            local.saveDetail(mediaItem.toEntity())
+                            local.saveMediaDetail(mediaItem.toEntity())
                             emit(NetworkRequest.Success(mediaItem))
                         }
                 }
@@ -164,7 +164,7 @@ class MediaDetailsRepository @Inject constructor(private val remote: RemoteDataS
         }
     }.flowOn(Dispatchers.IO)
 
-    fun MediaDetailEntity.toDetailMediaItem() = DetailMediaItem(
+    private fun MediaDetailEntity.toDetailMediaItem() = DetailMediaItem(
         movie = this.movie,
         tv = this.tv,
         credits = this.credits,
@@ -178,7 +178,7 @@ class MediaDetailsRepository @Inject constructor(private val remote: RemoteDataS
         reviews = this.reviews
     )
 
-    fun DetailMediaItem.toEntity() = MediaDetailEntity(
+    private fun DetailMediaItem.toEntity() = MediaDetailEntity(
         id = this.movie?.id ?: this.tv?.id ?: 0,
         movie = this.movie,
         tv = this.tv,
@@ -193,14 +193,14 @@ class MediaDetailsRepository @Inject constructor(private val remote: RemoteDataS
         reviews = this.reviews
     )
     suspend fun deleteExpiredDetails(expirationTime: Long) {
-        local.deleteExpiredDetailData(expirationTime)
+        local.deleteExpiredMediaDetailData(expirationTime)
     }
 
     // Get cached data
     suspend fun getCachedData(id :Int): NetworkRequest<DetailMediaItem> {
         return try {
             // Try to get cached data
-            val cachedData = local.getDetailById(id).firstOrNull()
+            val cachedData = local.getMediaDetailById(id).firstOrNull()
             if (cachedData != null) {
                 NetworkRequest.Success(cachedData.toDetailMediaItem())
             } else {
