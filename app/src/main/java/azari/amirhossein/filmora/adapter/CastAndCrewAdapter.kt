@@ -12,6 +12,7 @@ import azari.amirhossein.filmora.models.detail.ResponseCredit.Cast
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.HeightPayload
 import azari.amirhossein.filmora.utils.loadImageWithoutShimmer
+import azari.amirhossein.filmora.utils.setClickAnimation
 import javax.inject.Inject
 
 class CastAndCrewAdapter @Inject constructor() :
@@ -63,7 +64,7 @@ class CastAndCrewAdapter @Inject constructor() :
                 }
 
                 // Click
-                root.setOnClickListener {
+                root.setClickAnimation {
                     onItemClickListener?.let { it(item) }
                 }
 

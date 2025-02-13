@@ -12,6 +12,7 @@ import azari.amirhossein.filmora.models.detail.ResponseMovieRecommendations
 import azari.amirhossein.filmora.models.detail.ResponseMovieSimilar
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.loadImageWithShimmer
+import azari.amirhossein.filmora.utils.setClickAnimation
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -52,7 +53,7 @@ class RecommendationMovieAdapter :
 
             }
             // Click
-            binding.root.setOnClickListener {
+            binding.root.setClickAnimation {
                 onItemClickListener?.let { it(item) }
             }
 

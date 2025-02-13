@@ -24,6 +24,7 @@ import azari.amirhossein.filmora.models.tv.ResponseTrendingTv
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.NetworkRequest
 import azari.amirhossein.filmora.utils.customize
+import azari.amirhossein.filmora.utils.setClickAnimation
 import azari.amirhossein.filmora.viewmodel.TvViewModel
 import coil3.load
 import coil3.request.crossfade
@@ -74,7 +75,7 @@ class TvFragment : Fragment() {
         topRatedAdapter.setOnItemClickListener(clickTv)
         onTheAirAdapter.setOnItemClickListener(clickTv)
 
-        binding.layoutSeeAllTrending.setOnClickListener {
+        binding.layoutSeeAllTrending.setClickAnimation {
             findNavController().navigate(
                 R.id.actionToTvSectionFragment,
                 Bundle().apply {
@@ -83,7 +84,7 @@ class TvFragment : Fragment() {
             )
         }
 
-        binding.layoutSeeAllPopular.setOnClickListener {
+        binding.layoutSeeAllPopular.setClickAnimation {
             findNavController().navigate(
                 R.id.actionToTvSectionFragment,
                 Bundle().apply {
@@ -92,7 +93,7 @@ class TvFragment : Fragment() {
             )
         }
 
-        binding.layoutSeeAllAiringToday.setOnClickListener {
+        binding.layoutSeeAllAiringToday.setClickAnimation {
             findNavController().navigate(
                 R.id.actionToTvSectionFragment,
                 Bundle().apply {
@@ -101,7 +102,7 @@ class TvFragment : Fragment() {
             )
         }
 
-        binding.layoutSeeAllTopRated.setOnClickListener {
+        binding.layoutSeeAllTopRated.setClickAnimation {
             findNavController().navigate(
                 R.id.actionToTvSectionFragment,
                 Bundle().apply {
@@ -110,7 +111,7 @@ class TvFragment : Fragment() {
             )
         }
 
-        binding.layoutSeeAllOnTheAir.setOnClickListener {
+        binding.layoutSeeAllOnTheAir.setClickAnimation {
             findNavController().navigate(
                 R.id.actionToTvSectionFragment,
                 Bundle().apply {

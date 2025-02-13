@@ -11,6 +11,7 @@ import azari.amirhossein.filmora.databinding.ItemSimilarRemommendationBinding
 import azari.amirhossein.filmora.models.detail.ResponseMovieSimilar
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.loadImageWithShimmer
+import azari.amirhossein.filmora.utils.setClickAnimation
 
 class SimilarMovieAdapter :
     RecyclerView.Adapter<SimilarMovieAdapter.ViewHolder>() {
@@ -49,7 +50,7 @@ class SimilarMovieAdapter :
 
             }
             // Click
-            binding.root.setOnClickListener {
+            binding.root.setClickAnimation {
                 onItemClickListener?.let { it(item) }
             }
 

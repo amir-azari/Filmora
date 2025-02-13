@@ -19,6 +19,7 @@ import azari.amirhossein.filmora.models.prefences.tv.ResponseTvsList
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.loadImageWithShimmer
 import azari.amirhossein.filmora.utils.loadImageWithoutShimmer
+import azari.amirhossein.filmora.utils.setClickAnimation
 import coil3.load
 import coil3.request.crossfade
 import java.text.SimpleDateFormat
@@ -56,7 +57,7 @@ class SeasonsAdapter @Inject constructor() :
                 )
 
                 // Click
-                binding.root.setOnClickListener {
+                binding.root.setClickAnimation {
                     onItemClickListener?.let { it(item) }
 
                 }

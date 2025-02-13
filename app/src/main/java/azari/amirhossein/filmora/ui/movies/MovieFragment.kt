@@ -24,6 +24,7 @@ import azari.amirhossein.filmora.models.prefences.movie.ResponseMoviesList
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.NetworkRequest
 import azari.amirhossein.filmora.utils.customize
+import azari.amirhossein.filmora.utils.setClickAnimation
 import azari.amirhossein.filmora.viewmodel.MovieViewModel
 import coil3.load
 import coil3.request.crossfade
@@ -78,7 +79,7 @@ class MovieFragment : Fragment() {
         topRatedAdapter.setOnItemClickListener(clickMovie)
         upcomingAdapter.setOnItemClickListener(clickMovie)
 
-        binding.layoutSeeAllTrending.setOnClickListener {
+        binding.layoutSeeAllTrending.setClickAnimation {
             findNavController().navigate(
                 R.id.actionToMovieSectionFragment,
                 Bundle().apply {
@@ -87,7 +88,7 @@ class MovieFragment : Fragment() {
             )
         }
 
-        binding.layoutSeeAllPopular.setOnClickListener {
+        binding.layoutSeeAllPopular.setClickAnimation {
             findNavController().navigate(
                 R.id.actionToMovieSectionFragment,
                 Bundle().apply {
@@ -96,7 +97,7 @@ class MovieFragment : Fragment() {
             )
         }
 
-        binding.layoutSeeAllNowPlaying.setOnClickListener {
+        binding.layoutSeeAllNowPlaying.setClickAnimation {
             findNavController().navigate(
                 R.id.actionToMovieSectionFragment,
                 Bundle().apply {
@@ -105,7 +106,7 @@ class MovieFragment : Fragment() {
             )
         }
 
-        binding.layoutSeeAllTopRated.setOnClickListener {
+        binding.layoutSeeAllTopRated.setClickAnimation {
             findNavController().navigate(
                 R.id.actionToMovieSectionFragment,
                 Bundle().apply {
@@ -114,7 +115,7 @@ class MovieFragment : Fragment() {
             )
         }
 
-        binding.layoutSeeAllUpcoming.setOnClickListener {
+        binding.layoutSeeAllUpcoming.setClickAnimation {
             findNavController().navigate(
                 R.id.actionToMovieSectionFragment,
                 Bundle().apply {

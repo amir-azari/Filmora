@@ -47,7 +47,7 @@ class TvPreferencesAdapter  @Inject constructor() : RecyclerView.Adapter<TvPrefe
                 txtRating.text = String.format("%.1f", item.voteAverage)
 
                 imgPopupMenu.setOnClickListener { view ->
-                    showPopupMenu(view, adapterPosition)
+                    showPopupMenu(view, bindingAdapterPosition)
                 }
             }
         }

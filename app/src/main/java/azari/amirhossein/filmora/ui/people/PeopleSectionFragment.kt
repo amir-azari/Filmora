@@ -1,6 +1,7 @@
 package azari.amirhossein.filmora.ui.people
 
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -55,6 +56,8 @@ class PeopleSectionFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        adapter.setOnItemClickListener(click)
+
         val sectionType = arguments?.getString(Constants.SectionType.SECTION_TYPE) ?: return
         setActionBarTitle(sectionType)
 
@@ -103,11 +106,11 @@ class PeopleSectionFragment : Fragment() {
         }
     }
 
-//    // Click media
-//    private val clickMovie = { movieId : Int ->
-//        val action = MovieSectionFragmentDirections.actionToMovieDetail(Constants.MediaType.MOVIE, movieId)
-//        findNavController().navigate(action)
-//    }
+    // Click
+    private val click = { id : Int ->
+        val action = PeopleSectionFragmentDirections.actionToPeopleDetailFragment(id)
+        findNavController().navigate(action)
+    }
 
     private fun showErrorSnackbar(root: View, message: String) {
         Snackbar.make(root, message, Snackbar.LENGTH_SHORT).apply {

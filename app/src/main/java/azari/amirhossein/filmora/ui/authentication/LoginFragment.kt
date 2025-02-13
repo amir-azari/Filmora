@@ -20,6 +20,7 @@ import azari.amirhossein.filmora.databinding.FragmentLoginBinding
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.NetworkRequest
 import azari.amirhossein.filmora.utils.customize
+import azari.amirhossein.filmora.utils.setClickAnimation
 import azari.amirhossein.filmora.viewmodel.LoginViewModel
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -92,21 +93,21 @@ class LoginFragment : Fragment() {
                 viewModel.authenticateGuest()
             }
             // Navigates to reset password screen
-            tvForgotPassword.setOnClickListener { view ->
+            tvForgotPassword.setClickAnimation {
                 val url = Constants.WebView.RESET_PASSWORD_URL
                 val bundle = Bundle().apply {
                     putString(Constants.BundleKey.URL_BUNDLE_KEY, url)
                 }
-                findNavController(view).navigate(R.id.actionToWebView, bundle)
+                findNavController(tvForgotPassword).navigate(R.id.actionToWebView, bundle)
             }
             // Navigates to sign-up screen
-            tvSignup.setOnClickListener { view ->
+            tvSignup.setClickAnimation {
                 val url = Constants.WebView.SIGNUP_URL
                 val bundle = Bundle().apply {
                     putString(Constants.BundleKey.URL_BUNDLE_KEY, url)
                 }
 
-                findNavController(view).navigate(R.id.actionToWebView, bundle)
+                findNavController(tvSignup).navigate(R.id.actionToWebView, bundle)
             }
 
             // Authentication result collector

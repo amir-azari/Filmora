@@ -15,6 +15,7 @@ import azari.amirhossein.filmora.models.prefences.movie.ResponseMoviesList
 import azari.amirhossein.filmora.models.prefences.tv.ResponseTvsList
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.loadImageWithShimmer
+import azari.amirhossein.filmora.utils.setClickAnimation
 import javax.inject.Inject
 
 class TopRatedTvAdapter @Inject constructor() :
@@ -63,7 +64,7 @@ class TopRatedTvAdapter @Inject constructor() :
                 genreAdapter.differ.submitList(genres)
             }
             // Click
-            binding.root.setOnClickListener {
+            binding.root.setClickAnimation {
                 onItemClickListener?.let { it(item) }
             }
         }

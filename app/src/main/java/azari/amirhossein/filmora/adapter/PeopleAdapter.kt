@@ -13,6 +13,7 @@ import azari.amirhossein.filmora.models.celebtiry.ResponsePopularCelebrity
 import azari.amirhossein.filmora.models.celebtiry.ResponseTrendingCelebrity
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.loadImageWithShimmer
+import azari.amirhossein.filmora.utils.setClickAnimation
 import javax.inject.Inject
 
 class PeopleAdapter @Inject constructor() :
@@ -73,7 +74,7 @@ class PeopleAdapter @Inject constructor() :
 
 
                 // Click
-                root.setOnClickListener {
+                root.setClickAnimation {
                     onItemClickListener?.invoke(item.id)
                 }
 
@@ -102,7 +103,7 @@ class PeopleAdapter @Inject constructor() :
 
 
                 // Click
-                root.setOnClickListener {
+                root.setClickAnimation  {
                     onItemClickListener?.invoke(item.id)
                 }
 

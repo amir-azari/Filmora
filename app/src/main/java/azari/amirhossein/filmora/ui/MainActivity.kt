@@ -124,7 +124,8 @@ class MainActivity : AppCompatActivity() {
             R.id.movieSectionFragment,
             R.id.tvSectionFragment,
             R.id.peopleSectionFragment,
-            R.id.peopleDetailFragment
+            R.id.peopleDetailFragment,
+            R.id.creditsFragment
         )
         val currentDestinationId = navController.currentDestination?.id
 

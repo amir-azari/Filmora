@@ -23,6 +23,7 @@ import azari.amirhossein.filmora.models.prefences.ResponseGenresList
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.NetworkRequest
 import azari.amirhossein.filmora.utils.customize
+import azari.amirhossein.filmora.utils.setClickAnimation
 import azari.amirhossein.filmora.viewmodel.MoviePreferencesViewModel
 import azari.amirhossein.filmora.viewmodel.TvPreferencesViewModel
 import com.google.android.material.chip.Chip
@@ -143,7 +144,7 @@ class TvPreferencesFragment : Fragment() {
     }
 
     private fun setupBackButton() {
-        binding.btnBack.setOnClickListener {
+        binding.btnBack.setClickAnimation {
             findNavController().navigateUp()
         }
     }

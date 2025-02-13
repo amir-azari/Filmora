@@ -19,6 +19,7 @@ import azari.amirhossein.filmora.databinding.FragmentPeopleBinding
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.NetworkRequest
 import azari.amirhossein.filmora.utils.customize
+import azari.amirhossein.filmora.utils.setClickAnimation
 import azari.amirhossein.filmora.viewmodel.PeopleViewModel
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -58,7 +59,7 @@ class PeopleFragment : Fragment() {
         popular2Adapter.setOnItemClickListener(click)
         trendingAdapter.setOnItemClickListener(click)
 
-        binding.layoutSeeAllTrending.setOnClickListener {
+        binding.layoutSeeAllTrending.setClickAnimation {
             findNavController().navigate(
                 R.id.actionToPeopleSectionFragment,
                 Bundle().apply {
@@ -67,7 +68,7 @@ class PeopleFragment : Fragment() {
             )
         }
 
-        binding.layoutSeeAllPopular.setOnClickListener {
+        binding.layoutSeeAllPopular.setClickAnimation {
             findNavController().navigate(
                 R.id.actionToPeopleSectionFragment,
                 Bundle().apply {

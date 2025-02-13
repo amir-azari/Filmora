@@ -13,6 +13,7 @@ import azari.amirhossein.filmora.models.prefences.ResponseGenresList
 import azari.amirhossein.filmora.models.prefences.tv.ResponseTvsList
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.loadImageWithShimmer
+import azari.amirhossein.filmora.utils.setClickAnimation
 import javax.inject.Inject
 
 class MayLikeTvAdapter @Inject constructor() :
@@ -48,8 +49,9 @@ class MayLikeTvAdapter @Inject constructor() :
                 )
 
                 // Click
-                binding.root.setOnClickListener {
-                    onItemClickListener?.let { it(item) }
+                binding.root.setClickAnimation {
+
+                onItemClickListener?.let { it(item) }
 
                 }
 

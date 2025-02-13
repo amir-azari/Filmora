@@ -13,6 +13,7 @@ import azari.amirhossein.filmora.models.movie.ResponseTrendingMovie
 import azari.amirhossein.filmora.models.prefences.ResponseGenresList
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.loadImageWithShimmer
+import azari.amirhossein.filmora.utils.setClickAnimation
 import javax.inject.Inject
 
 class TrendingMovieAdapter @Inject constructor() : RecyclerView.Adapter<TrendingMovieAdapter.ViewHolder>(){
@@ -58,7 +59,7 @@ class TrendingMovieAdapter @Inject constructor() : RecyclerView.Adapter<Trending
                 val genres = getGenresByIds(item.genreIds)
                 genreAdapter.differ.submitList(genres)
             }
-            binding.root.setOnClickListener {
+            binding.root.setClickAnimation {
                 onItemClickListener?.let { it(item) }
             }
         }

@@ -24,6 +24,7 @@ import azari.amirhossein.filmora.models.prefences.tv.ResponseTvsList
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.NetworkRequest
 import azari.amirhossein.filmora.utils.customize
+import azari.amirhossein.filmora.utils.setClickAnimation
 import azari.amirhossein.filmora.viewmodel.HomeViewModel
 import coil3.load
 import coil3.request.crossfade
@@ -68,10 +69,10 @@ class HomeFragment : Fragment() {
         mayLikeTvAdapter.setOnItemClickListener(clickTv)
         trendingAdapter.setOnItemClickListener(clickTrending)
 
-        binding.layoutSeeAllMovies.setOnClickListener {
+        binding.layoutSeeAllMovies.setClickAnimation {
             findNavController().navigate(R.id.actionHomeToMayLikeMovies)
         }
-        binding.layoutSeeAllTVSeries.setOnClickListener {
+        binding.layoutSeeAllTVSeries.setClickAnimation {
             findNavController().navigate(R.id.actionHomeToMayLikeTvs)
         }
     }

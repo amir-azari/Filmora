@@ -12,6 +12,7 @@ import azari.amirhossein.filmora.models.celebtiry.ResponsePopularCelebrity
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.HeightPayload
 import azari.amirhossein.filmora.utils.loadImageWithShimmer
+import azari.amirhossein.filmora.utils.setClickAnimation
 import javax.inject.Inject
 
 class PopularCelebrityAdapter @Inject constructor() :
@@ -64,7 +65,7 @@ class PopularCelebrityAdapter @Inject constructor() :
                 }
 
                 // Click
-                root.setOnClickListener {
+                root.setClickAnimation {
                     onItemClickListener?.let { it(item.id) }
                 }
 

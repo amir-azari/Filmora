@@ -12,6 +12,7 @@ import azari.amirhossein.filmora.databinding.ItemSearchPreferencesBinding
 import azari.amirhossein.filmora.models.prefences.movie.ResponseMoviesList
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.loadImageWithShimmer
+import azari.amirhossein.filmora.utils.setClickAnimation
 import coil3.load
 import coil3.request.crossfade
 import javax.inject.Inject
@@ -48,7 +49,7 @@ class SearchMoviePreferencesAdapter @Inject constructor() :
                 txtYear.text = item.releaseDate?.split("-")?.get(0) ?: "N/A"
                 txtRating.text = String.format("%.1f", item.voteAverage)
 
-                root.setOnClickListener {
+                root.setClickAnimation {
                     onItemClick?.invoke(item)
                 }
             }

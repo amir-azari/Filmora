@@ -13,6 +13,7 @@ import azari.amirhossein.filmora.models.movie.ResponseTrendingMovie
 import azari.amirhossein.filmora.models.prefences.movie.ResponseMoviesList
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.loadImageWithShimmer
+import azari.amirhossein.filmora.utils.setClickAnimation
 import javax.inject.Inject
 
 class MoviesAdapter @Inject constructor() :
@@ -61,7 +62,7 @@ class MoviesAdapter @Inject constructor() :
                 txtRating.text = String.format("%.1f", item.voteAverage)
 
 
-                root.setOnClickListener {
+                root.setClickAnimation {
                     onItemClickListener?.invoke(item.id)
 
                 }

@@ -15,6 +15,7 @@ import azari.amirhossein.filmora.models.tv.ResponseTrendingTv
 import azari.amirhossein.filmora.models.tv.ResponseTvType
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.loadImageWithShimmer
+import azari.amirhossein.filmora.utils.setClickAnimation
 import javax.inject.Inject
 
 class TvsAdapter @Inject constructor() :
@@ -61,7 +62,7 @@ class TvsAdapter @Inject constructor() :
                 txtYear.text = item.firstAirDate?.split("-")?.get(0) ?: "N/A"
                 txtRating.text = String.format("%.1f", item.voteAverage)
 
-                root.setOnClickListener {
+                root.setClickAnimation {
                     onItemClickListener?.invoke(item.id)
                 }
             }

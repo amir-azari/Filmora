@@ -13,6 +13,7 @@ import azari.amirhossein.filmora.models.home.ResponseTrendingList
 import azari.amirhossein.filmora.models.prefences.movie.ResponseMoviesList
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.loadImageWithShimmer
+import azari.amirhossein.filmora.utils.setClickAnimation
 import coil3.load
 import coil3.request.crossfade
 import javax.inject.Inject
@@ -58,7 +59,7 @@ class TrendingAllAdapter @Inject constructor() : RecyclerView.Adapter<TrendingAl
                 txtRating.text = voteAverage
                 txtYear.text = year
             }
-            binding.root.setOnClickListener {
+            binding.root.setClickAnimation {
                 onItemClickListener?.let { it(item) }
             }
         }
