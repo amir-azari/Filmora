@@ -13,6 +13,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import azari.amirhossein.filmora.R
 import azari.amirhossein.filmora.adapter.ProfileAdapter
@@ -86,6 +87,32 @@ class PeopleDetailFragment : Fragment() {
         }
         observeViewModel()
         setupRecyclerViews()
+
+        binding.btnMovies.setOnClickListener {
+            viewModel.peopleDetails.value.data?.movieCredits?.let { credits ->
+                findNavController().navigate(
+                    PeopleDetailFragmentDirections.actionPeopleDetailFragmentToCreditsFragment(
+                        movieCredits = credits,
+                        tvCredits = null,
+                        isMovie = true
+                    )
+                )
+            }
+        }
+
+        binding.btnTvShows.setOnClickListener {
+            viewModel.peopleDetails.value.data?.tvCredits?.let { credits ->
+                findNavController().navigate(
+                    PeopleDetailFragmentDirections.actionPeopleDetailFragmentToCreditsFragment(
+                        movieCredits = null,
+                        tvCredits = credits,
+                        isMovie = false
+                    )
+                )
+            }
+        }
+
+
     }
 
     private fun setActionBarTitle(title: String?) {
