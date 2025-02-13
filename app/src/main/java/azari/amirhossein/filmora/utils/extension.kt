@@ -187,7 +187,23 @@ fun Double.toFormattedVoteAverage(): String {
         this
     )
 }
-
+fun View.setClickAnimation(onClick: () -> Unit) {
+    this.setOnClickListener { view ->
+        view.animate()
+            .scaleX(0.95f)
+            .scaleY(0.95f)
+            .setDuration(50)
+            .withEndAction {
+                view.animate()
+                    .scaleX(1f)
+                    .scaleY(1f)
+                    .setDuration(100)
+                    .start()
+                onClick()
+            }
+            .start()
+    }
+}
 
 fun List<SpokenLanguage?>?.toSpokenLanguagesText(): String {
     return this?.filterNotNull()?.joinToString("\n") { it.englishName ?: "Unknown Language" }
