@@ -286,6 +286,32 @@
         <argument
             android:name="id"
             app:argType="integer" />
+        <action
+            android:id="@+id/action_peopleDetailFragment_to_creditsFragment"
+            app:destination="@id/creditsFragment"
+            app:enterAnim="@anim/nav_fade_in"
+            app:exitAnim="@anim/nav_fade_out"
+            app:popEnterAnim="@anim/nav_fade_in"
+            app:popExitAnim="@anim/nav_fade_out"
+            />
+    </fragment>
+    <fragment
+        android:id="@+id/creditsFragment"
+        android:name="azari.amirhossein.filmora.ui.detail.people.CreditsFragment"
+        android:label="Credits"
+        tools:layout="@layout/fragment_credits">
+        <argument
+            android:name="movieCredits"
+            app:argType="azari.amirhossein.filmora.models.celebtiry.ResponsePeopleDetails$MovieCredits"
+            app:nullable="true" />
+        <argument
+            android:name="tvCredits"
+            app:argType="azari.amirhossein.filmora.models.celebtiry.ResponsePeopleDetails$TvCredits"
+            app:nullable="true" />
+        <argument
+            android:name="isMovie"
+            app:argType="boolean" />
+
     </fragment>
 
 </navigation>
