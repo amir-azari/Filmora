@@ -110,4 +110,7 @@
     <string name="deathday">Deathday</string>
     <string name="place_of_birth">Place of Birth</string>
     <string name="about">About</string>
+
+    <string name="role">as %s</string>
+
 </resources>
