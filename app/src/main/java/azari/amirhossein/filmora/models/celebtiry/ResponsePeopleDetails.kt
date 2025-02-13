@@ -1,8 +1,11 @@
 package azari.amirhossein.filmora.models.celebtiry
 
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 data class ResponsePeopleDetails(
     @SerializedName("adult")
     val adult: Boolean?, // false
@@ -38,11 +41,14 @@ data class ResponsePeopleDetails(
     val profilePath: String?, // /8qBylBsQf4llkGrWR3qAsOtOU8O.jpg
     @SerializedName("tv_credits")
     val tvCredits: TvCredits?
-) {
+) : Parcelable {
+    @Parcelize
     data class Images(
         @SerializedName("profiles")
         val profiles: List<Profile?>?
-    ) {
+    ) : Parcelable {
+        @Parcelize
+
         data class Profile(
             @SerializedName("aspect_ratio")
             val aspectRatio: Double?, // 0.667
@@ -51,22 +57,23 @@ data class ResponsePeopleDetails(
             @SerializedName("height")
             val height: Int?, // 2100
             @SerializedName("iso_639_1")
-            val iso6391: Any?, // null
+            val iso6391: String?, // null
             @SerializedName("vote_average")
             val voteAverage: Double?, // 4.986
             @SerializedName("vote_count")
             val voteCount: Int?, // 72
             @SerializedName("width")
             val width: Int? // 1400
-        )
+        ) : Parcelable
     }
-
+    @Parcelize
     data class MovieCredits(
         @SerializedName("cast")
         val cast: List<Cast?>?,
         @SerializedName("crew")
         val crew: List<Crew?>?
-    ) {
+    ) : Parcelable {
+        @Parcelize
         data class Cast(
             @SerializedName("adult")
             val adult: Boolean?, // false
@@ -77,9 +84,9 @@ data class ResponsePeopleDetails(
             @SerializedName("credit_id")
             val creditId: String?, // 52fe4213c3a36847f800226b
             @SerializedName("genre_ids")
-            val genreIds: List<Int?>?,
+            val genreIds: List<Int>?,
             @SerializedName("id")
-            val id: Int?, // 74
+            val id: Int, // 74
             @SerializedName("order")
             val order: Int?, // 0
             @SerializedName("original_language")
@@ -102,7 +109,9 @@ data class ResponsePeopleDetails(
             val voteAverage: Double?, // 6.514
             @SerializedName("vote_count")
             val voteCount: Int? // 8462
-        )
+        ) : Parcelable
+
+        @Parcelize
 
         data class Crew(
             @SerializedName("adult")
@@ -114,9 +123,9 @@ data class ResponsePeopleDetails(
             @SerializedName("department")
             val department: String?, // Production
             @SerializedName("genre_ids")
-            val genreIds: List<Int?>?,
+            val genreIds: List<Int>?,
             @SerializedName("id")
-            val id: Int?, // 616
+            val id: Int, // 616
             @SerializedName("job")
             val job: String?, // Producer
             @SerializedName("original_language")
@@ -139,15 +148,18 @@ data class ResponsePeopleDetails(
             val voteAverage: Double?, // 7.6
             @SerializedName("vote_count")
             val voteCount: Int? // 6928
-        )
+        ) : Parcelable
     }
+    @Parcelize
 
     data class TvCredits(
         @SerializedName("cast")
         val cast: List<Cast?>?,
         @SerializedName("crew")
         val crew: List<Crew?>?
-    ) {
+    ) : Parcelable {
+        @Parcelize
+
         data class Cast(
             @SerializedName("adult")
             val adult: Boolean?, // false
@@ -162,13 +174,13 @@ data class ResponsePeopleDetails(
             @SerializedName("first_air_date")
             val firstAirDate: String?, // 1989-08-03
             @SerializedName("genre_ids")
-            val genreIds: List<Int?>?,
+            val genreIds: List<Int>?,
             @SerializedName("id")
-            val id: Int?, // 742
+            val id: Int, // 742
             @SerializedName("name")
             val name: String?, // Prime Time LIVE
             @SerializedName("origin_country")
-            val originCountry: List<String?>?,
+            val originCountry: List<String>?,
             @SerializedName("original_language")
             val originalLanguage: String?, // en
             @SerializedName("original_name")
@@ -183,7 +195,8 @@ data class ResponsePeopleDetails(
             val voteAverage: Double?, // 3.5
             @SerializedName("vote_count")
             val voteCount: Int? // 2
-        )
+        ) : Parcelable
+        @Parcelize
 
         data class Crew(
             @SerializedName("adult")
@@ -199,15 +212,15 @@ data class ResponsePeopleDetails(
             @SerializedName("first_air_date")
             val firstAirDate: String?, // 1993-08-01
             @SerializedName("genre_ids")
-            val genreIds: List<Int?>?,
+            val genreIds: List<Int>?,
             @SerializedName("id")
-            val id: Int?, // 4981
+            val id: Int, // 4981
             @SerializedName("job")
             val job: String?, // Director
             @SerializedName("name")
             val name: String?, // Fallen Angels
             @SerializedName("origin_country")
-            val originCountry: List<String?>?,
+            val originCountry: List<String>?,
             @SerializedName("original_language")
             val originalLanguage: String?, // en
             @SerializedName("original_name")
@@ -222,6 +235,6 @@ data class ResponsePeopleDetails(
             val voteAverage: Double?, // 5.5
             @SerializedName("vote_count")
             val voteCount: Int? // 10
-        )
+        ) : Parcelable
     }
 }
