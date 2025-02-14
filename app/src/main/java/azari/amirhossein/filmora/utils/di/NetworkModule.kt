@@ -1,5 +1,6 @@
 package azari.amirhossein.filmora.utils.di
 
+import android.util.Log
 import azari.amirhossein.filmora.data.network.ApiServices
 import azari.amirhossein.filmora.utils.Constants
 import com.google.gson.Gson
@@ -45,7 +46,6 @@ object NetworkModule {
                 val requestWithHeaders = originalRequest.newBuilder()
                     .addHeader(Constants.Network.HEADER_ACCEPT, Constants.Network.CONTENT_TYPE_JSON)
                     .addHeader(Constants.Network.HEADER_CONTENT_TYPE, Constants.Network.CONTENT_TYPE_JSON)
-                    .addHeader(Constants.Network.HEADER_AUTHORIZATION, "Bearer ${Constants.Network.API_KEY}")
                     .build()
                 chain.proceed(requestWithHeaders)
             }
