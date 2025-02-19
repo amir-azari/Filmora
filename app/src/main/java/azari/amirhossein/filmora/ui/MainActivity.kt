@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
 import android.os.Bundle
 import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -92,7 +93,7 @@ class MainActivity : AppCompatActivity() {
                 supportActionBar?.setDisplayHomeAsUpEnabled(false)
             }
 
-            R.id.movieDetailFragment, R.id.tvDetailsFragment, R.id.mayLikeMoviesFragment, R.id.mayLikeTvsFragment, R.id.movieSectionFragment, R.id.tvSectionFragment, R.id.peopleSectionFragment , R.id.peopleDetailFragment-> {
+            R.id.movieDetailFragment, R.id.tvDetailsFragment, R.id.mayLikeMoviesFragment, R.id.mayLikeTvsFragment, R.id.movieSectionFragment, R.id.tvSectionFragment, R.id.peopleSectionFragment , R.id.peopleDetailFragment , R.id.searchFragment-> {
                 hideBottomNavWithFade()
                 showToolbar()
                 hideProfileSection()
@@ -133,6 +134,16 @@ class MainActivity : AppCompatActivity() {
             menu.getItem(i).isVisible = currentDestinationId !in hiddenFragments
         }
         return super.onPrepareOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_search -> {
+                navController.navigate(R.id.actionToSearchFragment)
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
 
