@@ -58,7 +58,7 @@ interface ApiServices {
 
     // Search Movie
     @GET("search/movie")
-    suspend fun searchMovie( @Query("query") query: String) : Response<ResponseMoviesList>
+    suspend fun searchMovie(@Query("page") page: Int, @Query("query") query: String) : Response<ResponseMoviesList>
 
     // Movie genres
     @GET("genre/movie/list")
@@ -113,7 +113,7 @@ interface ApiServices {
 
     // Search TV
     @GET("search/tv")
-    suspend fun searchTv( @Query("query") query: String) : Response<ResponseTvsList>
+    suspend fun searchTv(@Query("page") page: Int, @Query("query") query: String) : Response<ResponseTvsList>
 
     // Tv genres
     @GET("genre/tv/list")
@@ -175,6 +175,8 @@ interface ApiServices {
     @GET("person/{person_id}")
     suspend fun getPeopleDetails(@Path("person_id") personId: Int, @QueryMap params: Map<String, String>): Response<ResponsePeopleDetails>
 
+    @GET("search/person")
+    suspend fun searchPeople(@Query("page") page: Int ,@Query("query") query: String): Response<ResponsePopularCelebrity>
     //---------All(Movie , Tv , People)---------
 
     // Trending

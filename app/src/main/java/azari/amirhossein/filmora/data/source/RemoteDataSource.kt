@@ -12,7 +12,7 @@ class RemoteDataSource @Inject constructor(private val api : ApiServices) {
     suspend fun createGuestSession() = api.createGuestSession()
     //---------Movies---------
 
-    suspend fun searchMovie(query:String) = api.searchMovie(query)
+    suspend fun searchMovie(page :Int ,query:String) = api.searchMovie(page,query)
     suspend fun getMovieGenres() = api.getMovieGenres()
     suspend fun getMovieKeywords(movieId:String) = api.getMovieKeywords(movieId)
     suspend fun discoverMovies(params: Map<String, String>) = api.discoverMovies(params)
@@ -31,7 +31,7 @@ class RemoteDataSource @Inject constructor(private val api : ApiServices) {
 
     //---------TVs---------
 
-    suspend fun searchTv(query:String) = api.searchTv(query)
+    suspend fun searchTv(page :Int ,query:String) = api.searchTv(page,query)
     suspend fun getTvGenres() = api.getTvGenres()
     suspend fun getTvKeywords(tvId:Int) = api.getTvKeywords(tvId)
     suspend fun discoverTvShows(params: Map<String, String>) = api.discoverTvShows(params)
@@ -52,6 +52,7 @@ class RemoteDataSource @Inject constructor(private val api : ApiServices) {
     suspend fun getPopularPeoples(page:Int) = api.getPopularPeople(page)
     suspend fun getTrendingPeoples(timeWindow:String,page:Int) = api.geTrendingPeople(timeWindow,page)
     suspend fun getPeopleDetails(personId:Int,params: Map<String, String>) = api.getPeopleDetails(personId,params)
+    suspend fun searchPeople(page :Int ,query:String) = api.searchPeople(page,query)
 
 
     //---------All(Movie , Tv , People)---------
