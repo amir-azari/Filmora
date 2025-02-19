@@ -252,7 +252,7 @@
     <fragment
         android:id="@+id/mayLikeTvsFragment"
         android:name="azari.amirhossein.filmora.ui.home.MayLikeTvsFragment"
-        android:label="fragment_may_like_tvs"
+        android:label="Series you may like"
         tools:layout="@layout/fragment_may_like_tvs" />
     <fragment
         android:id="@+id/movieSectionFragment"
@@ -313,5 +313,18 @@
             app:argType="boolean" />
 
     </fragment>
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="azari.amirhossein.filmora.ui.search.SearchFragment"
+        android:label="Search"
+        tools:layout="@layout/fragment_search" >
+    </fragment>
 
+    <action
+        android:id="@+id/actionToSearchFragment"
+        app:destination="@id/searchFragment"
+        app:enterAnim="@anim/nav_fade_in"
+        app:exitAnim="@anim/nav_fade_out"
+        app:popEnterAnim="@anim/nav_fade_in"
+        app:popExitAnim="@anim/nav_fade_out"/>
 </navigation>
