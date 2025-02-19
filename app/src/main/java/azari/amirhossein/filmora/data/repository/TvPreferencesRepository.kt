@@ -2,7 +2,6 @@ package azari.amirhossein.filmora.data.repository
 
 import azari.amirhossein.filmora.data.source.RemoteDataSource
 import azari.amirhossein.filmora.models.prefences.ResponseGenresList
-import azari.amirhossein.filmora.models.prefences.movie.ResponseMovieKeywordList
 import azari.amirhossein.filmora.models.prefences.tv.ResponseTvKeywordList
 import azari.amirhossein.filmora.models.prefences.tv.ResponseTvsList
 import azari.amirhossein.filmora.utils.NetworkRequest
@@ -17,7 +16,7 @@ class TvPreferencesRepository @Inject constructor(private val remote: RemoteData
     fun searchTv(query: String): Flow<NetworkRequest<ResponseTvsList>> = flow {
         emit(NetworkRequest.Loading())
         try {
-            val response = remote.searchTv(query)
+            val response = remote.searchTv(1,query)
             val networkResponse = NetworkResponse(response).handleNetworkResponse()
             if (networkResponse is NetworkRequest.Success) {
                 val tvs = networkResponse.data
