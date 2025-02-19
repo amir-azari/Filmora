@@ -16,7 +16,7 @@ class MoviePreferencesRepository @Inject constructor(private val remote: RemoteD
     fun searchMovies(query: String): Flow<NetworkRequest<ResponseMoviesList>> = flow {
         emit(NetworkRequest.Loading())
         try {
-            val response = remote.searchMovie(query)
+            val response = remote.searchMovie(1,query)
             val networkResponse = NetworkResponse(response).handleNetworkResponse()
             if (networkResponse is NetworkRequest.Success) {
                 val movies = networkResponse.data
