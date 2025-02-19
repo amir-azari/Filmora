@@ -112,5 +112,7 @@
     <string name="about">About</string>
 
     <string name="role">as %s</string>
+    <string name="search_hint">Search movies, TV shows, people...</string>
+    <string name="not_result_found">Not results found</string>
 
 </resources>
