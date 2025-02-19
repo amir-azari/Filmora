@@ -114,5 +114,6 @@
     <string name="role">as %s</string>
     <string name="search_hint">Search movies, TV shows, people...</string>
     <string name="not_result_found">Not results found</string>
+    <string name="no_description">Not description found</string>
 
 </resources>

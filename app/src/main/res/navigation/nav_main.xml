@@ -193,6 +193,13 @@
             app:argType="string" />
         <argument android:name="id"
             app:argType="integer" />
+        <action
+            android:id="@+id/action_movieDetailFragment_to_collectionFragment"
+            app:destination="@id/collectionFragment"
+            app:enterAnim="@anim/nav_fade_in"
+            app:exitAnim="@anim/nav_fade_out"
+            app:popEnterAnim="@anim/nav_fade_in"
+            app:popExitAnim="@anim/nav_fade_out" />
 
     </fragment>
     <action
@@ -327,4 +334,11 @@
         app:exitAnim="@anim/nav_fade_out"
         app:popEnterAnim="@anim/nav_fade_in"
         app:popExitAnim="@anim/nav_fade_out"/>
+    <fragment
+        android:id="@+id/collectionFragment"
+        android:name="azari.amirhossein.filmora.ui.detail.movie.CollectionFragment"
+        tools:layout="@layout/fragment_collection" >
+        <argument android:name="collection_id"
+            app:argType="integer" />
+    </fragment>
 </navigation>

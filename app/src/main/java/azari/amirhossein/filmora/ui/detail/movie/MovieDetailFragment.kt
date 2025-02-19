@@ -13,6 +13,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import azari.amirhossein.filmora.R
 import azari.amirhossein.filmora.adapter.CastAndCrewAdapter
@@ -27,12 +28,14 @@ import azari.amirhossein.filmora.models.detail.DetailMediaItem
 import azari.amirhossein.filmora.models.detail.ResponseCredit
 import azari.amirhossein.filmora.models.detail.ResponseMovieDetails
 import azari.amirhossein.filmora.models.detail.ResponseReviews
+import azari.amirhossein.filmora.ui.people.PeopleSectionFragmentDirections
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.NetworkRequest
 import azari.amirhossein.filmora.utils.customize
 import azari.amirhossein.filmora.utils.getFullLanguageName
 import azari.amirhossein.filmora.utils.loadImageWithoutShimmer
 import azari.amirhossein.filmora.utils.observeLoginStatus
+import azari.amirhossein.filmora.utils.setClickAnimation
 import azari.amirhossein.filmora.utils.setupOverviewExpansion
 import azari.amirhossein.filmora.utils.toCompanyNames
 import azari.amirhossein.filmora.utils.toCountryNames
@@ -511,6 +514,17 @@ class MovieDetailFragment : Fragment() {
                 )
                 tvCollectionName.text =
                     getString(R.string.part_of_collection, belongsToCollection?.name)
+
+                binding.apply {
+                    btnSeeCollection.setClickAnimation {
+                        val action = data.belongsToCollection?.id?.let {
+                            MovieDetailFragmentDirections.actionMovieDetailFragmentToCollectionFragment(
+                                it
+                            )
+                        }
+                        action?.let { findNavController().navigate(it) }
+                    }
+                }
 
             }
         }
