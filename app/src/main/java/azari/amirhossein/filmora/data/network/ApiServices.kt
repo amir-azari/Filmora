@@ -9,6 +9,7 @@ import azari.amirhossein.filmora.models.authentication.ResponseToken
 import azari.amirhossein.filmora.models.celebtiry.ResponsePeopleDetails
 import azari.amirhossein.filmora.models.celebtiry.ResponsePopularCelebrity
 import azari.amirhossein.filmora.models.celebtiry.ResponseTrendingCelebrity
+import azari.amirhossein.filmora.models.detail.ResponseCollectionDetails
 import azari.amirhossein.filmora.models.detail.ResponseCredit
 import azari.amirhossein.filmora.models.detail.ResponseImage
 import azari.amirhossein.filmora.models.detail.ResponseMovieDetails
@@ -108,6 +109,9 @@ interface ApiServices {
 
     @GET("movie/upcoming")
     suspend fun getUpcoming(@Query("page") page: Int): Response<ResponseMoviesList>
+
+    @GET("collection/{collection_id}")
+    suspend fun getCollectionDetail (@Path("collection_id")collectionId: Int): Response<ResponseCollectionDetails>
 
     //---------TVs---------
 
