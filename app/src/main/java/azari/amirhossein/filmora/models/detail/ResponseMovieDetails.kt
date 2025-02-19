@@ -61,7 +61,7 @@ data class ResponseMovieDetails(
         @SerializedName("backdrop_path")
         val backdropPath: String?, // /l5CIAdxVhhaUD3DaS4lP4AR2so9.jpg
         @SerializedName("id")
-        val id: Int?, // 720879
+        val id: Int, // 720879
         @SerializedName("name")
         val name: String?, // Sonic the Hedgehog Collection
         @SerializedName("poster_path")
