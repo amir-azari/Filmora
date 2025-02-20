@@ -100,6 +100,8 @@ dependencies {
     //Pagination:
     implementation(libs.androidx.paging.runtime)
     implementation(libs.carouselrecyclerview)
+
+    implementation("com.google.android.flexbox:flexbox:3.0.0")
 }
 kapt {
     correctErrorTypes = true
