@@ -201,6 +201,7 @@
             app:popEnterAnim="@anim/nav_fade_in"
             app:popExitAnim="@anim/nav_fade_out" />
 
+
     </fragment>
     <action
         android:id="@+id/actionToMovieDetail"
@@ -341,4 +342,20 @@
         <argument android:name="collection_id"
             app:argType="integer" />
     </fragment>
+    <fragment
+        android:id="@+id/castAndCrewFragment"
+        android:name="azari.amirhossein.filmora.ui.detail.CastAndCrewFragment"
+        tools:layout="@layout/fragment_cast_and_crew" >
+        <argument
+            android:name="castAndCrew"
+            app:argType="azari.amirhossein.filmora.models.detail.ResponseCredit" />
+    </fragment>
+
+    <action
+        android:id="@+id/actionToCastAndCrewFragment"
+        app:destination="@id/castAndCrewFragment"
+        app:enterAnim="@anim/nav_fade_in"
+        app:exitAnim="@anim/nav_fade_out"
+        app:popEnterAnim="@anim/nav_fade_in"
+        app:popExitAnim="@anim/nav_fade_out"/>
 </navigation>
