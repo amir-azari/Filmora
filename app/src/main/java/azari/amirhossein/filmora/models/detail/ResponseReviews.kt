@@ -1,8 +1,11 @@
 package azari.amirhossein.filmora.models.detail
 
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 data class ResponseReviews(
     @SerializedName("id")
     val id: Int?, // 839033
@@ -14,7 +17,8 @@ data class ResponseReviews(
     val totalPages: Int?, // 1
     @SerializedName("total_results")
     val totalResults: Int? // 1
-) {
+) : Parcelable {
+    @Parcelize
     data class Result(
         @SerializedName("author")
         val author: String?, // CinemaSerf
@@ -30,7 +34,8 @@ data class ResponseReviews(
         val updatedAt: String?, // 2024-12-17T12:53:13.088Z
         @SerializedName("url")
         val url: String? // https://www.themoviedb.org/review/676174387bf386051518a493
-    ) {
+    ) : Parcelable {
+        @Parcelize
         data class AuthorDetails(
             @SerializedName("avatar_path")
             val avatarPath: String?, // /yz2HPme8NPLne0mM8tBnZ5ZWJzf.jpg
@@ -40,6 +45,6 @@ data class ResponseReviews(
             val rating: Double?, // 6
             @SerializedName("username")
             val username: String? // Geronimo1967
-        )
+        ) : Parcelable
     }
 }
