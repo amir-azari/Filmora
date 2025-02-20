@@ -391,6 +391,12 @@ class MovieDetailFragment : Fragment() {
     }
 
     private fun bindUiReview(data: ResponseReviews) {
+
+        binding.layoutSeeAllReviews.setClickAnimation {
+            findNavController().navigate(
+                MovieDetailFragmentDirections.actionMovieDetailFragmentToReviewsFragment(data)
+            )
+        }
         binding.apply {
             if (data.results?.isEmpty() == true) {
                 cvReview.visibility = View.GONE
