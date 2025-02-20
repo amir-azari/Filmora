@@ -10,31 +10,28 @@ import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.compose.ui.text.Placeholder
-import androidx.compose.ui.text.TextStyle
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import azari.amirhossein.filmora.R
 import azari.amirhossein.filmora.data.SessionManager
 import azari.amirhossein.filmora.models.ResponseLanguage
 import azari.amirhossein.filmora.models.detail.CreatedBy
 import azari.amirhossein.filmora.models.detail.Network
 import azari.amirhossein.filmora.models.detail.ProductionCompany
 import azari.amirhossein.filmora.models.detail.ProductionCountry
-import azari.amirhossein.filmora.models.detail.ResponseMovieDetails
 import azari.amirhossein.filmora.models.detail.SpokenLanguage
 import coil3.load
-import coil3.request.ErrorResult
-import coil3.request.ImageRequest
-import coil3.request.SuccessResult
 import coil3.request.crossfade
 import coil3.request.error
 import coil3.request.fallback
-import coil3.request.placeholder
 import com.facebook.shimmer.ShimmerFrameLayout
+import com.google.android.flexbox.AlignItems
+import com.google.android.flexbox.FlexDirection
+import com.google.android.flexbox.FlexWrap
+import com.google.android.flexbox.FlexboxLayoutManager
+import com.google.android.flexbox.JustifyContent
 import com.google.android.material.imageview.ShapeableImageView
 import com.google.android.material.shape.CornerFamily
 import com.google.android.material.shape.MaterialShapeDrawable
@@ -42,7 +39,6 @@ import com.google.android.material.shape.ShapeAppearanceModel
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
-import java.time.LocalDate
 import java.util.Locale
 
 fun Snackbar.customize(
@@ -355,4 +351,16 @@ fun LinearLayout.setupOverviewExpansion(
     imgExpand.setOnClickListener(clickListener)
 }
 
-
+fun Context.createFlexboxLayoutManager(
+    flexDirection: Int = FlexDirection.ROW,
+    justifyContent: Int = JustifyContent.SPACE_AROUND,
+    alignItems: Int = AlignItems.CENTER,
+    flexWrap: Int = FlexWrap.WRAP
+): FlexboxLayoutManager {
+    return FlexboxLayoutManager(this).apply {
+        this.flexDirection = flexDirection
+        this.justifyContent = justifyContent
+        this.alignItems = alignItems
+        this.flexWrap = flexWrap
+    }
+}

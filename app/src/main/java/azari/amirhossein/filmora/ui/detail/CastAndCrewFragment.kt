@@ -12,7 +12,12 @@ import azari.amirhossein.filmora.R
 import azari.amirhossein.filmora.adapter.SectionedCastAndCrewAdapter
 import azari.amirhossein.filmora.databinding.FragmentCastAndCrewBinding
 import azari.amirhossein.filmora.models.detail.ResponseCredit
-import azari.amirhossein.filmora.utils.GridSpacingItemDecoration
+import azari.amirhossein.filmora.utils.createFlexboxLayoutManager
+import com.google.android.flexbox.AlignItems
+import com.google.android.flexbox.FlexDirection
+import com.google.android.flexbox.FlexWrap
+import com.google.android.flexbox.FlexboxLayoutManager
+import com.google.android.flexbox.JustifyContent
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -46,16 +51,11 @@ class CastAndCrewFragment : Fragment() {
 
     }
     private fun setupRecyclerView() {
-        val spanCount = 3
-        val spacing = resources.getDimensionPixelSize(R.dimen.spacing)
-
-        binding.rvCredits.apply {
-            layoutManager = GridLayoutManager(context, spanCount)
-            adapter = castAndCrewAdapter
-
-            addItemDecoration(GridSpacingItemDecoration(spanCount, spacing, true))
-        }
+        val flexboxLayoutManager = requireContext().createFlexboxLayoutManager()
+        binding.rvCredits.layoutManager = flexboxLayoutManager
+        binding.rvCredits.adapter = castAndCrewAdapter
     }
+
 
 
     private fun setupClickListeners() {
