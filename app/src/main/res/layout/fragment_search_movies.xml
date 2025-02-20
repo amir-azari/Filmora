@@ -14,7 +14,6 @@
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginStart="@dimen/_6mdp"
         app:layout_constraintTop_toTopOf="parent"
         app:spanCount="3"
         tools:listitem="@layout/item_similar_remommendation" />

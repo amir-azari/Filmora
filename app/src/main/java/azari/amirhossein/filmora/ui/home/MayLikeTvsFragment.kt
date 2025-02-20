@@ -11,27 +11,25 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
-import androidx.recyclerview.widget.GridLayoutManager
 import azari.amirhossein.filmora.R
 import azari.amirhossein.filmora.adapter.DataLoadStateAdapter
 import azari.amirhossein.filmora.adapter.TvsAdapter
-import azari.amirhossein.filmora.databinding.FragmentMayLikeMoviesBinding
-import azari.amirhossein.filmora.models.prefences.tv.ResponseTvsList
+import azari.amirhossein.filmora.databinding.FragmentMayLikeTvsBinding
 import azari.amirhossein.filmora.ui.movies.MovieSectionFragmentDirections
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.NetworkRequest
+import azari.amirhossein.filmora.utils.createFlexboxLayoutManager
 import azari.amirhossein.filmora.utils.customize
 import azari.amirhossein.filmora.viewmodel.MayLikeTvsViewModel
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class MayLikeTvsFragment : Fragment() {
     // Binding
-    private var _binding: FragmentMayLikeMoviesBinding? = null
+    private var _binding: FragmentMayLikeTvsBinding? = null
     private val binding get() = _binding!!
 
     @Inject
@@ -44,7 +42,7 @@ class MayLikeTvsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        _binding = FragmentMayLikeMoviesBinding.inflate(inflater, container, false)
+        _binding = FragmentMayLikeTvsBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -57,23 +55,16 @@ class MayLikeTvsFragment : Fragment() {
         setActionBarTitle("Series you may like")
         adapterTv.setOnItemClickListener(clickTv)
 
-        val gridLayoutManager = GridLayoutManager(requireContext(), 3)
-        binding.rvMovies.layoutManager = gridLayoutManager
+
+        val flexboxLayoutManager = requireContext().createFlexboxLayoutManager()
+
+        binding.rvTvs.layoutManager = flexboxLayoutManager
 
         val concatAdapter = adapterTv.withLoadStateFooter(
             footer = DataLoadStateAdapter { adapterTv.retry() }
         )
-        binding.rvMovies.adapter = concatAdapter
 
-        gridLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
-            override fun getSpanSize(position: Int): Int {
-                return when (concatAdapter.getItemViewType(position)) {
-                    DataLoadStateAdapter.VIEW_TYPE_LOAD_STATE -> 3
-                    else -> 1
-                }
-            }
-        }
-
+        binding.rvTvs.adapter = concatAdapter
 
         // Collecting the Tvs
         viewLifecycleOwner.lifecycleScope.launch  {
@@ -118,7 +109,7 @@ class MayLikeTvsFragment : Fragment() {
 
     private fun showLoading() {
         binding.progressBar.visibility = View.VISIBLE
-        binding.rvMovies.visibility = View.GONE
+        binding.rvTvs.visibility = View.GONE
         binding.internetLay.visibility  = View.GONE
 
 
@@ -127,14 +118,14 @@ class MayLikeTvsFragment : Fragment() {
     private fun showSuccess() {
         binding.internetLay.visibility  = View.GONE
         binding.progressBar.visibility = View.GONE
-        binding.rvMovies.visibility = View.VISIBLE
+        binding.rvTvs.visibility = View.VISIBLE
 
 
     }
 
     private fun showError() {
         binding.progressBar.visibility = View.GONE
-        binding.rvMovies.visibility = View.GONE
+        binding.rvTvs.visibility = View.GONE
 
     }
     override fun onDestroyView() {

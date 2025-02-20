@@ -21,6 +21,7 @@ import azari.amirhossein.filmora.databinding.FragmentPeopleSectionBinding
 import azari.amirhossein.filmora.ui.movies.MovieSectionFragmentDirections
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.NetworkRequest
+import azari.amirhossein.filmora.utils.createFlexboxLayoutManager
 import azari.amirhossein.filmora.utils.customize
 import azari.amirhossein.filmora.viewmodel.MovieSectionViewModel
 import azari.amirhossein.filmora.viewmodel.PeopleSectionViewModel
@@ -61,21 +62,15 @@ class PeopleSectionFragment : Fragment() {
         val sectionType = arguments?.getString(Constants.SectionType.SECTION_TYPE) ?: return
         setActionBarTitle(sectionType)
 
-        val gridLayoutManager = GridLayoutManager(requireContext(), 3)
-        binding.rvPeoples.layoutManager = gridLayoutManager
+        val flexboxLayoutManager = requireContext().createFlexboxLayoutManager()
+
+        binding.rvPeoples.layoutManager = flexboxLayoutManager
 
         val concatAdapter = adapter.withLoadStateFooter(
             footer = DataLoadStateAdapter { adapter.retry() }
         )
         binding.rvPeoples.adapter = concatAdapter
-        gridLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
-            override fun getSpanSize(position: Int): Int {
-                return when (concatAdapter.getItemViewType(position)) {
-                    DataLoadStateAdapter.VIEW_TYPE_LOAD_STATE -> 3
-                    else -> 1
-                }
-            }
-        }
+
 
         // Collecting the movies
         viewLifecycleOwner.lifecycleScope.launch {

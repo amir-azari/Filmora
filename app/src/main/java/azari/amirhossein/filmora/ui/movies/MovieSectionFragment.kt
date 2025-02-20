@@ -20,6 +20,7 @@ import azari.amirhossein.filmora.databinding.FragmentMovieSectionBinding
 import azari.amirhossein.filmora.models.prefences.movie.ResponseMoviesList
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.NetworkRequest
+import azari.amirhossein.filmora.utils.createFlexboxLayoutManager
 import azari.amirhossein.filmora.utils.customize
 import azari.amirhossein.filmora.viewmodel.MovieSectionViewModel
 import com.google.android.material.snackbar.Snackbar
@@ -63,22 +64,15 @@ class MovieSectionFragment : Fragment() {
 
         adapterMovie.setOnItemClickListener(clickMovie)
 
-        val gridLayoutManager = GridLayoutManager(requireContext(), 3)
-        binding.rvMovies.layoutManager = gridLayoutManager
+        val flexboxLayoutManager = requireContext().createFlexboxLayoutManager()
+
+        binding.rvMovies.layoutManager = flexboxLayoutManager
 
         val concatAdapter = adapterMovie.withLoadStateFooter(
             footer = DataLoadStateAdapter { adapterMovie.retry() }
         )
         binding.rvMovies.adapter = concatAdapter
-        gridLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
-            override fun getSpanSize(position: Int): Int {
-                return when (concatAdapter.getItemViewType(position)) {
-                    DataLoadStateAdapter.VIEW_TYPE_LOAD_STATE -> 3
-                    else -> 1
-                }
-            }
-        }
-
+        
         // Collecting the movies
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.getMovies(sectionType).collect { state ->

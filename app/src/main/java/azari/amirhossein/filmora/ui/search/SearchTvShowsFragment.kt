@@ -29,6 +29,7 @@ import azari.amirhossein.filmora.models.tv.ResponseTvType
 import azari.amirhossein.filmora.ui.movies.MovieSectionFragmentDirections
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.NetworkRequest
+import azari.amirhossein.filmora.utils.createFlexboxLayoutManager
 import azari.amirhossein.filmora.utils.customize
 import azari.amirhossein.filmora.viewmodel.SearchViewModel
 import com.google.android.material.snackbar.Snackbar
@@ -60,21 +61,14 @@ class SearchTvShowsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         tvShowsAdapter.setOnItemClickListener(clickTv)
 
-        val gridLayoutManager = GridLayoutManager(requireContext(), 3)
-        binding.rvTvShows.layoutManager = gridLayoutManager
+        val flexboxLayoutManager = requireContext().createFlexboxLayoutManager()
+
+        binding.rvTvShows.layoutManager = flexboxLayoutManager
 
         val concatAdapter = tvShowsAdapter.withLoadStateFooter(
             footer = DataLoadStateAdapter { tvShowsAdapter.retry() }
         )
         binding.rvTvShows.adapter = concatAdapter
-        gridLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
-            override fun getSpanSize(position: Int): Int {
-                return when (concatAdapter.getItemViewType(position)) {
-                    DataLoadStateAdapter.VIEW_TYPE_LOAD_STATE -> 3
-                    else -> 1
-                }
-            }
-        }
 
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {

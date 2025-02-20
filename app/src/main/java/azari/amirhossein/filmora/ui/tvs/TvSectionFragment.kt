@@ -22,6 +22,7 @@ import azari.amirhossein.filmora.models.prefences.tv.ResponseTvsList
 import azari.amirhossein.filmora.ui.movies.MovieSectionFragmentDirections
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.NetworkRequest
+import azari.amirhossein.filmora.utils.createFlexboxLayoutManager
 import azari.amirhossein.filmora.utils.customize
 import azari.amirhossein.filmora.viewmodel.MovieSectionViewModel
 import azari.amirhossein.filmora.viewmodel.TvSectionViewModel
@@ -62,24 +63,15 @@ class TvSectionFragment : Fragment() {
             Constants.SectionType.ON_THE_AIR -> setActionBarTitle(getString(R.string.on_tv))
             else -> setActionBarTitle(sectionType)
         }
-
         adapter.setOnItemClickListener(clickTv)
 
-        val gridLayoutManager = GridLayoutManager(requireContext(), 3)
-        binding.rvTvs.layoutManager = gridLayoutManager
+        val flexboxLayoutManager = requireContext().createFlexboxLayoutManager()
 
+        binding.rvTvs.layoutManager = flexboxLayoutManager
         val concatAdapter = adapter.withLoadStateFooter(
             footer = DataLoadStateAdapter { adapter.retry() }
         )
         binding.rvTvs.adapter = concatAdapter
-        gridLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
-            override fun getSpanSize(position: Int): Int {
-                return when (concatAdapter.getItemViewType(position)) {
-                    DataLoadStateAdapter.VIEW_TYPE_LOAD_STATE -> 3
-                    else -> 1
-                }
-            }
-        }
 
         // Collecting the movies
         viewLifecycleOwner.lifecycleScope.launch {
