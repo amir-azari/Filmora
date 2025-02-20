@@ -13,6 +13,8 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.NavHostFragment.Companion
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import azari.amirhossein.filmora.R
@@ -28,6 +30,7 @@ import azari.amirhossein.filmora.models.detail.DetailMediaItem
 import azari.amirhossein.filmora.models.detail.ResponseCredit
 import azari.amirhossein.filmora.models.detail.ResponseMovieDetails
 import azari.amirhossein.filmora.models.detail.ResponseReviews
+import azari.amirhossein.filmora.ui.detail.people.PeopleDetailFragmentDirections
 import azari.amirhossein.filmora.ui.people.PeopleSectionFragmentDirections
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.NetworkRequest
@@ -62,9 +65,6 @@ class MovieDetailFragment : Fragment() {
 
     @Inject
     lateinit var genresAdapter: GenresAdapter
-
-    @Inject
-    lateinit var seasonsAdapter: SeasonsAdapter
 
     @Inject
     lateinit var castAndCrewAdapter: CastAndCrewAdapter
@@ -102,6 +102,8 @@ class MovieDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupViewPagersSimilarAndRecommendations()
+
+        castAndCrewAdapter.setOnItemClickListener(clickCast)
 
         // Extract fragment arguments
         args = MovieDetailFragmentArgs.fromBundle(requireArguments())
@@ -303,6 +305,7 @@ class MovieDetailFragment : Fragment() {
                                     viewModel.updateMediaDetails(mediaItem)
                                     setupSimilarAndRecommendations(mediaItem)
                                     setupVisual(mediaItem)
+
                                 }
                             }
 
@@ -533,6 +536,12 @@ class MovieDetailFragment : Fragment() {
 
 
     private fun bindUiCast(data: ResponseCredit) {
+        binding.layoutSeeAllCastAndCrew.setClickAnimation {
+            findNavController().navigate(
+                MovieDetailFragmentDirections.actionToCastAndCrewFragment(data)
+            )
+        }
+
         data.cast?.let { cast ->
             if (cast.isNotEmpty()) {
                 binding.cvCastAndCrew.visibility = View.VISIBLE
@@ -541,6 +550,10 @@ class MovieDetailFragment : Fragment() {
                 cast.filterNotNull()
             )
         }
+    }
+    private val clickCast = { cast : ResponseCredit.Cast ->
+        val action = PeopleSectionFragmentDirections.actionToPeopleDetailFragment(cast.id)
+        findNavController().navigate(action)
     }
 
     private fun bindUiLanguage(data: ResponseLanguage) {
