@@ -1,8 +1,11 @@
 package azari.amirhossein.filmora.models.detail
 
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 data class ResponseCredit(
     @SerializedName("cast")
     val cast: List<Cast?>?,
@@ -10,7 +13,8 @@ data class ResponseCredit(
     val crew: List<Crew>?,
     @SerializedName("id")
     val id: Int? // 939243
-) {
+) : Parcelable {
+    @Parcelize
     data class Cast(
         @SerializedName("adult")
         val adult: Boolean?, // false
@@ -23,7 +27,7 @@ data class ResponseCredit(
         @SerializedName("gender")
         val gender: Int?, // 2
         @SerializedName("id")
-        val id: Int?, // 206
+        val id: Int, // 206
         @SerializedName("known_for_department")
         val knownForDepartment: String?, // Acting
         @SerializedName("name")
@@ -36,8 +40,9 @@ data class ResponseCredit(
         val popularity: Double?, // 62.685
         @SerializedName("profile_path")
         val profilePath: String? // /u0AqTz6Y7GHPCHINS01P7gPvDSb.jpg
-    )
+    ) : Parcelable
 
+    @Parcelize
     data class Crew(
         @SerializedName("adult")
         val adult: Boolean?, // false
@@ -48,7 +53,7 @@ data class ResponseCredit(
         @SerializedName("gender")
         val gender: Int?, // 2
         @SerializedName("id")
-        val id: Int?, // 11874
+        val id: Int, // 11874
         @SerializedName("job")
         val job: String?, // Producer
         @SerializedName("known_for_department")
@@ -61,5 +66,5 @@ data class ResponseCredit(
         val popularity: Double?, // 3.913
         @SerializedName("profile_path")
         val profilePath: String? // /xgCTFHhbQh3QyIT7ZvJGbEohzG8.jpg
-    )
+    ) : Parcelable
 }
