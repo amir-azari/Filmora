@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView android:id="@+id/cv_review"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/_8mdp"
+    android:orientation="horizontal"
+    app:cardBackgroundColor="@color/cardBackgroundColor"
+    app:cardCornerRadius="@dimen/_8mdp"
+    app:cardElevation="@dimen/_2mdp"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/cv_visual_content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/reviewSection"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingVertical="@dimen/_8mdp">
+
+        <!-- Profile Image -->
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/iv_profileReviewAuthor"
+            android:layout_width="@dimen/_45mdp"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/_9mdp"
+            android:scaleType="centerCrop"
+            android:layout_marginStart="@dimen/_12mdp"
+            android:padding="@dimen/_2mdp"
+            app:strokeWidth="0.5dp"
+            app:strokeColor="@color/textColor_secondary"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:shapeAppearanceOverlay="@style/CircleImage" />
+
+        <!-- Username -->
+        <TextView
+            android:id="@+id/tv_reviewAuthor"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_6mdp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            app:layout_goneMarginEnd="@dimen/_2mdp"
+            android:textColor="@color/cardTextColorAlpha"
+            android:textSize="@dimen/_10font_mdp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@id/tv_reviewRating"
+            app:layout_constraintStart_toEndOf="@id/iv_profileReviewAuthor"
+            app:layout_constraintTop_toTopOf="@id/iv_profileReviewAuthor" />
+
+        <!-- Rating -->
+        <TextView
+            android:layout_marginEnd="@dimen/_12mdp"
+            android:id="@+id/tv_reviewRating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/cardTextColorAlpha"
+            android:textSize="@dimen/_8font_mdp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tv_reviewAuthor" />
+
+        <!-- Review Date -->
+        <TextView
+            android:id="@+id/tv_review_date"
+            android:layout_width="0dp"
+            android:maxLines="1"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_2mdp"
+            android:textColor="@color/textColor"
+            android:textSize="@dimen/_8font_mdp"
+            app:layout_constraintEnd_toStartOf="@id/tv_reviewRating"
+            app:layout_constraintStart_toStartOf="@id/tv_reviewAuthor"
+            app:layout_constraintTop_toBottomOf="@id/tv_reviewAuthor" />
+        <LinearLayout
+            android:id="@+id/review_container"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_4mdp"
+            android:layout_marginEnd="@dimen/_8mdp"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="@+id/tv_reviewRating"
+            app:layout_constraintStart_toStartOf="@+id/tv_review_date"
+            app:layout_constraintTop_toBottomOf="@id/iv_profileReviewAuthor">
+
+            <!-- Review content -->
+            <TextView
+                android:id="@+id/tv_reviewContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_9mdp"
+                android:lineSpacingExtra="@dimen/_2mdp"
+                android:maxLines="3"
+                android:ellipsize="end"
+                android:textColor="@color/textColor_secondary"
+                android:textSize="@dimen/_8font_mdp"
+                />
+
+            <ImageView
+                android:id="@+id/img_reviewContent_expand"
+                android:layout_width="@dimen/_10mdp"
+                android:layout_height="@dimen/_10mdp"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/angle_down"
+                android:visibility="invisible"
+                app:tint="@color/textColor_secondary" />
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>
