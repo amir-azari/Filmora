@@ -46,8 +46,8 @@ class ReviewAdapter @Inject constructor(@ApplicationContext val context: Context
 
                 ivProfileReviewAuthor.loadImageWithoutShimmer(
                     fullPosterPath,
-                    R.drawable.image_slash_medium,
-                    R.drawable.image_medium,
+                    R.drawable.image_slash_small,
+                    R.drawable.image_small,
                     originalScaleType,
                     true
                 )
