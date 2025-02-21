@@ -17,7 +17,7 @@ import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.loadImageWithShimmer
 import azari.amirhossein.filmora.utils.loadImageWithoutShimmer
 
-class BackdropAdapter  :
+class BackdropAdapter (private val isFullScreen: Boolean = false)  :
     RecyclerView.Adapter<BackdropAdapter.ViewHolder>() {
 
     private var onItemClickListener: ((ResponseImage.Backdrop) -> Unit)? = null
@@ -27,9 +27,11 @@ class BackdropAdapter  :
 
     inner class ViewHolder(private val binding: ItemBackdropBinding) :
         RecyclerView.ViewHolder(binding.root) {
+
         private val originalScaleType: ImageView.ScaleType = binding.imgBackdrop.scaleType
 
         fun bind(item: ResponseImage.Backdrop) {
+
             binding.apply {
                 val baseUrl = Constants.Network.IMAGE_BASE_URL
                 val fullPosterPath = if (item.filePath.isNullOrEmpty()) {
@@ -37,6 +39,28 @@ class BackdropAdapter  :
                 } else {
                     baseUrl + Constants.ImageSize.ORIGINAL + item.filePath
                 }
+
+                binding.imgBackdrop.layoutParams.height =
+                    if (isFullScreen){
+                        0
+                    }
+                    else binding.root.context.resources.getDimensionPixelSize(R.dimen.size_125mdp)
+
+                binding.imgBackdrop.layoutParams.width =
+                    if (isFullScreen) {
+                        ViewGroup.LayoutParams.MATCH_PARENT
+                    } else {
+                        0
+                    }
+                binding.imgBackdrop.requestLayout()
+
+                binding.root.layoutParams.width =
+                    if (isFullScreen) {
+                        ViewGroup.LayoutParams.MATCH_PARENT
+                    } else {
+                        ViewGroup.LayoutParams.WRAP_CONTENT
+                    }
+                binding.root.requestLayout()
 
                 imgBackdrop.loadImageWithShimmer(
                     fullPosterPath,

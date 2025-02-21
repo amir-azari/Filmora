@@ -12,7 +12,7 @@ import azari.amirhossein.filmora.models.detail.ResponseImage
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.loadImageWithShimmer
 
-class PosterAdapter  :
+class PosterAdapter  (private val isFullScreen: Boolean = false) :
     RecyclerView.Adapter<PosterAdapter.ViewHolder>() {
 
     private var onItemClickListener: ((ResponseImage.Poster) -> Unit)? = null
@@ -32,7 +32,14 @@ class PosterAdapter  :
                 } else {
                     baseUrl + Constants.ImageSize.ORIGINAL + item.filePath
                 }
-
+                if (!isFullScreen){
+                    binding.root.setPadding(
+                        binding.root.paddingTop,
+                        0,
+                        binding.root.bottom,
+                        0
+                    )
+                }
                 imgPoster.loadImageWithShimmer(
                     fullPosterPath,
                     R.drawable.image_slash_medium,
@@ -41,8 +48,6 @@ class PosterAdapter  :
                     true,
                     imgShimmerContainer
                 )
-
-
 
             }
             // Click

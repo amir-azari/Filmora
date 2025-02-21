@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="spacing">@dimen/_2mdp</dimen>
+    <dimen name="spacing_8mdp">@dimen/_8mdp</dimen>
+    <dimen name="size_125mdp">@dimen/_125mdp</dimen>
 </resources>

@@ -8,21 +8,19 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import azari.amirhossein.filmora.R
-import azari.amirhossein.filmora.databinding.ItemSimilarRemommendationBinding
 import azari.amirhossein.filmora.databinding.ItemVideoBinding
-import azari.amirhossein.filmora.models.detail.ResponseImage
-import azari.amirhossein.filmora.models.detail.ResponseTvSimilar
 import azari.amirhossein.filmora.models.detail.ResponseVideo
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.loadImageWithShimmer
-import azari.amirhossein.filmora.utils.loadImageWithoutShimmer
+import azari.amirhossein.filmora.utils.setClickAnimation
 import azari.amirhossein.filmora.utils.toFormattedDate
 
-class VideoAdapter  :
+class VideoAdapter (private val isFullScreen: Boolean = false)  :
     RecyclerView.Adapter<VideoAdapter.ViewHolder>() {
 
-    private var onItemClickListener: ((ResponseVideo.Result) -> Unit)? = null
-    fun setOnItemClickListener(listener: (ResponseVideo.Result) -> Unit) {
+    private var onItemClickListener: ((String) -> Unit)? = null
+
+    fun setOnItemClickListener(listener: (String) -> Unit) {
         onItemClickListener = listener
     }
 
@@ -39,6 +37,27 @@ class VideoAdapter  :
                 if (!item.key.isNullOrEmpty()){
                     binding.imgPlay.visibility = View.VISIBLE
                 }
+                binding.imgVideo.layoutParams.height =
+                    if (isFullScreen){
+                        0
+                    }
+                    else binding.root.context.resources.getDimensionPixelSize(R.dimen.size_125mdp)
+
+                binding.imgVideo.layoutParams.width =
+                    if (isFullScreen) {
+                        ViewGroup.LayoutParams.MATCH_PARENT
+                    } else {
+                        0
+                    }
+                binding.imgVideo.requestLayout()
+
+                binding.root.layoutParams.width =
+                    if (isFullScreen) {
+                        ViewGroup.LayoutParams.MATCH_PARENT
+                    } else {
+                        ViewGroup.LayoutParams.WRAP_CONTENT
+                    }
+                binding.root.requestLayout()
                 binding.imgVideo.loadImageWithShimmer(
                     path = thumbnailUrl,
                     fallback = R.drawable.film,
@@ -54,8 +73,9 @@ class VideoAdapter  :
                 }
             }
             // Click
-            binding.root.setOnClickListener {
-                onItemClickListener?.let { it(item) }
+            binding.root.setClickAnimation {
+                val videoId = item.key ?: return@setClickAnimation
+                onItemClickListener?.invoke(videoId)
             }
 
         }
