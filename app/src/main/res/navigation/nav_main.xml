@@ -236,6 +236,9 @@
             app:argType="string" />
         <argument android:name="id"
             app:argType="integer" />
+        <action
+            android:id="@+id/action_tvDetailsFragment_to_reviewsFragment"
+            app:destination="@id/reviewsFragment" />
     </fragment>
 
     <action
