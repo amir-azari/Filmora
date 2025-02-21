@@ -9,10 +9,15 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import azari.amirhossein.filmora.adapter.BackdropAdapter
 import azari.amirhossein.filmora.databinding.FragmentBackdropBinding
+import azari.amirhossein.filmora.models.detail.ResponseImage
+import azari.amirhossein.filmora.ui.detail.movie.MovieDetailFragmentDirections
+import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.NetworkRequest
+import azari.amirhossein.filmora.utils.setClickAnimation
 import azari.amirhossein.filmora.viewmodel.MediaDetailsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -24,6 +29,7 @@ class BackdropFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: MediaDetailsViewModel by viewModels({ requireParentFragment() })
+
     private val backdropAdapter by lazy { BackdropAdapter() }
 
 
@@ -49,6 +55,7 @@ class BackdropFragment : Fragment() {
                                 binding.btnAllBackdrops.visibility =View.VISIBLE
                             }
                             backdropAdapter.submitList(result.data.backdrops)
+                            navTo(result.data)
                         }
 
                         else -> Unit
@@ -59,11 +66,20 @@ class BackdropFragment : Fragment() {
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         setupRecyclerView()
         observeBackdrops()
 
     }
 
+    private fun navTo(data :ResponseImage){
+        binding.btnAllBackdrops.setClickAnimation {
+            val action = BackdropFragmentDirections.actionToMediaGalleryFragment(media = data, type = Constants.MediaGalleryType.BACKDROP , video = null)
+            findNavController().navigate(
+                action
+            )
+        }
+    }
     private fun setupRecyclerView() {
         binding.rvBackdrop.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)

@@ -9,10 +9,15 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import azari.amirhossein.filmora.adapter.PosterAdapter
 import azari.amirhossein.filmora.databinding.FragmentPosterBinding
+import azari.amirhossein.filmora.models.detail.ResponseImage
+import azari.amirhossein.filmora.models.detail.ResponseVideo
+import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.NetworkRequest
+import azari.amirhossein.filmora.utils.setClickAnimation
 import azari.amirhossein.filmora.viewmodel.MediaDetailsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -48,6 +53,7 @@ class PosterFragment : Fragment(){
                                 binding.btnAllPosters.visibility =View.VISIBLE
                             }
                             posterAdapter.submitList(result.data.posters)
+                            navTo(result.data)
                         }
 
                         else -> Unit
@@ -63,6 +69,14 @@ class PosterFragment : Fragment(){
         setupRecyclerView()
         observePoster()
 
+    }
+    private fun navTo(data : ResponseImage){
+        binding.btnAllPosters.setClickAnimation {
+            val action = BackdropFragmentDirections.actionToMediaGalleryFragment(media = data, type = Constants.MediaGalleryType.POSTER , video = null)
+            findNavController().navigate(
+                action
+            )
+        }
     }
     private fun setupRecyclerView() {
         binding.rvPoster.apply {
