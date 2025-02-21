@@ -558,7 +558,7 @@ class MovieDetailFragment : Fragment() {
         }
     }
     private val clickCast = { cast : ResponseCredit.Cast ->
-        val action = PeopleSectionFragmentDirections.actionToPeopleDetailFragment(cast.id)
+        val action = MovieDetailFragmentDirections.actionToPeopleDetailFragment(cast.id)
         findNavController().navigate(action)
     }
 

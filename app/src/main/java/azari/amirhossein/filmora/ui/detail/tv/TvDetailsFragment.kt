@@ -13,6 +13,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import azari.amirhossein.filmora.R
 import azari.amirhossein.filmora.adapter.CastAndCrewAdapter
@@ -27,12 +28,15 @@ import azari.amirhossein.filmora.models.detail.DetailMediaItem
 import azari.amirhossein.filmora.models.detail.ResponseCredit
 import azari.amirhossein.filmora.models.detail.ResponseReviews
 import azari.amirhossein.filmora.models.detail.ResponseTvDetails
+import azari.amirhossein.filmora.ui.detail.movie.MovieDetailFragmentDirections
+import azari.amirhossein.filmora.ui.people.PeopleSectionFragmentDirections
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.NetworkRequest
 import azari.amirhossein.filmora.utils.customize
 import azari.amirhossein.filmora.utils.getFullLanguageName
 import azari.amirhossein.filmora.utils.loadImageWithoutShimmer
 import azari.amirhossein.filmora.utils.observeLoginStatus
+import azari.amirhossein.filmora.utils.setClickAnimation
 import azari.amirhossein.filmora.utils.setupOverviewExpansion
 import azari.amirhossein.filmora.utils.toCompanyNames
 import azari.amirhossein.filmora.utils.toCountryNames
@@ -98,6 +102,8 @@ class TvDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupViewPagersSimilarAndRecommendations()
+
+        castAndCrewAdapter.setOnItemClickListener(clickCast)
 
         // Extract fragment arguments
         args = TvDetailsFragmentArgs.fromBundle(requireArguments())
@@ -526,6 +532,11 @@ class TvDetailsFragment : Fragment() {
     }
 
     private fun bindUiCast(data : ResponseCredit){
+        binding.layoutSeeAllCastAndCrew.setClickAnimation {
+            findNavController().navigate(
+                TvDetailsFragmentDirections.actionToCastAndCrewFragment(data)
+            )
+        }
         data.cast?.let { cast ->
             if (cast.isNotEmpty()){
                 binding.cvCastAndCrew.visibility = View.VISIBLE
@@ -535,6 +546,11 @@ class TvDetailsFragment : Fragment() {
             )
         }
     }
+    private val clickCast = { cast : ResponseCredit.Cast ->
+        val action = TvDetailsFragmentDirections.actionToPeopleDetailFragment(cast.id)
+        findNavController().navigate(action)
+    }
+
     private fun bindUiLanguage(data: ResponseLanguage){
         val originalLanguage = binding.txtLanguageValue.text.toString()
         originalLanguage.getFullLanguageName(data)
