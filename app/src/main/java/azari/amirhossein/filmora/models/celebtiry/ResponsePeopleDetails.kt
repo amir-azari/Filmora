@@ -3,7 +3,7 @@ package azari.amirhossein.filmora.models.celebtiry
 
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class ResponsePeopleDetails(

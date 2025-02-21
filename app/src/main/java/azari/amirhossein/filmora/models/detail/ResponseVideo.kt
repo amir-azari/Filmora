@@ -1,14 +1,18 @@
 package azari.amirhossein.filmora.models.detail
 
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class ResponseVideo(
     @SerializedName("id")
     val id: Int?, // 839033
     @SerializedName("results")
     val results: List<Result>?
-) {
+) : Parcelable {
+    @Parcelize
     data class Result(
         @SerializedName("id")
         val id: String?, // 677d526b5c738e1c22669d99
@@ -30,5 +34,5 @@ data class ResponseVideo(
         val size: Int?, // 1080
         @SerializedName("type")
         val type: String? // Behind the Scenes
-    )
+    ) : Parcelable
 }

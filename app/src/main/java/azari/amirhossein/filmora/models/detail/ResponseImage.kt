@@ -1,18 +1,22 @@
 package azari.amirhossein.filmora.models.detail
 
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class ResponseImage(
     @SerializedName("backdrops")
-    val backdrops: List<Backdrop>?,
+    val backdrops: List<Backdrop>,
     @SerializedName("id")
     val id: Int?, // 839033
     @SerializedName("logos")
     val logos: List<Logo?>?,
     @SerializedName("posters")
     val posters: List<Poster>?
-) {
+) : Parcelable {
+    @Parcelize
     data class Backdrop(
         @SerializedName("aspect_ratio")
         val aspectRatio: Double?, // 1.778
@@ -28,8 +32,9 @@ data class ResponseImage(
         val voteCount: Int?, // 4
         @SerializedName("width")
         val width: Int? // 3840
-    )
+    ) : Parcelable
 
+    @Parcelize
     data class Logo(
         @SerializedName("aspect_ratio")
         val aspectRatio: Double?, // 2.122
@@ -45,8 +50,9 @@ data class ResponseImage(
         val voteCount: Int?, // 2
         @SerializedName("width")
         val width: Int? // 2754
-    )
+    ) : Parcelable
 
+    @Parcelize
     data class Poster(
         @SerializedName("aspect_ratio")
         val aspectRatio: Double?, // 0.667
@@ -62,5 +68,5 @@ data class ResponseImage(
         val voteCount: Int?, // 4
         @SerializedName("width")
         val width: Int? // 2000
-    )
+    ) : Parcelable
 }
