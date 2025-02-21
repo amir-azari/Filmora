@@ -208,8 +208,15 @@
             app:popEnterAnim="@anim/nav_fade_in"
             app:popExitAnim="@anim/nav_fade_out" />
 
-
     </fragment>
+    <action
+        android:id="@+id/actionToMediaGalleryFragment"
+        app:destination="@id/mediaGalleryFragment"
+        app:enterAnim="@anim/nav_fade_in"
+        app:exitAnim="@anim/nav_fade_out"
+        app:popEnterAnim="@anim/nav_fade_in"
+        app:popExitAnim="@anim/nav_fade_out" />
+
     <action
         android:id="@+id/actionToMovieDetail"
         app:destination="@id/movieDetailFragment"
@@ -373,5 +380,41 @@
         <argument
             android:name="review"
             app:argType="azari.amirhossein.filmora.models.detail.ResponseReviews" />
+    </fragment>
+    <fragment
+        android:id="@+id/mediaGalleryFragment"
+        android:name="azari.amirhossein.filmora.ui.detail.MediaGalleryFragment"
+        tools:layout="@layout/fragment_media_gallery" >
+        <argument
+            android:name="media"
+            app:argType="azari.amirhossein.filmora.models.detail.ResponseImage"
+            app:nullable="true" />
+        <argument
+            android:name="type"
+            app:argType="string" />
+        <argument
+            android:name="video"
+            app:argType="azari.amirhossein.filmora.models.detail.ResponseVideo"
+            app:nullable="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/backdropFragment"
+        android:name="azari.amirhossein.filmora.ui.detail.BackdropFragment"
+        android:label="fragment_backdrop"
+        tools:layout="@layout/fragment_backdrop" >
+
+    </fragment>
+    <fragment
+        android:id="@+id/posterFragment"
+        android:name="azari.amirhossein.filmora.ui.detail.PosterFragment"
+        android:label="fragment_poster"
+        tools:layout="@layout/fragment_poster" >
+
+    </fragment>
+    <fragment
+        android:id="@+id/videoFragment"
+        android:name="azari.amirhossein.filmora.ui.detail.VideoFragment"
+        android:label="fragment_video"
+        tools:layout="@layout/fragment_video" >
     </fragment>
 </navigation>

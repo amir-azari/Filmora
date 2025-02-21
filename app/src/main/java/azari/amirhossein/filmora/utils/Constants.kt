@@ -142,4 +142,9 @@ object Constants {
     object Departments {
         const val ACTING = "Acting"
     }
+    object MediaGalleryType {
+        const val POSTER = "poster"
+        const val BACKDROP = "backdrop"
+        const val VIDEO = "video"
+    }
 }
