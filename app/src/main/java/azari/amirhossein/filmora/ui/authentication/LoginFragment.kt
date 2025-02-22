@@ -1,6 +1,7 @@
 package azari.amirhossein.filmora.ui.authentication
 
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -9,12 +10,14 @@ import android.view.inputmethod.EditorInfo
 import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.Navigation.findNavController
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import azari.amirhossein.filmora.R
 import azari.amirhossein.filmora.databinding.FragmentLoginBinding
 import azari.amirhossein.filmora.utils.Constants
@@ -22,6 +25,7 @@ import azari.amirhossein.filmora.utils.NetworkRequest
 import azari.amirhossein.filmora.utils.customize
 import azari.amirhossein.filmora.utils.setClickAnimation
 import azari.amirhossein.filmora.viewmodel.LoginViewModel
+import azari.amirhossein.filmora.viewmodel.SharedAccountViewModel
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -33,8 +37,11 @@ class LoginFragment : Fragment() {
     private val binding get() = _binding!!
 
     // View Model
+    private val accountViewModel: SharedAccountViewModel by activityViewModels()
     private val viewModel: LoginViewModel by viewModels()
     private var currentAuthType: AuthType = AuthType.LOGIN
+
+    private val args: LoginFragmentArgs by navArgs()
 
     private enum class AuthType {
         LOGIN, CONTINUE
@@ -51,6 +58,9 @@ class LoginFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val loginType = args.loginType
+
+        binding.btnContinue.isEnabled = loginType != Constants.LoginType.PROFILE
 
         binding.apply {
             // Set up text watchers
@@ -125,7 +135,13 @@ class LoginFragment : Fragment() {
 
                                     val sessionId = it.data
                                     if (!sessionId.isNullOrEmpty()) {
-                                        findNavController().navigate(R.id.actionLoginToMoviePreferences)
+                                        accountViewModel.fetchAccountDetails()
+
+                                        if (loginType ==  Constants.LoginType.PROFILE) {
+                                            findNavController().navigate(R.id.actionLoginToHomeFromProfile)
+                                        } else {
+                                            findNavController().navigate(R.id.actionLoginToMoviePreferences)
+                                        }
                                     } else {
                                         showErrorSnackbar(root, Constants.Message.SESSION_EMPTY)
                                     }
