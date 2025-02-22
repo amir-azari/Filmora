@@ -6,10 +6,18 @@ import azari.amirhossein.filmora.models.authentication.RequestSession
 import javax.inject.Inject
 
 class RemoteDataSource @Inject constructor(private val api : ApiServices) {
+
+    //---------Authentication---------
+
     suspend fun requestToken() = api.requestToken()
     suspend fun validateWithLogin( request: RequestLogin) = api.validateWithLogin(request)
     suspend fun createSession( request: RequestSession) = api.createSession(request)
     suspend fun createGuestSession() = api.createGuestSession()
+
+    //---------Profile(Account)---------
+    suspend fun getAccountDetails(sessionId : String) = api.getAccountDetails(sessionId)
+
+
     //---------Movies---------
 
     suspend fun searchMovie(page :Int ,query:String) = api.searchMovie(page,query)

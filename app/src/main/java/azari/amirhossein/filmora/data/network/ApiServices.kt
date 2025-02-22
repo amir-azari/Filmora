@@ -1,6 +1,7 @@
 package azari.amirhossein.filmora.data.network
 
 import azari.amirhossein.filmora.models.ResponseLanguage
+import azari.amirhossein.filmora.models.acccount.ResponseAccountDetails
 import azari.amirhossein.filmora.models.authentication.RequestLogin
 import azari.amirhossein.filmora.models.authentication.RequestSession
 import azari.amirhossein.filmora.models.authentication.ResponseGuestSession
@@ -38,7 +39,7 @@ import retrofit2.http.QueryMap
 
 interface ApiServices {
 
-    // Authentication
+    // ---------Authentication---------
     @GET("authentication/token/new")
     suspend fun requestToken(): Response<ResponseToken>
 
@@ -54,6 +55,10 @@ interface ApiServices {
 
     @GET("authentication/guest_session/new")
     suspend fun createGuestSession(): Response<ResponseGuestSession>
+
+    //---------Profile(Account)---------
+    @GET("account")
+    suspend fun getAccountDetails(@Query("session_id") sessionId: String): Response<ResponseAccountDetails>
 
     //---------Movies---------
 
