@@ -62,7 +62,7 @@ object Constants {
     }
     object Message{
         const val NO_INTERNET_CONNECTION = "No internet connection"
-        const val UNKNOWN_ERROR = "Unknown error"
+        const val UNKNOWN_ERROR = "An unknown error occurred"
         const val SESSION_EMPTY = "Session ID is empty"
         const val SESSION_NULL = "Session ID is null"
         const val TOKEN_NULL = "Token is null"
