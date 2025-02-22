@@ -46,6 +46,11 @@
         android:label="fragment_login"
         tools:layout="@layout/fragment_login" >
 
+
+        <argument
+            android:name="loginType"
+            app:argType="string"
+            android:defaultValue="splash" />
         <action
             android:id="@+id/actionLoginToMoviePreferences"
             app:destination="@id/moviePreferencesFragment"
@@ -56,9 +61,18 @@
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim"
             />
-
+        <action
+            android:id="@+id/actionLoginToHomeFromProfile"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/nav_main"
+            app:popUpToInclusive="true"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
 
     </fragment>
+
     <action
         android:id="@+id/actionToWebView"
         app:destination="@id/webViewFragment"
@@ -66,6 +80,7 @@
         app:exitAnim="@anim/nav_default_exit_anim"
         app:popEnterAnim="@anim/nav_default_pop_enter_anim"
         app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
+
     <fragment
         android:id="@+id/webViewFragment"
         android:name="azari.amirhossein.filmora.ui.webview.WebViewFragment"
@@ -146,7 +161,17 @@
             app:popEnterAnim="@anim/nav_fade_in"
             app:popExitAnim="@anim/nav_fade_out"
             />
+
     </fragment>
+    <action
+        android:id="@+id/actionToProfileFragment"
+        app:destination="@id/profileFragment"
+        app:enterAnim="@anim/nav_fade_in"
+        app:exitAnim="@anim/nav_fade_out"
+        app:popEnterAnim="@anim/nav_fade_in"
+        app:popExitAnim="@anim/nav_fade_out"
+        />
+
     <fragment
         android:id="@+id/tvFragment"
         android:name="azari.amirhossein.filmora.ui.tvs.TvFragment"
@@ -419,5 +444,18 @@
         android:name="azari.amirhossein.filmora.ui.detail.VideoFragment"
         android:label="fragment_video"
         tools:layout="@layout/fragment_video" >
+    </fragment>
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="azari.amirhossein.filmora.ui.profile.ProfileFragment"
+        android:label="Profile"
+        tools:layout="@layout/fragment_profile" >
+        <action
+            android:id="@+id/action_profileFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:enterAnim="@anim/nav_fade_in"
+            app:exitAnim="@anim/nav_fade_out"
+            app:popEnterAnim="@anim/nav_fade_in"
+            app:popExitAnim="@anim/nav_fade_out"/>
     </fragment>
 </navigation>

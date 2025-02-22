@@ -147,4 +147,8 @@ object Constants {
         const val BACKDROP = "backdrop"
         const val VIDEO = "video"
     }
+
+    object LoginType {
+        const val PROFILE = "profile"
+    }
 }

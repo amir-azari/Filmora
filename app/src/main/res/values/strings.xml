@@ -115,5 +115,12 @@
     <string name="search_hint">Search movies, TV shows, people...</string>
     <string name="not_result_found">Not results found</string>
     <string name="no_description">Not description found</string>
+    <string name="rated_movie_and_tv_shows">Rated Movie and TV Shows</string>
+    <string name="ratings">Ratings</string>
+    <string name="movies_and_tv_shows_added_to_watchlist">Movies and TV Shows Added to watchlist</string>
+    <string name="your_favorite_movie_and_tv_shows">Your favorite Movie and TV Shows</string>
+    <string name="lists">lists</string>
+    <string name="create_updates_and_manage_yor_personal_lists">Create, updates and manage yor personal lists</string>
+    <string name="sing_in_sing_up">Sing in / Sing up</string>
 
 </resources>

@@ -1,0 +1,413 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingHorizontal="@dimen/_12mdp"
+    android:paddingVertical="@dimen/_8mdp"
+    tools:context=".ui.profile.ProfileFragment">
+
+    <LinearLayout
+        android:id="@+id/profile_section"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/img_profile"
+            android:layout_width="@dimen/_45mdp"
+            android:layout_height="@dimen/_45mdp"
+            android:layout_marginStart="@dimen/_1mdp"
+            android:contentDescription="@string/profile"
+            android:padding="@dimen/_1mdp"
+            android:src="@drawable/profile"
+            app:shapeAppearanceOverlay="@style/CircleImage"
+            app:strokeWidth="0.5dp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_6mdp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/_1mdp"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="@color/textColor"
+                android:textSize="@dimen/_14mdp"
+                android:textStyle="bold"
+                tools:text="Amir" />
+
+            <TextView
+                android:id="@+id/tv_username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_5mdp"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="@color/textColor_secondary"
+                android:textSize="@dimen/_10mdp"
+                tools:text="amir_az" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cv_favorite"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_20mdp"
+        android:orientation="horizontal"
+        app:cardBackgroundColor="@color/cardBackgroundColor"
+        app:cardCornerRadius="@dimen/_8mdp"
+        android:layout_marginHorizontal="@dimen/_6mdp"
+
+        app:cardElevation="@dimen/_2mdp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profile_section">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="@dimen/_8mdp">
+
+            <ImageView
+                android:id="@+id/img_favorite"
+                android:layout_width="@dimen/_25mdp"
+                android:layout_height="@dimen/_25mdp"
+                android:layout_marginVertical="@dimen/_16mdp"
+                android:src="@drawable/heart"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/btn_icon" />
+
+            <LinearLayout
+                android:id="@+id/linearLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_8mdp"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="@+id/img_favorite"
+                app:layout_constraintStart_toEndOf="@+id/img_favorite"
+                app:layout_constraintTop_toTopOf="@+id/img_favorite">
+
+                <TextView
+                    android:id="@+id/tv_favoriteHeader"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:maxLines="2"
+                    android:text="@string/favorite"
+                    android:textColor="@color/md_theme_secondaryContainer"
+                    android:textSize="@dimen/_12mdp"
+
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_favoriteDescription"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_2mdp"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="@string/your_favorite_movie_and_tv_shows"
+                    android:textColor="@color/textColor_secondary"
+                    android:textSize="@dimen/_10mdp"
+                    app:layout_constraintStart_toEndOf="@+id/imageView"
+                    app:layout_constraintTop_toBottomOf="@+id/btn_favorite" />
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="@dimen/_16mdp"
+                android:layout_height="@dimen/_16mdp"
+                android:layout_marginVertical="@dimen/_16mdp"
+                android:src="@drawable/angle_right"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/textColor" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cv_watchlist"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_8mdp"
+        android:orientation="horizontal"
+        app:cardBackgroundColor="@color/cardBackgroundColor"
+        app:cardCornerRadius="@dimen/_8mdp"
+        app:cardElevation="@dimen/_2mdp"
+        android:layout_marginHorizontal="@dimen/_6mdp"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cv_favorite">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="@dimen/_8mdp">
+
+            <ImageView
+                android:id="@+id/img_watchlist"
+                android:layout_width="@dimen/_25mdp"
+                android:layout_height="@dimen/_25mdp"
+                android:layout_marginVertical="@dimen/_16mdp"
+                android:src="@drawable/bookmark"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/btn_icon" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_8mdp"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="@+id/img_watchlist"
+                app:layout_constraintStart_toEndOf="@+id/img_watchlist"
+                app:layout_constraintTop_toTopOf="@+id/img_watchlist">
+
+                <TextView
+                    android:id="@+id/tv_watchlistHeader"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:maxLines="2"
+                    android:text="@string/watchlist"
+                    android:textColor="@color/md_theme_secondaryContainer"
+                    android:textSize="@dimen/_12mdp"
+
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_watchlistDescription"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_2mdp"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="@string/movies_and_tv_shows_added_to_watchlist"
+                    android:textColor="@color/textColor_secondary"
+                    android:textSize="@dimen/_10mdp"
+                    app:layout_constraintStart_toEndOf="@+id/imageView"
+                    app:layout_constraintTop_toBottomOf="@+id/btn_favorite" />
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="@dimen/_16mdp"
+                android:layout_height="@dimen/_16mdp"
+                android:layout_marginVertical="@dimen/_16mdp"
+                android:src="@drawable/angle_right"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/textColor" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cv_ratings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_8mdp"
+        android:orientation="horizontal"
+        app:cardBackgroundColor="@color/cardBackgroundColor"
+        app:cardCornerRadius="@dimen/_8mdp"
+        app:cardElevation="@dimen/_2mdp"
+        android:layout_marginHorizontal="@dimen/_6mdp"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cv_watchlist">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="@dimen/_8mdp">
+
+            <ImageView
+                android:id="@+id/img_ratings"
+                android:layout_width="@dimen/_25mdp"
+                android:layout_height="@dimen/_25mdp"
+                android:layout_marginVertical="@dimen/_16mdp"
+                android:src="@drawable/star_secondary"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/btn_icon" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_8mdp"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="@+id/img_ratings"
+                app:layout_constraintStart_toEndOf="@+id/img_ratings"
+                app:layout_constraintTop_toTopOf="@+id/img_ratings">
+
+                <TextView
+                    android:id="@+id/tv_ratingsHeader"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="@string/ratings"
+                    android:textColor="@color/md_theme_secondaryContainer"
+                    android:textSize="@dimen/_12mdp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_ratingsDescription"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_2mdp"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:maxLines="2"
+                    android:text="@string/rated_movie_and_tv_shows"
+                    android:textColor="@color/textColor_secondary"
+                    android:textSize="@dimen/_10mdp"
+                    app:layout_constraintStart_toEndOf="@+id/imageView"
+                    app:layout_constraintTop_toBottomOf="@+id/btn_favorite" />
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="@dimen/_16mdp"
+                android:layout_height="@dimen/_16mdp"
+                android:layout_marginVertical="@dimen/_16mdp"
+                android:src="@drawable/angle_right"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/textColor" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cv_lists"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_8mdp"
+        android:orientation="horizontal"
+        app:cardBackgroundColor="@color/cardBackgroundColor"
+        app:cardCornerRadius="@dimen/_8mdp"
+        app:cardElevation="@dimen/_2mdp"
+        android:layout_marginHorizontal="@dimen/_6mdp"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cv_ratings">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="@dimen/_8mdp">
+
+            <ImageView
+                android:id="@+id/img_lists"
+                android:layout_width="@dimen/_25mdp"
+                android:layout_height="@dimen/_25mdp"
+                android:layout_marginVertical="@dimen/_16mdp"
+                android:src="@drawable/list"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/btn_icon" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_8mdp"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="@+id/img_lists"
+                app:layout_constraintStart_toEndOf="@+id/img_lists"
+                app:layout_constraintTop_toTopOf="@+id/img_lists">
+
+                <TextView
+                    android:id="@+id/tv_listsHeader"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="@string/lists"
+                    android:textColor="@color/md_theme_secondaryContainer"
+                    android:textSize="@dimen/_12mdp"
+
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_listsDescription"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_2mdp"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:maxLines="2"
+                    android:textColor="@color/textColor_secondary"
+                    android:textSize="@dimen/_10mdp"
+                    app:layout_constraintStart_toEndOf="@+id/imageView"
+                    app:layout_constraintTop_toBottomOf="@+id/btn_favorite"
+                    android:text="@string/create_updates_and_manage_yor_personal_lists" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="@dimen/_16mdp"
+                android:layout_height="@dimen/_16mdp"
+                android:layout_marginVertical="@dimen/_16mdp"
+                android:src="@drawable/angle_right"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/textColor" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_login"
+        android:layout_width="0dp"
+        android:layout_marginHorizontal="@dimen/_6mdp"
+
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_gradient"
+        android:paddingTop="@dimen/_8mdp"
+        android:layout_marginTop="@dimen/_30mdp"
+        android:paddingBottom="@dimen/_8mdp"
+        android:text="@string/sing_in_sing_up"
+        android:textAllCaps="false"
+        android:textSize="@dimen/_12font_mdp"
+        android:textStyle="bold"
+        app:backgroundTint="@null"
+        app:cornerRadius="@dimen/_8mdp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cv_lists" />
+</androidx.constraintlayout.widget.ConstraintLayout>
