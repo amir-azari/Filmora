@@ -37,32 +37,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_marginStart="@dimen/_5mdp">
+                android:layout_marginStart="@dimen/_6mdp">
 
                 <TextView
                     android:id="@+id/tv_name"
                     android:layout_width="@dimen/_70mdp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:textSize="@dimen/_11mdp"
-                    android:textColor="#CBCBCB"
+                    android:textSize="@dimen/_12mdp"
+                    android:textColor="@color/textColor"
                     android:textStyle="bold"
                     android:layout_marginBottom="@dimen/_1mdp"
-                    android:text="Amir"
+                    tools:text="Amir"
                     android:maxLines="1"
                     android:ellipsize="end" />
-
-                <TextView
-                    android:id="@+id/tv_username"
-                    android:layout_width="@dimen/_65mdp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textSize="@dimen/_8mdp"
-                    android:textColor="#70FDFDFD"
-                    android:text="amir_az"
-                    android:maxLines="1"
-                    android:ellipsize="end"
-                    android:layout_marginStart="@dimen/_5mdp" />
 
             </LinearLayout>
 

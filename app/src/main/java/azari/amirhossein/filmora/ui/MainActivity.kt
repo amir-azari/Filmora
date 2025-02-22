@@ -7,10 +7,15 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
@@ -18,12 +23,17 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import azari.amirhossein.filmora.R
 import azari.amirhossein.filmora.databinding.ActivityMainBinding
+import azari.amirhossein.filmora.utils.NetworkRequest
+import azari.amirhossein.filmora.utils.setClickAnimation
+import azari.amirhossein.filmora.viewmodel.SharedAccountViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     //Binding
     private lateinit var binding: ActivityMainBinding
+    private val accountViewModel: SharedAccountViewModel by viewModels()
 
     private lateinit var navController: NavController
     private lateinit var navHost: NavHostFragment
@@ -69,6 +79,8 @@ class MainActivity : AppCompatActivity() {
         // Setup Bottom Navigation
         binding.bottomNav.setupWithNavController(navController)
 
+        observeAccountDetails()
+        setupProfileClickListener()
         // Handle destination changes
         navController.addOnDestinationChangedListener { _, destination, _ ->
             handleDestinationChanges(destination.id)
@@ -93,7 +105,17 @@ class MainActivity : AppCompatActivity() {
                 supportActionBar?.setDisplayHomeAsUpEnabled(false)
             }
 
-            R.id.movieDetailFragment, R.id.tvDetailsFragment, R.id.mayLikeMoviesFragment, R.id.mayLikeTvsFragment, R.id.movieSectionFragment, R.id.tvSectionFragment, R.id.peopleSectionFragment , R.id.peopleDetailFragment , R.id.searchFragment-> {
+            R.id.movieDetailFragment,
+            R.id.tvDetailsFragment,
+            R.id.mayLikeMoviesFragment,
+            R.id.mayLikeTvsFragment,
+            R.id.movieSectionFragment,
+            R.id.tvSectionFragment,
+            R.id.peopleSectionFragment,
+            R.id.peopleDetailFragment,
+            R.id.searchFragment,
+            R.id.profileFragment -> {
+
                 hideBottomNavWithFade()
                 showToolbar()
                 hideProfileSection()
@@ -129,7 +151,8 @@ class MainActivity : AppCompatActivity() {
             R.id.creditsFragment,
             R.id.collectionFragment,
             R.id.castAndCrewFragment,
-            R.id.reviewsFragment
+            R.id.reviewsFragment,
+            R.id.profileFragment
         )
         val currentDestinationId = navController.currentDestination?.id
 
@@ -145,6 +168,7 @@ class MainActivity : AppCompatActivity() {
                 navController.navigate(R.id.actionToSearchFragment)
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -212,6 +236,33 @@ class MainActivity : AppCompatActivity() {
                 duration = 150
                 start()
             }
+        }
+    }
+
+    private fun observeAccountDetails() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                accountViewModel.accountDetails.collect { state ->
+                    when (state) {
+                        is NetworkRequest.Success -> {
+                            state.data?.let { account ->
+                                binding.toolbar.findViewById<TextView>(R.id.tv_name).text =
+                                    account.username
+
+                            }
+                        }
+
+                        else -> Unit
+                    }
+                }
+            }
+        }
+    }
+
+    private fun setupProfileClickListener() {
+        binding.imgProfile.setClickAnimation {
+            navController.navigate(R.id.actionToProfileFragment)
+
         }
     }
 
