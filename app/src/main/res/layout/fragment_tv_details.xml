@@ -207,31 +207,34 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/_8mdp"
+                android:visibility="gone"
                 app:cardBackgroundColor="@color/cardBackgroundColor"
                 app:cardCornerRadius="@dimen/_8mdp"
-                android:visibility="gone"
                 app:cardElevation="@dimen/_2mdp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/overview_container">
 
-                <LinearLayout
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/mediaActionSection"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="horizontal"
                     android:paddingHorizontal="@dimen/_6mdp"
-                    android:paddingVertical="@dimen/_6mdp"
-                    android:weightSum="4">
+                    android:paddingVertical="@dimen/_6mdp">
 
                     <!-- List Button with Text -->
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:id="@+id/ll_list"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
                         android:gravity="center"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:visibility="gone"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/ll_favorite"
+                        app:layout_constraintHorizontal_chainStyle="spread">
 
                         <com.google.android.material.floatingactionbutton.FloatingActionButton
                             android:id="@+id/btn_list"
@@ -256,11 +259,15 @@
 
                     <!-- Favorite Button with Text -->
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:id="@+id/ll_favorite"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
                         android:gravity="center"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        app:layout_constraintStart_toEndOf="@+id/ll_list"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/ll_watchlist">
 
                         <com.google.android.material.floatingactionbutton.FloatingActionButton
                             android:id="@+id/btn_favorite"
@@ -285,11 +292,15 @@
 
                     <!-- Watchlist Button with Text -->
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:id="@+id/ll_watchlist"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
                         android:gravity="center"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        app:layout_constraintStart_toEndOf="@+id/ll_favorite"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/ll_rate">
 
                         <com.google.android.material.floatingactionbutton.FloatingActionButton
                             android:id="@+id/btn_watchlist"
@@ -314,11 +325,15 @@
 
                     <!-- Rate Button with Text -->
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:id="@+id/ll_rate"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
                         android:gravity="center"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        app:layout_constraintStart_toEndOf="@+id/ll_watchlist"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent">
 
                         <com.google.android.material.floatingactionbutton.FloatingActionButton
                             android:id="@+id/btn_rate"
@@ -341,9 +356,10 @@
                             android:textStyle="bold" />
                     </LinearLayout>
 
-                </LinearLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
             </androidx.cardview.widget.CardView>
+
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cv_tvSeasons"
