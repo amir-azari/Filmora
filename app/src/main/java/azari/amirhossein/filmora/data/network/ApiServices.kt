@@ -88,6 +88,20 @@ interface ApiServices {
         @Query("page") page: Int = 1,
     ): Response<ResponseTvsList>
 
+    @GET("account/{account_id}/rated/movies")
+    suspend fun getRatedMovies(
+        @Path("account_id") accountId: Int,
+        @Query("session_id") sessionId: String,
+        @Query("page") page: Int = 1,
+    ): Response<ResponseMoviesList>
+
+    @GET("account/{account_id}/rated/tv")
+    suspend fun getRatedTvs(
+        @Path("account_id") accountId: Int,
+        @Query("session_id") sessionId: String,
+        @Query("page") page: Int = 1,
+    ): Response<ResponseTvsList>
+
 
     //---------Movies---------
 
