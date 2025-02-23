@@ -18,7 +18,7 @@ import androidx.paging.map
 import azari.amirhossein.filmora.R
 import azari.amirhossein.filmora.adapter.DataLoadStateAdapter
 import azari.amirhossein.filmora.adapter.TvsAdapter
-import azari.amirhossein.filmora.databinding.FragmentFavoriteTvsBinding
+import azari.amirhossein.filmora.databinding.FragmentFavoriteTvShowBinding
 import azari.amirhossein.filmora.models.tv.ResponseTvType
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.NetworkRequest
@@ -33,9 +33,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class FavoriteTvsFragment : Fragment() {
+class FavoriteTvShowFragment : Fragment() {
 
-    private var _binding: FragmentFavoriteTvsBinding? = null
+    private var _binding: FragmentFavoriteTvShowBinding? = null
     private val binding get() = _binding!!
 
     @Inject
@@ -47,7 +47,7 @@ class FavoriteTvsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        _binding = FragmentFavoriteTvsBinding.inflate(inflater, container, false)
+        _binding = FragmentFavoriteTvShowBinding.inflate(inflater, container, false)
         return binding.root
     }
 

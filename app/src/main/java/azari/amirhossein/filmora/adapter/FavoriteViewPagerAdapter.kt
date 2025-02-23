@@ -3,7 +3,7 @@ package azari.amirhossein.filmora.adapter
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import azari.amirhossein.filmora.ui.profile.favorite.FavoriteMovieFragment
-import azari.amirhossein.filmora.ui.profile.favorite.FavoriteTvsFragment
+import azari.amirhossein.filmora.ui.profile.favorite.FavoriteTvShowFragment
 
 class FavoriteViewPagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
 
@@ -12,7 +12,7 @@ class FavoriteViewPagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragme
     override fun createFragment(position: Int): Fragment {
         return when (position) {
             0 -> FavoriteMovieFragment()
-            1 -> FavoriteTvsFragment()
+            1 -> FavoriteTvShowFragment()
             else -> throw IllegalArgumentException("Invalid position $position")
         }
     }
