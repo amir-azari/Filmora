@@ -211,7 +211,6 @@
     <fragment
         android:id="@+id/movieDetailFragment"
         android:name="azari.amirhossein.filmora.ui.detail.movie.MovieDetailFragment"
-        android:label="fragment_detail"
         tools:layout="@layout/fragment_movie_detail" >
         <argument
             android:name="mediaType"
@@ -253,7 +252,6 @@
     <fragment
         android:id="@+id/tvDetailsFragment"
         android:name="azari.amirhossein.filmora.ui.detail.tv.TvDetailsFragment"
-        android:label="fragment_tv_details"
         tools:layout="@layout/fragment_tv_details">
 
         <argument
@@ -457,5 +455,18 @@
             app:exitAnim="@anim/nav_fade_out"
             app:popEnterAnim="@anim/nav_fade_in"
             app:popExitAnim="@anim/nav_fade_out"/>
+        <action
+            android:id="@+id/action_profileFragment_to_favoriteFragment"
+            app:destination="@id/favoriteFragment"
+            app:enterAnim="@anim/nav_fade_in"
+            app:exitAnim="@anim/nav_fade_out"
+            app:popEnterAnim="@anim/nav_fade_in"
+            app:popExitAnim="@anim/nav_fade_out"/>
     </fragment>
+
+    <fragment
+        android:id="@+id/favoriteFragment"
+        android:name="azari.amirhossein.filmora.ui.profile.favorite.FavoriteFragment"
+        android:label="Favorites"
+        tools:layout="@layout/fragment_favorite" />
 </navigation>
