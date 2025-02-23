@@ -74,6 +74,21 @@ interface ApiServices {
     ): Response<ResponseTvsList>
 
 
+    @GET("account/{account_id}/watchlist/movies")
+    suspend fun getWatchlistMovies(
+        @Path("account_id") accountId: Int,
+        @Query("session_id") sessionId: String,
+        @Query("page") page: Int = 1,
+    ): Response<ResponseMoviesList>
+
+    @GET("account/{account_id}/watchlist/tv")
+    suspend fun getWatchlistTvs(
+        @Path("account_id") accountId: Int,
+        @Query("session_id") sessionId: String,
+        @Query("page") page: Int = 1,
+    ): Response<ResponseTvsList>
+
+
     //---------Movies---------
 
     // Search Movie

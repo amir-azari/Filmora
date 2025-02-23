@@ -18,8 +18,10 @@ class RemoteDataSource @Inject constructor(private val api : ApiServices) {
     suspend fun getAccountDetails(sessionId : String) = api.getAccountDetails(sessionId)
 
     suspend fun getFavoriteMovies(accountId: Int, sessionId: String, page: Int) = api.getFavoriteMovies(accountId, sessionId, page)
-
     suspend fun getFavoriteTV(accountId: Int, sessionId: String, page: Int) = api.getFavoriteTvs(accountId, sessionId, page)
+
+    suspend fun getWatchlistMovies(accountId: Int, sessionId: String, page: Int) = api.getWatchlistMovies(accountId, sessionId, page)
+    suspend fun getWatchlistTvs(accountId: Int, sessionId: String, page: Int) = api.getWatchlistTvs(accountId, sessionId, page)
 
     //---------Movies---------
 
