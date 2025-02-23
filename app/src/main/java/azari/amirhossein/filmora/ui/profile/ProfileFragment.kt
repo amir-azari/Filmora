@@ -62,7 +62,13 @@ class ProfileFragment : Fragment() {
 
         binding.btnLogin.setOnClickListener {
             val action = ProfileFragmentDirections.actionProfileFragmentToLoginFragment(loginType =  Constants.LoginType.PROFILE)
-            findNavController().navigate(action)        }
+            findNavController().navigate(action)
+        }
+
+        binding.cvFavorite.setOnClickListener {
+            val action = ProfileFragmentDirections.actionProfileFragmentToFavoriteFragment()
+            findNavController().navigate(action)
+        }
     }
 
     override fun onDestroyView() {
