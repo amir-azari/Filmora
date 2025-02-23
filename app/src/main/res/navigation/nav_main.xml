@@ -464,7 +464,19 @@
             app:popExitAnim="@anim/nav_fade_out"/>
         <action
             android:id="@+id/action_profileFragment_to_watchlistFragment"
-            app:destination="@id/watchlistFragment" />
+            app:destination="@id/watchlistFragment"
+            app:enterAnim="@anim/nav_fade_in"
+            app:exitAnim="@anim/nav_fade_out"
+            app:popEnterAnim="@anim/nav_fade_in"
+            app:popExitAnim="@anim/nav_fade_out"/>
+
+        <action
+            android:id="@+id/action_profileFragment_to_ratedFragment"
+            app:destination="@id/ratedFragment"
+            app:enterAnim="@anim/nav_fade_in"
+            app:exitAnim="@anim/nav_fade_out"
+            app:popEnterAnim="@anim/nav_fade_in"
+            app:popExitAnim="@anim/nav_fade_out"/>
     </fragment>
 
     <fragment
@@ -477,4 +489,9 @@
         android:name="azari.amirhossein.filmora.ui.profile.watchlist.WatchlistFragment"
         android:label="Watchlist"
         tools:layout="@layout/fragment_watchlist" />
+    <fragment
+        android:id="@+id/ratedFragment"
+        android:name="azari.amirhossein.filmora.ui.profile.rated.RatedFragment"
+        android:label="Rating"
+        tools:layout="@layout/fragment_rated" />
 </navigation>
