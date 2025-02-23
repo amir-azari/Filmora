@@ -69,6 +69,11 @@ class ProfileFragment : Fragment() {
             val action = ProfileFragmentDirections.actionProfileFragmentToFavoriteFragment()
             findNavController().navigate(action)
         }
+
+        binding.cvWatchlist.setOnClickListener {
+            val action = ProfileFragmentDirections.actionProfileFragmentToWatchlistFragment()
+            findNavController().navigate(action)
+        }
     }
 
     override fun onDestroyView() {

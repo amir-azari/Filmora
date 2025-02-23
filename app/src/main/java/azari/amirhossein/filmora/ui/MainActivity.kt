@@ -153,7 +153,8 @@ class MainActivity : AppCompatActivity() {
             R.id.castAndCrewFragment,
             R.id.reviewsFragment,
             R.id.profileFragment,
-            R.id.favoriteFragment
+            R.id.favoriteFragment,
+            R.id.watchlistFragment
         )
         val currentDestinationId = navController.currentDestination?.id
 

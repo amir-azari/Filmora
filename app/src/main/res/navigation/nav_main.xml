@@ -462,6 +462,9 @@
             app:exitAnim="@anim/nav_fade_out"
             app:popEnterAnim="@anim/nav_fade_in"
             app:popExitAnim="@anim/nav_fade_out"/>
+        <action
+            android:id="@+id/action_profileFragment_to_watchlistFragment"
+            app:destination="@id/watchlistFragment" />
     </fragment>
 
     <fragment
@@ -469,4 +472,9 @@
         android:name="azari.amirhossein.filmora.ui.profile.favorite.FavoriteFragment"
         android:label="Favorites"
         tools:layout="@layout/fragment_favorite" />
+    <fragment
+        android:id="@+id/watchlistFragment"
+        android:name="azari.amirhossein.filmora.ui.profile.watchlist.WatchlistFragment"
+        android:label="Watchlist"
+        tools:layout="@layout/fragment_watchlist" />
 </navigation>
