@@ -17,6 +17,9 @@ class RemoteDataSource @Inject constructor(private val api : ApiServices) {
     //---------Profile(Account)---------
     suspend fun getAccountDetails(sessionId : String) = api.getAccountDetails(sessionId)
 
+    suspend fun getFavoriteMovies(accountId: Int, sessionId: String, page: Int) = api.getFavoriteMovies(accountId, sessionId, page)
+
+    suspend fun getFavoriteTV(accountId: Int, sessionId: String, page: Int) = api.getFavoriteTvs(accountId, sessionId, page)
 
     //---------Movies---------
 

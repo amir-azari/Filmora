@@ -60,6 +60,20 @@ interface ApiServices {
     @GET("account")
     suspend fun getAccountDetails(@Query("session_id") sessionId: String): Response<ResponseAccountDetails>
 
+    @GET("account/{account_id}/favorite/movies")
+    suspend fun getFavoriteMovies(@Path("account_id") accountId: Int,
+        @Query("session_id") sessionId: String,
+        @Query("page") page: Int = 1
+    ): Response<ResponseMoviesList>
+
+    @GET("account/{account_id}/favorite/tv")
+    suspend fun getFavoriteTvs(
+        @Path("account_id") accountId: Int,
+        @Query("session_id") sessionId: String,
+        @Query("page") page: Int = 1,
+    ): Response<ResponseTvsList>
+
+
     //---------Movies---------
 
     // Search Movie
