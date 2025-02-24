@@ -102,6 +102,7 @@ dependencies {
     implementation(libs.carouselrecyclerview)
 
     implementation("com.google.android.flexbox:flexbox:3.0.0")
+    implementation("com.github.ome450901:SimpleRatingBar:1.5.1")
 }
 kapt {
     correctErrorTypes = true
