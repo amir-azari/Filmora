@@ -10,16 +10,12 @@ import azari.amirhossein.filmora.models.authentication.ResponseToken
 import azari.amirhossein.filmora.models.celebtiry.ResponsePeopleDetails
 import azari.amirhossein.filmora.models.celebtiry.ResponsePopularCelebrity
 import azari.amirhossein.filmora.models.celebtiry.ResponseTrendingCelebrity
-import azari.amirhossein.filmora.models.detail.ResponseCollectionDetails
+import azari.amirhossein.filmora.models.detail.movie.ResponseCollectionDetails
 import azari.amirhossein.filmora.models.detail.ResponseCredit
 import azari.amirhossein.filmora.models.detail.ResponseImage
-import azari.amirhossein.filmora.models.detail.ResponseMovieDetails
-import azari.amirhossein.filmora.models.detail.ResponseMovieRecommendations
-import azari.amirhossein.filmora.models.detail.ResponseMovieSimilar
+import azari.amirhossein.filmora.models.detail.movie.ResponseMovieDetails
 import azari.amirhossein.filmora.models.detail.ResponseReviews
-import azari.amirhossein.filmora.models.detail.ResponseTvDetails
-import azari.amirhossein.filmora.models.detail.ResponseTvRecommendations
-import azari.amirhossein.filmora.models.detail.ResponseTvSimilar
+import azari.amirhossein.filmora.models.detail.tv.ResponseTvDetails
 import azari.amirhossein.filmora.models.detail.ResponseVideo
 import azari.amirhossein.filmora.models.home.ResponseTrendingList
 import azari.amirhossein.filmora.models.movie.ResponseTrendingMovie
@@ -125,24 +121,6 @@ interface ApiServices {
     @GET("movie/{movie_id}")
     suspend fun getMovieDetails(@Path("movie_id") movieId: Int , @QueryMap params: Map<String, String>): Response<ResponseMovieDetails>
 
-    @GET("movie/{movie_id}/credits")
-    suspend fun getMovieCredits(@Path("movie_id") movieId: Int): Response<ResponseCredit>
-
-    @GET("movie/{movie_id}/similar")
-    suspend fun getMovieSimilar (@Path("movie_id")movieId: Int): Response<ResponseMovieSimilar>
-
-    @GET("movie/{movie_id}/recommendations")
-    suspend fun getMovieRecommendations (@Path("movie_id")movieId: Int): Response<ResponseMovieRecommendations>
-
-    @GET("movie/{movie_id}/videos")
-    suspend fun getMovieVideos (@Path("movie_id")movieId: Int): Response<ResponseVideo>
-
-    @GET("movie/{movie_id}/images")
-    suspend fun getMovieImages (@Path("movie_id")movieId: Int): Response<ResponseImage>
-
-    @GET("movie/{movie_id}/reviews")
-    suspend fun getMovieReviews (@Path("movie_id")movieId: Int): Response<ResponseReviews>
-
     @GET("trending/movie/{time_window}")
     suspend fun getTrendingMovie(@Path("time_window") timeWindow: String , @Query("page") page: Int): Response<ResponseTrendingMovie>
 
@@ -182,24 +160,6 @@ interface ApiServices {
     // Detail
     @GET("tv/{series_id}")
     suspend fun getDetailsTvSeries(@Path("series_id") seriesId: Int , @QueryMap params: Map<String, String>): Response<ResponseTvDetails>
-
-    @GET("tv/{series_id}/credits")
-    suspend fun getTvCredits(@Path("series_id") seriesId: Int): Response<ResponseCredit>
-
-    @GET("tv/{series_id}/similar")
-    suspend fun getTvSimilar (@Path("series_id")seriesId: Int): Response<ResponseTvSimilar>
-
-    @GET("tv/{series_id}/recommendations")
-    suspend fun getTvRecommendations (@Path("series_id")seriesId: Int): Response<ResponseTvRecommendations>
-
-    @GET("tv/{series_id}/videos")
-    suspend fun getTvVideos (@Path("series_id")seriesId: Int): Response<ResponseVideo>
-
-    @GET("tv/{series_id}/images")
-    suspend fun getTvImages (@Path("series_id")seriesId: Int): Response<ResponseImage>
-
-    @GET("tv/{series_id}/reviews")
-    suspend fun getTvReviews (@Path("series_id")seriesId: Int): Response<ResponseReviews>
 
     @GET("trending/tv/{time_window}")
     suspend fun getTrendingTv(@Path("time_window") timeWindow: String , @Query("page") page: Int): Response<ResponseTrendingTv>
