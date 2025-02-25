@@ -8,16 +8,10 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
-import azari.amirhossein.filmora.R
 import azari.amirhossein.filmora.adapter.SectionedCastAndCrewAdapter
 import azari.amirhossein.filmora.databinding.FragmentCastAndCrewBinding
 import azari.amirhossein.filmora.models.detail.ResponseCredit
 import azari.amirhossein.filmora.utils.createFlexboxLayoutManager
-import com.google.android.flexbox.AlignItems
-import com.google.android.flexbox.FlexDirection
-import com.google.android.flexbox.FlexWrap
-import com.google.android.flexbox.FlexboxLayoutManager
-import com.google.android.flexbox.JustifyContent
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

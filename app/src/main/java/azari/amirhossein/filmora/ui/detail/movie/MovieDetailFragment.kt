@@ -13,29 +13,22 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.fragment.NavHostFragment.Companion
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import azari.amirhossein.filmora.R
 import azari.amirhossein.filmora.adapter.CastAndCrewAdapter
 import azari.amirhossein.filmora.adapter.GenresAdapter
-import azari.amirhossein.filmora.adapter.SeasonsAdapter
+import azari.amirhossein.filmora.adapter.MovieGalleryPagerAdapter
 import azari.amirhossein.filmora.adapter.SimilarMovieRecommendationsPagerAdapter
-import azari.amirhossein.filmora.adapter.VisualContentPagerAdapter
 import azari.amirhossein.filmora.data.SessionManager
 import azari.amirhossein.filmora.databinding.FragmentMovieDetailBinding
-import azari.amirhossein.filmora.models.ResponseLanguage
-import azari.amirhossein.filmora.models.detail.DetailMediaItem
 import azari.amirhossein.filmora.models.detail.ResponseCredit
 import azari.amirhossein.filmora.models.detail.ResponseMovieDetails
 import azari.amirhossein.filmora.models.detail.ResponseReviews
-import azari.amirhossein.filmora.ui.detail.people.PeopleDetailFragmentDirections
-import azari.amirhossein.filmora.ui.people.PeopleSectionFragmentDirections
+import azari.amirhossein.filmora.models.detail.SpokenLanguage
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.NetworkRequest
 import azari.amirhossein.filmora.utils.customize
-import azari.amirhossein.filmora.utils.getFullLanguageName
 import azari.amirhossein.filmora.utils.loadImageWithoutShimmer
 import azari.amirhossein.filmora.utils.observeLoginStatus
 import azari.amirhossein.filmora.utils.setClickAnimation
@@ -47,7 +40,7 @@ import azari.amirhossein.filmora.utils.toFormattedRuntime
 import azari.amirhossein.filmora.utils.toFormattedVoteAverage
 import azari.amirhossein.filmora.utils.toFormattedWithUnits
 import azari.amirhossein.filmora.utils.toSpokenLanguagesText
-import azari.amirhossein.filmora.viewmodel.MediaDetailsViewModel
+import azari.amirhossein.filmora.viewmodel.MovieDetailViewModel
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
@@ -70,14 +63,14 @@ class MovieDetailFragment : Fragment() {
     lateinit var castAndCrewAdapter: CastAndCrewAdapter
 
     private lateinit var similarAndRecommendationsPagerAdapter : SimilarMovieRecommendationsPagerAdapter
-    private var visualContentPagerAdapter: VisualContentPagerAdapter? = null
+    private var movieGalleryPagerAdapter: MovieGalleryPagerAdapter? = null
 
     // State variables for overview expansion and configuration
     private var isOverviewExpanded = false
     private val overviewMaxLines = Constants.Defaults.OVERVIEW_MAX_LINES
     private val overviewReviewsMaxLines = 3
 
-    private val viewModel: MediaDetailsViewModel by viewModels()
+    private val viewModel: MovieDetailViewModel by viewModels()
 
     // Arguments passed to the fragment
     private lateinit var args: MovieDetailFragmentArgs
@@ -114,7 +107,7 @@ class MovieDetailFragment : Fragment() {
         setActionBarTitle("")
 
         // Fetch media details
-        viewModel.getMediaDetails(mediaId, Constants.MediaType.MOVIE)
+        viewModel.getMovieDetails(mediaId)
         originalScaleType = binding.imgPoster.scaleType
 
         setupUI()
@@ -185,7 +178,7 @@ class MovieDetailFragment : Fragment() {
 
     }
 
-    private fun setupSimilarAndRecommendations(mediaItem: DetailMediaItem) {
+    private fun setupSimilarAndRecommendations(mediaItem: ResponseMovieDetails) {
         val hasSimilar = !mediaItem.similar?.results.isNullOrEmpty()
         val hasRecommendations = !mediaItem.recommendations?.results.isNullOrEmpty()
 
@@ -214,7 +207,7 @@ class MovieDetailFragment : Fragment() {
         }
     }
 
-    private fun setupVisual(mediaItem: DetailMediaItem) {
+    private fun setupVisual(mediaItem: ResponseMovieDetails) {
         val hasVideos = !mediaItem.videos?.results.isNullOrEmpty()
         val hasBackdrops = !mediaItem.images?.backdrops.isNullOrEmpty()
         val hasPosters = !mediaItem.images?.posters.isNullOrEmpty()
@@ -252,8 +245,8 @@ class MovieDetailFragment : Fragment() {
             binding.txtHeaderVisualContent.visibility = View.GONE
         }
 
-        visualContentPagerAdapter = VisualContentPagerAdapter(this, visibleTabs)
-        viewPager.adapter = visualContentPagerAdapter
+        movieGalleryPagerAdapter = MovieGalleryPagerAdapter(this, visibleTabs)
+        viewPager.adapter = movieGalleryPagerAdapter
 
         for (i in 0 until tabLayout.tabCount) {
             val tab = tabLayout.getTabAt(i)
@@ -291,7 +284,7 @@ class MovieDetailFragment : Fragment() {
     private fun observeViewModel() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.mediaDetails.collect { result ->
+                viewModel.movieDetails.collect { result ->
                     result.let { it ->
                         when (it) {
                             is NetworkRequest.Loading -> {
@@ -299,13 +292,11 @@ class MovieDetailFragment : Fragment() {
                             }
 
                             is NetworkRequest.Success -> {
-                                it.data?.let { mediaItem ->
+                                result.data?.let { movieDetail ->
                                     showSuccess()
-                                    bindUI(mediaItem)
-                                    viewModel.updateMediaDetails(mediaItem)
-                                    setupSimilarAndRecommendations(mediaItem)
-                                    setupVisual(mediaItem)
-
+                                    bindUI(movieDetail)
+                                    setupSimilarAndRecommendations(movieDetail)
+                                    setupVisual(movieDetail)
                                 }
                             }
 
@@ -383,11 +374,11 @@ class MovieDetailFragment : Fragment() {
         }
     }
 
-    private fun bindUI(data: DetailMediaItem) {
-        data.movie?.let { bindUiDetail(it) }
-        data.credits?.let { bindUiCast(it) }
-        data.language?.let { bindUiLanguage(it) }
-        data.reviews?.let { bindUiReview(it) }
+    private fun bindUI(data: ResponseMovieDetails) {
+        bindUiDetail(data)
+        bindUiCast(data.credits)
+        bindUiLanguage(data.spokenLanguages, data.originalLanguage)
+        bindUiReview(data.reviews!!)
     }
 
     private fun bindUiReview(data: ResponseReviews) {
@@ -541,14 +532,16 @@ class MovieDetailFragment : Fragment() {
     }
 
 
-    private fun bindUiCast(data: ResponseCredit) {
+    private fun bindUiCast(credits: ResponseCredit) {
         binding.layoutSeeAllCastAndCrew.setClickAnimation {
-            findNavController().navigate(
-                MovieDetailFragmentDirections.actionToCastAndCrewFragment(data)
-            )
+            credits.let {
+                findNavController().navigate(
+                    MovieDetailFragmentDirections.actionToCastAndCrewFragment(it)
+                )
+            }
         }
 
-        data.cast?.let { cast ->
+        credits.cast?.let { cast ->
             if (cast.isNotEmpty()) {
                 binding.cvCastAndCrew.visibility = View.VISIBLE
             }
@@ -557,21 +550,24 @@ class MovieDetailFragment : Fragment() {
             )
         }
     }
+
     private val clickCast = { cast : ResponseCredit.Cast ->
         val action = MovieDetailFragmentDirections.actionToPeopleDetailFragment(cast.id)
         findNavController().navigate(action)
     }
 
-    private fun bindUiLanguage(data: ResponseLanguage) {
-        val originalLanguage = binding.txtLanguageValue.text.toString()
-        originalLanguage.getFullLanguageName(data)
-            .also { binding.txtLanguageValue.text = it }
+    private fun bindUiLanguage(spokenLanguages: List<SpokenLanguage?>?, originalLanguage: String?) {
+        val primaryLanguage = spokenLanguages?.filterNotNull()
+            ?.find { it.iso6391 == originalLanguage }
+            ?.englishName ?: Constants.Defaults.NOT_APPLICABLE
+
+        binding.txtLanguageValue.text = primaryLanguage
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-        visualContentPagerAdapter = null
+        movieGalleryPagerAdapter = null
 
     }
 }

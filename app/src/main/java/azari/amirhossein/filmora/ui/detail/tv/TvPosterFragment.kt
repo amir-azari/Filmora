@@ -11,46 +11,48 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import azari.amirhossein.filmora.adapter.RecommendationTvAdapter
-import azari.amirhossein.filmora.databinding.FragmentRecommendationsTvBinding
-import azari.amirhossein.filmora.models.detail.ResponseTvDetails
+import azari.amirhossein.filmora.adapter.PosterAdapter
+import azari.amirhossein.filmora.databinding.FragmentTvPosterBinding
+import azari.amirhossein.filmora.models.detail.ResponseImage
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.NetworkRequest
+import azari.amirhossein.filmora.utils.setClickAnimation
 import azari.amirhossein.filmora.viewmodel.TvDetailViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class RecommendationsTvFragment : Fragment() {
-    private var _binding: FragmentRecommendationsTvBinding? = null
+class TvPosterFragment : Fragment(){
+    //Binding
+    private var _binding: FragmentTvPosterBinding? = null
     private val binding get() = _binding!!
 
     private val viewModel: TvDetailViewModel by viewModels({ requireParentFragment() })
-    private val recommendationsTvAdapter by lazy { RecommendationTvAdapter() }
+    private val posterAdapter by lazy { PosterAdapter() }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
-        _binding = FragmentRecommendationsTvBinding.inflate(inflater, container, false)
+        // Inflate the layout for this fragment
+        _binding = FragmentTvPosterBinding.inflate(inflater, container, false)
         return binding.root
-    }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        setupRecyclerView()
-        observeRecommendationTvs()
-        recommendationsTvAdapter.setOnItemClickListener(clickTv)
 
     }
-    private fun observeRecommendationTvs() {
+    private fun observePoster() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.tvDetails.collect { result ->
                     when (result) {
                         is NetworkRequest.Success -> {
-                            recommendationsTvAdapter.differ.submitList(result.data?.recommendations?.results)
+                            binding.btnAllPosters.visibility =View.GONE
+                            if (result.data?.images?.posters?.size!! > 10){
+                                binding.btnAllPosters.visibility =View.VISIBLE
+                            }
+                            posterAdapter.submitList(result.data.images.posters)
+                            navTo(result.data.images)
                         }
 
                         else -> Unit
@@ -59,20 +61,35 @@ class RecommendationsTvFragment : Fragment() {
             }
         }
     }
-    private fun setupRecyclerView() {
-        binding.rvRecommendations.apply {
-            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-            adapter = recommendationsTvAdapter
-        }
-    }
-    //Click media
-    private val clickTv = { tv: ResponseTvDetails.Recommendations.Result ->
-        val action = RecommendationsTvFragmentDirections.actionToTvDetail(Constants.MediaType.TV,tv.id)
-        findNavController().navigate(action)
+
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setupRecyclerView()
+        observePoster()
 
     }
+    private fun navTo(data : ResponseImage){
+        binding.btnAllPosters.setClickAnimation {
+            val action = TvPosterFragmentDirections.actionToMediaGalleryFragment(media = data, type = Constants.MediaGalleryType.POSTER , video = null)
+            findNavController().navigate(
+                action
+            )
+        }
+    }
+    private fun setupRecyclerView() {
+        binding.rvPoster.apply {
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            adapter = posterAdapter
+            setHasFixedSize(false)
+
+        }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
+
+
 }

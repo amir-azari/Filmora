@@ -423,26 +423,7 @@
             app:argType="azari.amirhossein.filmora.models.detail.ResponseVideo"
             app:nullable="true" />
     </fragment>
-    <fragment
-        android:id="@+id/backdropFragment"
-        android:name="azari.amirhossein.filmora.ui.detail.BackdropFragment"
-        android:label="fragment_backdrop"
-        tools:layout="@layout/fragment_backdrop" >
 
-    </fragment>
-    <fragment
-        android:id="@+id/posterFragment"
-        android:name="azari.amirhossein.filmora.ui.detail.PosterFragment"
-        android:label="fragment_poster"
-        tools:layout="@layout/fragment_poster" >
-
-    </fragment>
-    <fragment
-        android:id="@+id/videoFragment"
-        android:name="azari.amirhossein.filmora.ui.detail.VideoFragment"
-        android:label="fragment_video"
-        tools:layout="@layout/fragment_video" >
-    </fragment>
     <fragment
         android:id="@+id/profileFragment"
         android:name="azari.amirhossein.filmora.ui.profile.ProfileFragment"
@@ -494,4 +475,34 @@
         android:name="azari.amirhossein.filmora.ui.profile.rated.RatedFragment"
         android:label="Rating"
         tools:layout="@layout/fragment_rated" />
+    <fragment
+        android:id="@+id/movieVideoFragment"
+        android:name="azari.amirhossein.filmora.ui.detail.movie.MovieVideoFragment"
+        android:label="fragment_movie_video"
+        tools:layout="@layout/fragment_movie_video" />
+    <fragment
+        android:id="@+id/moviePosterFragment"
+        android:name="azari.amirhossein.filmora.ui.detail.movie.MoviePosterFragment"
+        android:label="fragment_movie_poster"
+        tools:layout="@layout/fragment_movie_poster" />
+    <fragment
+        android:id="@+id/movieBackdropFragment"
+        android:name="azari.amirhossein.filmora.ui.detail.movie.MovieBackdropFragment"
+        android:label="fragment_movie_backdrop"
+        tools:layout="@layout/fragment_movie_backdrop" />
+    <fragment
+        android:id="@+id/tvBackdropFragment"
+        android:name="azari.amirhossein.filmora.ui.detail.tv.TvBackdropFragment"
+        android:label="fragment_tv_backdrop"
+        tools:layout="@layout/fragment_tv_backdrop" />
+    <fragment
+        android:id="@+id/tvPosterFragment"
+        android:name="azari.amirhossein.filmora.ui.detail.tv.TvPosterFragment"
+        android:label="fragment_tv_poster"
+        tools:layout="@layout/fragment_tv_poster" />
+    <fragment
+        android:id="@+id/tvVideoFragment"
+        android:name="azari.amirhossein.filmora.ui.detail.tv.TvVideoFragment"
+        android:label="fragment_tv_video"
+        tools:layout="@layout/fragment_tv_video" />
 </navigation>

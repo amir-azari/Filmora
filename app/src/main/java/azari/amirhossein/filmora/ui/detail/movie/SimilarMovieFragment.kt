@@ -13,10 +13,10 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import azari.amirhossein.filmora.adapter.SimilarMovieAdapter
 import azari.amirhossein.filmora.databinding.FragmentSimilarMovieBinding
-import azari.amirhossein.filmora.models.detail.ResponseMovieSimilar
+import azari.amirhossein.filmora.models.detail.ResponseMovieDetails
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.NetworkRequest
-import azari.amirhossein.filmora.viewmodel.MediaDetailsViewModel
+import azari.amirhossein.filmora.viewmodel.MovieDetailViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -25,7 +25,7 @@ class SimilarMovieFragment : Fragment() {
     private var _binding: FragmentSimilarMovieBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: MediaDetailsViewModel by viewModels({ requireParentFragment() })
+    private val viewModel: MovieDetailViewModel by viewModels({ requireParentFragment() })
     private val similarMovieAdapter by lazy { SimilarMovieAdapter() }
 
 
@@ -47,10 +47,10 @@ class SimilarMovieFragment : Fragment() {
     private fun observeSimilarMovies() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.movieSimilar.collect { result ->
+                viewModel.movieDetails.collect { result ->
                     when (result) {
                         is NetworkRequest.Success -> {
-                            similarMovieAdapter.differ.submitList(result.data?.results)
+                            similarMovieAdapter.differ.submitList(result.data?.similar?.results)
                         }
 
                         else -> Unit
@@ -67,7 +67,7 @@ class SimilarMovieFragment : Fragment() {
         }
     }
 
-    private val clickMovie = { movie: ResponseMovieSimilar.Result ->
+    private val clickMovie = { movie: ResponseMovieDetails.Similar.Result ->
         val action = SimilarMovieFragmentDirections.actionToMovieDetail(Constants.MediaType.MOVIE, movie.id)
         findNavController().navigate(action)
 

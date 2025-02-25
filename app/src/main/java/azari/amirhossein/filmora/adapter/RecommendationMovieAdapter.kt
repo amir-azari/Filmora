@@ -8,19 +8,16 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import azari.amirhossein.filmora.R
 import azari.amirhossein.filmora.databinding.ItemSimilarRemommendationBinding
-import azari.amirhossein.filmora.models.detail.ResponseMovieRecommendations
-import azari.amirhossein.filmora.models.detail.ResponseMovieSimilar
+import azari.amirhossein.filmora.models.detail.ResponseMovieDetails
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.loadImageWithShimmer
 import azari.amirhossein.filmora.utils.setClickAnimation
-import javax.inject.Inject
-import javax.inject.Singleton
 
 class RecommendationMovieAdapter :
     RecyclerView.Adapter<RecommendationMovieAdapter.ViewHolder>() {
 
-    private var onItemClickListener: ((ResponseMovieRecommendations.Result) -> Unit)? = null
-    fun setOnItemClickListener(listener: (ResponseMovieRecommendations.Result) -> Unit) {
+    private var onItemClickListener: ((ResponseMovieDetails.Recommendations.Result) -> Unit)? = null
+    fun setOnItemClickListener(listener: (ResponseMovieDetails.Recommendations.Result) -> Unit) {
         onItemClickListener = listener
     }
 
@@ -28,7 +25,7 @@ class RecommendationMovieAdapter :
         RecyclerView.ViewHolder(binding.root) {
         private val originalScaleType: ImageView.ScaleType = binding.imgPoster.scaleType
 
-        fun bind(item: ResponseMovieRecommendations.Result) {
+        fun bind(item: ResponseMovieDetails.Recommendations.Result) {
             binding.apply {
                 val baseUrl = Constants.Network.IMAGE_BASE_URL
                 val fullPosterPath = if (item.posterPath.isNullOrEmpty()) {
@@ -79,12 +76,12 @@ class RecommendationMovieAdapter :
         }
     }
 
-    private val diffCallback = object : DiffUtil.ItemCallback<ResponseMovieRecommendations.Result>() {
-        override fun areItemsTheSame(oldItem: ResponseMovieRecommendations.Result, newItem: ResponseMovieRecommendations.Result): Boolean {
+    private val diffCallback = object : DiffUtil.ItemCallback<ResponseMovieDetails.Recommendations.Result>() {
+        override fun areItemsTheSame(oldItem: ResponseMovieDetails.Recommendations.Result, newItem: ResponseMovieDetails.Recommendations.Result): Boolean {
             return oldItem.id == newItem.id
         }
 
-        override fun areContentsTheSame(oldItem: ResponseMovieRecommendations.Result, newItem: ResponseMovieRecommendations.Result): Boolean {
+        override fun areContentsTheSame(oldItem: ResponseMovieDetails.Recommendations.Result, newItem: ResponseMovieDetails.Recommendations.Result): Boolean {
             return oldItem == newItem
         }
     }

@@ -4,10 +4,10 @@ import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import azari.amirhossein.filmora.R
@@ -18,8 +18,9 @@ import azari.amirhossein.filmora.databinding.FragmentMediaGalleryBinding
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.VerticalSpaceItemDecoration
 import azari.amirhossein.filmora.utils.createFlexboxLayoutManager
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class MediaGalleryFragment : Fragment() {
     //Binding
     private var _binding : FragmentMediaGalleryBinding? = null

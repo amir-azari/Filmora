@@ -1,4 +1,4 @@
-package azari.amirhossein.filmora.ui.detail
+package azari.amirhossein.filmora.ui.detail.tv
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
@@ -15,25 +15,22 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import azari.amirhossein.filmora.adapter.VideoAdapter
-import azari.amirhossein.filmora.databinding.FragmentVideoBinding
-import azari.amirhossein.filmora.models.detail.ResponseImage
+import azari.amirhossein.filmora.databinding.FragmentTvVideoBinding
 import azari.amirhossein.filmora.models.detail.ResponseVideo
-import azari.amirhossein.filmora.models.movie.ResponseTrendingMovie
-import azari.amirhossein.filmora.ui.movies.MovieFragmentDirections
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.NetworkRequest
 import azari.amirhossein.filmora.utils.setClickAnimation
-import azari.amirhossein.filmora.viewmodel.MediaDetailsViewModel
+import azari.amirhossein.filmora.viewmodel.TvDetailViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class VideoFragment : Fragment() {
+class TvVideoFragment : Fragment() {
     //Binding
-    private var _binding: FragmentVideoBinding? = null
+    private var _binding: FragmentTvVideoBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: MediaDetailsViewModel by viewModels({ requireParentFragment() })
+    private val viewModel: TvDetailViewModel by viewModels({ requireParentFragment() })
     private val videoAdapter by lazy { VideoAdapter() }
 
     override fun onCreateView(
@@ -42,7 +39,7 @@ class VideoFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View {
         // Inflate the layout for this fragment
-        _binding = FragmentVideoBinding.inflate(inflater, container, false)
+        _binding = FragmentTvVideoBinding.inflate(inflater, container, false)
         return binding.root
 
 
@@ -50,15 +47,15 @@ class VideoFragment : Fragment() {
     private fun observeVideos() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.videos.collect { result ->
+                viewModel.tvDetails.collect { result ->
                     when (result) {
                         is NetworkRequest.Success -> {
                             binding.btnAllVideos.visibility =View.GONE
-                            if (result.data?.results?.size!! > 10){
+                            if (result.data?.videos?.results?.size!! > 10){
                                 binding.btnAllVideos.visibility =View.VISIBLE
                             }
-                            videoAdapter.submitList(result.data.results)
-                            navTo(result.data)
+                            videoAdapter.submitList(result.data.videos.results)
+                            navTo(result.data.videos)
                         }
 
                         else -> Unit
@@ -69,7 +66,7 @@ class VideoFragment : Fragment() {
     }
     private fun navTo(data : ResponseVideo){
         binding.btnAllVideos.setClickAnimation {
-            val action = BackdropFragmentDirections.actionToMediaGalleryFragment(media = null, type = Constants.MediaGalleryType.VIDEO , video = data)
+            val action = TvVideoFragmentDirections.actionToMediaGalleryFragment(media = null, type = Constants.MediaGalleryType.VIDEO , video = data)
             findNavController().navigate(
                 action
             )

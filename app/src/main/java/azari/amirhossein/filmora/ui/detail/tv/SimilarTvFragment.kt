@@ -13,10 +13,10 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import azari.amirhossein.filmora.adapter.SimilarTvAdapter
 import azari.amirhossein.filmora.databinding.FragmentSimilarTvBinding
-import azari.amirhossein.filmora.models.detail.ResponseTvSimilar
+import azari.amirhossein.filmora.models.detail.ResponseTvDetails
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.NetworkRequest
-import azari.amirhossein.filmora.viewmodel.MediaDetailsViewModel
+import azari.amirhossein.filmora.viewmodel.TvDetailViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -25,7 +25,7 @@ class SimilarTvFragment : Fragment() {
     private var _binding: FragmentSimilarTvBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: MediaDetailsViewModel by viewModels({ requireParentFragment() })
+    private val viewModel: TvDetailViewModel by viewModels({ requireParentFragment() })
     private val similarTvAdapter by lazy { SimilarTvAdapter() }
 
     override fun onCreateView(
@@ -47,10 +47,10 @@ class SimilarTvFragment : Fragment() {
     private fun observeSimilarTvs() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.tvSimilar.collect { result ->
+                viewModel.tvDetails.collect { result ->
                     when (result) {
                         is NetworkRequest.Success -> {
-                            similarTvAdapter.differ.submitList(result.data?.results)
+                            similarTvAdapter.differ.submitList(result.data?.similar?.results)
                         }
 
                         else -> Unit
@@ -66,7 +66,7 @@ class SimilarTvFragment : Fragment() {
         }
     }
     //Click media
-    private val clickTv = { tv: ResponseTvSimilar.Result ->
+    private val clickTv = { tv: ResponseTvDetails.Similar.Result ->
         val action = SimilarTvFragmentDirections.actionToTvDetail(Constants.MediaType.TV,tv.id)
         findNavController().navigate(action)
 

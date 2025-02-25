@@ -1,19 +1,14 @@
 package azari.amirhossein.filmora.ui.detail
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.navigation.fragment.findNavController
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import azari.amirhossein.filmora.R
-import azari.amirhossein.filmora.adapter.CastAndCrewAdapter
 import azari.amirhossein.filmora.adapter.ReviewAdapter
-import azari.amirhossein.filmora.databinding.FragmentPosterBinding
 import azari.amirhossein.filmora.databinding.FragmentReviewsBinding
-import azari.amirhossein.filmora.ui.detail.people.CreditsFragmentArgs
 import azari.amirhossein.filmora.utils.createFlexboxLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject

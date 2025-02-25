@@ -1,4 +1,4 @@
-package azari.amirhossein.filmora.ui.detail
+package azari.amirhossein.filmora.ui.detail.movie
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,23 +12,22 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import azari.amirhossein.filmora.adapter.BackdropAdapter
-import azari.amirhossein.filmora.databinding.FragmentBackdropBinding
+import azari.amirhossein.filmora.databinding.FragmentMovieBackdropBinding
 import azari.amirhossein.filmora.models.detail.ResponseImage
-import azari.amirhossein.filmora.ui.detail.movie.MovieDetailFragmentDirections
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.NetworkRequest
 import azari.amirhossein.filmora.utils.setClickAnimation
-import azari.amirhossein.filmora.viewmodel.MediaDetailsViewModel
+import azari.amirhossein.filmora.viewmodel.MovieDetailViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class BackdropFragment : Fragment() {
+class MovieBackdropFragment : Fragment() {
     //Binding
-    private var _binding: FragmentBackdropBinding? = null
+    private var _binding: FragmentMovieBackdropBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: MediaDetailsViewModel by viewModels({ requireParentFragment() })
+    private val viewModel: MovieDetailViewModel by viewModels({ requireParentFragment() })
 
     private val backdropAdapter by lazy { BackdropAdapter() }
 
@@ -39,7 +38,7 @@ class BackdropFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View {
         // Inflate the layout for this fragment
-        _binding = FragmentBackdropBinding.inflate(inflater, container, false)
+        _binding = FragmentMovieBackdropBinding.inflate(inflater, container, false)
         return binding.root
 
 
@@ -47,15 +46,15 @@ class BackdropFragment : Fragment() {
     private fun observeBackdrops() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.images.collect { result ->
+                viewModel.movieDetails.collect { result ->
                     when (result) {
                         is NetworkRequest.Success -> {
                             binding.btnAllBackdrops.visibility =View.GONE
-                            if (result.data?.backdrops?.size!! > 10){
+                            if (result.data?.images?.backdrops?.size!! > 10){
                                 binding.btnAllBackdrops.visibility =View.VISIBLE
                             }
-                            backdropAdapter.submitList(result.data.backdrops)
-                            navTo(result.data)
+                            backdropAdapter.submitList(result.data.images.backdrops)
+                            navTo(result.data.images)
                         }
 
                         else -> Unit
@@ -74,7 +73,7 @@ class BackdropFragment : Fragment() {
 
     private fun navTo(data :ResponseImage){
         binding.btnAllBackdrops.setClickAnimation {
-            val action = BackdropFragmentDirections.actionToMediaGalleryFragment(media = data, type = Constants.MediaGalleryType.BACKDROP , video = null)
+            val action = MovieBackdropFragmentDirections.actionToMediaGalleryFragment(media = data, type = Constants.MediaGalleryType.BACKDROP , video = null)
             findNavController().navigate(
                 action
             )

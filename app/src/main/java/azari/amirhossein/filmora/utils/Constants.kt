@@ -88,6 +88,8 @@ object Constants {
         const val HOME_TABLE = "home_table"
         const val MOVIES_TABLE = "movies_table"
         const val MEDIA_DETAIL_TABLE = "media_detail_table"
+        const val MOVIE_DETAIL_TABLE = "movie_detail_table"
+        const val TV_DETAIL_TABLE = "tv_detail_table"
         const val PEOPLE_DETAIL_TABLE = "People_detail_table"
         const val TV_SHOW_TABLE = "tv_show_table"
         const val CELEBRITIES_TABLE = "celebrities_table"

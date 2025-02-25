@@ -123,7 +123,7 @@ interface ApiServices {
 
     // Detail
     @GET("movie/{movie_id}")
-    suspend fun getMovieDetails(@Path("movie_id") movieId: Int): Response<ResponseMovieDetails>
+    suspend fun getMovieDetails(@Path("movie_id") movieId: Int , @QueryMap params: Map<String, String>): Response<ResponseMovieDetails>
 
     @GET("movie/{movie_id}/credits")
     suspend fun getMovieCredits(@Path("movie_id") movieId: Int): Response<ResponseCredit>
@@ -181,7 +181,7 @@ interface ApiServices {
 
     // Detail
     @GET("tv/{series_id}")
-    suspend fun getDetailsTvSeries(@Path("series_id") seriesId: Int): Response<ResponseTvDetails>
+    suspend fun getDetailsTvSeries(@Path("series_id") seriesId: Int , @QueryMap params: Map<String, String>): Response<ResponseTvDetails>
 
     @GET("tv/{series_id}/credits")
     suspend fun getTvCredits(@Path("series_id") seriesId: Int): Response<ResponseCredit>

@@ -4,11 +4,12 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import azari.amirhossein.filmora.data.database.entity.MediaDetailEntity
 import azari.amirhossein.filmora.data.database.entity.HomeEntity
+import azari.amirhossein.filmora.data.database.entity.MovieDetailEntity
 import azari.amirhossein.filmora.data.database.entity.MovieEntity
 import azari.amirhossein.filmora.data.database.entity.PeopleDetailEntity
 import azari.amirhossein.filmora.data.database.entity.PeopleEntity
+import azari.amirhossein.filmora.data.database.entity.TvDetailEntity
 import azari.amirhossein.filmora.data.database.entity.TvEntity
 import azari.amirhossein.filmora.utils.Constants
 import kotlinx.coroutines.flow.Flow
@@ -44,14 +45,23 @@ interface AppDao {
     suspend fun savePeopleData(data: PeopleEntity)
 
     // Media Detail
-    @Query("SELECT * FROM ${Constants.Database.MEDIA_DETAIL_TABLE} WHERE id = :id")
-    fun getMediaDetailById(id: Int): Flow<MediaDetailEntity?>
+    @Query("SELECT * FROM ${Constants.Database.MOVIE_DETAIL_TABLE} WHERE id = :id")
+    fun getMovieDetailById(id: Int): Flow<MovieDetailEntity?>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun saveMediaDetail(detail: MediaDetailEntity)
+    suspend fun saveMovieDetail(detail: MovieDetailEntity)
 
-    @Query("DELETE FROM ${Constants.Database.MEDIA_DETAIL_TABLE} WHERE timestamp < :expirationTime")
-    suspend fun deleteExpiredMediaDetailData(expirationTime: Long)
+    @Query("DELETE FROM ${Constants.Database.MOVIE_DETAIL_TABLE} WHERE timestamp < :expirationTime")
+    suspend fun deleteExpiredMovieDetailData(expirationTime: Long)
+
+    @Query("SELECT * FROM ${Constants.Database.TV_DETAIL_TABLE} WHERE id = :id")
+    fun getTvDetailById(id: Int): Flow<TvDetailEntity?>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun saveTvDetail(detail: TvDetailEntity)
+
+    @Query("DELETE FROM ${Constants.Database.TV_DETAIL_TABLE} WHERE timestamp < :expirationTime")
+    suspend fun deleteExpiredTvDetailData(expirationTime: Long)
 
     // People Detail
     @Query("SELECT * FROM ${Constants.Database.PEOPLE_DETAIL_TABLE} WHERE id = :id")

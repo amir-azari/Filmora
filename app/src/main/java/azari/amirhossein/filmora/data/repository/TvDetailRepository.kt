@@ -1,9 +1,9 @@
 package azari.amirhossein.filmora.data.repository
 
-import azari.amirhossein.filmora.data.database.entity.PeopleDetailEntity
+import azari.amirhossein.filmora.data.database.entity.TvDetailEntity
 import azari.amirhossein.filmora.data.source.LocalDataSource
 import azari.amirhossein.filmora.data.source.RemoteDataSource
-import azari.amirhossein.filmora.models.celebtiry.ResponsePeopleDetails
+import azari.amirhossein.filmora.models.detail.ResponseTvDetails
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.NetworkRequest
 import azari.amirhossein.filmora.utils.NetworkResponse
@@ -13,45 +13,47 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
+import javax.inject.Singleton
 
-class PeopleDetailsRepository @Inject constructor(
+@Singleton
+class TvDetailRepository @Inject constructor(
     private val remote: RemoteDataSource,
     private val local: LocalDataSource,
 ) {
-    fun getPeopleDetails(id: Int): Flow<NetworkRequest<ResponsePeopleDetails>> = flow {
-        val params = mapOf("append_to_response" to "movie_credits,tv_credits,images")
+    fun getTvDetails(id: Int): Flow<NetworkRequest<ResponseTvDetails>> = flow {
+        val params =
+            mapOf("append_to_response" to "credits,similar,recommendations,videos,images,reviews,account_states")
         emit(NetworkRequest.Loading())
         try {
-            val response = remote.getPeopleDetails(id, params)
+            val response = remote.getTvDetails(id, params)
             val networkResponse = NetworkResponse(response).handleNetworkResponse()
-            networkResponse.data?.let { local.savePeopleDetail(it.toEntity()) }
+            networkResponse.data?.let { local.saveTvDetail(it.toEntity()) }
             emit(networkResponse)
-
-        } catch (e: Exception) {
+        }catch (e: Exception) {
             emit(NetworkRequest.Error(e.message ?: "An error occurred"))
         }
     }.flowOn(Dispatchers.IO)
 
-    private fun ResponsePeopleDetails.toEntity(): PeopleDetailEntity =
-        PeopleDetailEntity(
+    suspend fun deleteExpiredDetails(expirationTime: Long) {
+        local.deleteExpiredTvDetailData(expirationTime)
+    }
+
+    private fun ResponseTvDetails.toEntity(): TvDetailEntity =
+        TvDetailEntity(
             id = this.id ?: 0,
-            detail = this,
+            tv = this,
             timestamp = System.currentTimeMillis()
         )
 
-    private fun PeopleDetailEntity.toPeopleDetail(): ResponsePeopleDetails =
-        this.detail
-    suspend fun deleteExpiredDetails(expirationTime: Long) {
-        local.deleteExpiredPeopleDetailData(expirationTime)
-    }
+    private fun TvDetailEntity.toTvDetail(): ResponseTvDetails =
+        this.tv
 
-    // Get cached data
-    suspend fun getCachedData(id :Int): NetworkRequest<ResponsePeopleDetails> {
+    suspend fun getCachedData(id :Int): NetworkRequest<ResponseTvDetails> {
         return try {
             // Try to get cached data
-            val cachedData = local.getPeopleDetailById(id).firstOrNull()
+            val cachedData = local.getTvDetailById(id).firstOrNull()
             if (cachedData != null) {
-                NetworkRequest.Success(cachedData.toPeopleDetail())
+                NetworkRequest.Success(cachedData.toTvDetail())
             } else {
                 NetworkRequest.Error(Constants.Message.NO_INTERNET_CONNECTION)
             }

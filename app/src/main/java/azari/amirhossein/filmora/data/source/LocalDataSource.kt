@@ -1,11 +1,12 @@
 package azari.amirhossein.filmora.data.source
 
 import azari.amirhossein.filmora.data.database.AppDao
-import azari.amirhossein.filmora.data.database.entity.MediaDetailEntity
 import azari.amirhossein.filmora.data.database.entity.HomeEntity
+import azari.amirhossein.filmora.data.database.entity.MovieDetailEntity
 import azari.amirhossein.filmora.data.database.entity.MovieEntity
 import azari.amirhossein.filmora.data.database.entity.PeopleDetailEntity
 import azari.amirhossein.filmora.data.database.entity.PeopleEntity
+import azari.amirhossein.filmora.data.database.entity.TvDetailEntity
 import azari.amirhossein.filmora.data.database.entity.TvEntity
 import javax.inject.Inject
 class LocalDataSource @Inject constructor(private val dao: AppDao) {
@@ -24,10 +25,15 @@ class LocalDataSource @Inject constructor(private val dao: AppDao) {
     // People
     suspend fun savePeopleData(entity: PeopleEntity) = dao.savePeopleData(entity)
     fun getPeopleData() = dao.getPeopleData()
+
     // Media Detail
-    suspend fun saveMediaDetail(entity: MediaDetailEntity) = dao.saveMediaDetail(entity)
-    fun getMediaDetailById(id: Int) = dao.getMediaDetailById(id)
-    suspend fun deleteExpiredMediaDetailData(expirationTime: Long) = dao.deleteExpiredMediaDetailData(expirationTime)
+    suspend fun saveMovieDetail(entity: MovieDetailEntity) = dao.saveMovieDetail(entity)
+    fun getMovieDetailById(id: Int) = dao.getMovieDetailById(id)
+    suspend fun deleteExpiredMovieDetailData(expirationTime: Long) = dao.deleteExpiredMovieDetailData(expirationTime)
+
+    suspend fun saveTvDetail(entity: TvDetailEntity) = dao.saveTvDetail(entity)
+    fun getTvDetailById(id: Int) = dao.getTvDetailById(id)
+    suspend fun deleteExpiredTvDetailData(expirationTime: Long) = dao.deleteExpiredTvDetailData(expirationTime)
 
     // People Detail
     suspend fun savePeopleDetail(entity: PeopleDetailEntity) = dao.savePeopleDetail(entity)

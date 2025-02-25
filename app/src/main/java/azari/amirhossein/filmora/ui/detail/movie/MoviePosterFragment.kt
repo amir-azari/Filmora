@@ -1,4 +1,4 @@
-package azari.amirhossein.filmora.ui.detail
+package azari.amirhossein.filmora.ui.detail.movie
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,23 +12,22 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import azari.amirhossein.filmora.adapter.PosterAdapter
-import azari.amirhossein.filmora.databinding.FragmentPosterBinding
+import azari.amirhossein.filmora.databinding.FragmentMoviePosterBinding
 import azari.amirhossein.filmora.models.detail.ResponseImage
-import azari.amirhossein.filmora.models.detail.ResponseVideo
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.NetworkRequest
 import azari.amirhossein.filmora.utils.setClickAnimation
-import azari.amirhossein.filmora.viewmodel.MediaDetailsViewModel
+import azari.amirhossein.filmora.viewmodel.MovieDetailViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class PosterFragment : Fragment(){
+class MoviePosterFragment : Fragment(){
     //Binding
-    private var _binding: FragmentPosterBinding? = null
+    private var _binding: FragmentMoviePosterBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: MediaDetailsViewModel by viewModels({ requireParentFragment() })
+    private val viewModel: MovieDetailViewModel by viewModels({ requireParentFragment() })
     private val posterAdapter by lazy { PosterAdapter() }
 
     override fun onCreateView(
@@ -37,7 +36,7 @@ class PosterFragment : Fragment(){
         savedInstanceState: Bundle?,
     ): View {
         // Inflate the layout for this fragment
-        _binding = FragmentPosterBinding.inflate(inflater, container, false)
+        _binding = FragmentMoviePosterBinding.inflate(inflater, container, false)
         return binding.root
 
 
@@ -45,15 +44,15 @@ class PosterFragment : Fragment(){
     private fun observePoster() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.images.collect { result ->
+                viewModel.movieDetails.collect { result ->
                     when (result) {
                         is NetworkRequest.Success -> {
                             binding.btnAllPosters.visibility =View.GONE
-                            if (result.data?.posters?.size!! > 10){
+                            if (result.data?.images?.posters?.size!! > 10){
                                 binding.btnAllPosters.visibility =View.VISIBLE
                             }
-                            posterAdapter.submitList(result.data.posters)
-                            navTo(result.data)
+                            posterAdapter.submitList(result.data.images.posters)
+                            navTo(result.data.images)
                         }
 
                         else -> Unit
@@ -72,7 +71,7 @@ class PosterFragment : Fragment(){
     }
     private fun navTo(data : ResponseImage){
         binding.btnAllPosters.setClickAnimation {
-            val action = BackdropFragmentDirections.actionToMediaGalleryFragment(media = data, type = Constants.MediaGalleryType.POSTER , video = null)
+            val action = MoviePosterFragmentDirections.actionToMediaGalleryFragment(media = data, type = Constants.MediaGalleryType.POSTER , video = null)
             findNavController().navigate(
                 action
             )

@@ -1,15 +1,13 @@
 package azari.amirhossein.filmora.adapter
 
-import android.util.SparseArray
-import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import azari.amirhossein.filmora.ui.detail.BackdropFragment
-import azari.amirhossein.filmora.ui.detail.PosterFragment
-import azari.amirhossein.filmora.ui.detail.VideoFragment
+import azari.amirhossein.filmora.ui.detail.tv.TvBackdropFragment
+import azari.amirhossein.filmora.ui.detail.tv.TvPosterFragment
+import azari.amirhossein.filmora.ui.detail.tv.TvVideoFragment
 
 
-class VisualContentPagerAdapter(
+class TvGalleryPagerAdapter(
     fragment: Fragment,
     private val visibleTabs: List<Int>,
 ) : FragmentStateAdapter(fragment) {
@@ -25,9 +23,9 @@ class VisualContentPagerAdapter(
 
     override fun createFragment(position: Int): Fragment {
         return when (visibleTabs[position]) {
-            0 -> VideoFragment()
-            1 -> BackdropFragment()
-            2 -> PosterFragment()
+            0 -> TvVideoFragment()
+            1 -> TvBackdropFragment()
+            2 -> TvPosterFragment()
             else -> throw IllegalArgumentException("Invalid position $position")
         }
     }

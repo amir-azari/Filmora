@@ -20,20 +20,16 @@ import azari.amirhossein.filmora.adapter.CastAndCrewAdapter
 import azari.amirhossein.filmora.adapter.GenresAdapter
 import azari.amirhossein.filmora.adapter.SeasonsAdapter
 import azari.amirhossein.filmora.adapter.SimilarTvRecommendationsPagerAdapter
-import azari.amirhossein.filmora.adapter.VisualContentPagerAdapter
+import azari.amirhossein.filmora.adapter.TvGalleryPagerAdapter
 import azari.amirhossein.filmora.data.SessionManager
 import azari.amirhossein.filmora.databinding.FragmentTvDetailsBinding
-import azari.amirhossein.filmora.models.ResponseLanguage
-import azari.amirhossein.filmora.models.detail.DetailMediaItem
 import azari.amirhossein.filmora.models.detail.ResponseCredit
 import azari.amirhossein.filmora.models.detail.ResponseReviews
 import azari.amirhossein.filmora.models.detail.ResponseTvDetails
-import azari.amirhossein.filmora.ui.detail.movie.MovieDetailFragmentDirections
-import azari.amirhossein.filmora.ui.people.PeopleSectionFragmentDirections
+import azari.amirhossein.filmora.models.detail.SpokenLanguage
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.NetworkRequest
 import azari.amirhossein.filmora.utils.customize
-import azari.amirhossein.filmora.utils.getFullLanguageName
 import azari.amirhossein.filmora.utils.loadImageWithoutShimmer
 import azari.amirhossein.filmora.utils.observeLoginStatus
 import azari.amirhossein.filmora.utils.setClickAnimation
@@ -45,7 +41,7 @@ import azari.amirhossein.filmora.utils.toFormattedDate
 import azari.amirhossein.filmora.utils.toFormattedVoteAverage
 import azari.amirhossein.filmora.utils.toNetworkNames
 import azari.amirhossein.filmora.utils.toSpokenLanguagesText
-import azari.amirhossein.filmora.viewmodel.MediaDetailsViewModel
+import azari.amirhossein.filmora.viewmodel.TvDetailViewModel
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
@@ -71,14 +67,14 @@ class TvDetailsFragment : Fragment() {
     lateinit var castAndCrewAdapter: CastAndCrewAdapter
 
     private lateinit var similarAndRecommendationsPagerAdapter: SimilarTvRecommendationsPagerAdapter
-    private  var visualContentPagerAdapter: VisualContentPagerAdapter? = null
+    private  var tvGalleryPagerAdapter: TvGalleryPagerAdapter? = null
 
     // State variables for overview expansion and configuration
     private var isOverviewExpanded = false
     private val overviewMaxLines = Constants.Defaults.OVERVIEW_MAX_LINES
     private val overviewReviewsMaxLines = 3
 
-    private val viewModel: MediaDetailsViewModel by viewModels()
+    private val viewModel: TvDetailViewModel by viewModels()
 
     // Arguments passed to the fragment
     private lateinit var args: TvDetailsFragmentArgs
@@ -114,7 +110,7 @@ class TvDetailsFragment : Fragment() {
         setActionBarTitle("")
 
         // Fetch media details
-        viewModel.getMediaDetails(mediaId, Constants.MediaType.TV)
+        viewModel.getTvDetails(mediaId)
 
         originalScaleType = binding.imgPoster.scaleType
 
@@ -184,7 +180,7 @@ class TvDetailsFragment : Fragment() {
         }.attach()
 
     }
-    private fun setupVisual(mediaItem: DetailMediaItem) {
+    private fun setupVisual(mediaItem: ResponseTvDetails) {
         val hasVideos = !mediaItem.videos?.results.isNullOrEmpty()
         val hasBackdrops = !mediaItem.images?.backdrops.isNullOrEmpty()
         val hasPosters = !mediaItem.images?.posters.isNullOrEmpty()
@@ -229,8 +225,8 @@ class TvDetailsFragment : Fragment() {
             binding.txtHeaderVisualContent.visibility = View.GONE
         }
 
-        visualContentPagerAdapter = VisualContentPagerAdapter(this, visibleTabs)
-        viewPager.adapter = visualContentPagerAdapter
+        tvGalleryPagerAdapter = TvGalleryPagerAdapter(this, visibleTabs)
+        viewPager.adapter = tvGalleryPagerAdapter
 
         for (i in 0 until tabLayout.tabCount) {
             val tab = tabLayout.getTabAt(i)
@@ -251,9 +247,9 @@ class TvDetailsFragment : Fragment() {
 
 
 
-    private fun setupSimilarAndRecommendations(mediaItem: DetailMediaItem) {
-        val hasSimilar = !mediaItem.tvSimilar?.results.isNullOrEmpty()
-        val hasRecommendations = !mediaItem.tvRecommendations?.results.isNullOrEmpty()
+    private fun setupSimilarAndRecommendations(mediaItem: ResponseTvDetails) {
+        val hasSimilar = !mediaItem.similar?.results.isNullOrEmpty()
+        val hasRecommendations = !mediaItem.recommendations?.results.isNullOrEmpty()
 
         if (!hasRecommendations && !hasSimilar) {
             binding.cvSimilarRecommendations.visibility = View.GONE
@@ -302,7 +298,7 @@ class TvDetailsFragment : Fragment() {
     private fun observeViewModel() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.mediaDetails.collect { result ->
+                viewModel.tvDetails.collect { result ->
                     result.let { it ->
                         when (it) {
                             is NetworkRequest.Loading -> {
@@ -314,7 +310,6 @@ class TvDetailsFragment : Fragment() {
                                     showSuccess()
                                     bindUI(mediaItem)
                                     setupVisual(mediaItem)
-                                    viewModel.updateMediaDetails(mediaItem)
                                     setupSimilarAndRecommendations(mediaItem)
 
                                 }
@@ -529,11 +524,11 @@ class TvDetailsFragment : Fragment() {
             }
         }
 
-    private fun bindUI(data: DetailMediaItem) {
-        data.tv?.let {  bindUiDetail(it) }
-        data.credits?.let { bindUiCast(it) }
-        data.language?.let { bindUiLanguage(it) }
-        data.reviews?.let { bindUiReview(it) }
+    private fun bindUI(data: ResponseTvDetails) {
+        bindUiDetail(data)
+        bindUiCast(data.credits)
+        bindUiLanguage(data.spokenLanguages, data.originalLanguage)
+        bindUiReview(data.reviews!!)
 
     }
 
@@ -557,14 +552,16 @@ class TvDetailsFragment : Fragment() {
         findNavController().navigate(action)
     }
 
-    private fun bindUiLanguage(data: ResponseLanguage){
-        val originalLanguage = binding.txtLanguageValue.text.toString()
-        originalLanguage.getFullLanguageName(data)
-            .also { binding.txtLanguageValue.text = it }
+    private fun bindUiLanguage(spokenLanguages: List<SpokenLanguage?>?, originalLanguage: String?) {
+        val primaryLanguage = spokenLanguages?.filterNotNull()
+            ?.find { it.iso6391 == originalLanguage }
+            ?.englishName ?: Constants.Defaults.NOT_APPLICABLE
+
+        binding.txtLanguageValue.text = primaryLanguage
     }
     override fun onDestroyView() {
         super.onDestroyView()
-        visualContentPagerAdapter = null
+        tvGalleryPagerAdapter = null
         _binding = null
     }
 }

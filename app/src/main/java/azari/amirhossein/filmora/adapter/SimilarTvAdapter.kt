@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import azari.amirhossein.filmora.R
 import azari.amirhossein.filmora.databinding.ItemSimilarRemommendationBinding
-import azari.amirhossein.filmora.models.detail.ResponseTvSimilar
+import azari.amirhossein.filmora.models.detail.ResponseTvDetails
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.loadImageWithShimmer
 import azari.amirhossein.filmora.utils.setClickAnimation
@@ -16,8 +16,8 @@ import azari.amirhossein.filmora.utils.setClickAnimation
 class SimilarTvAdapter  :
     RecyclerView.Adapter<SimilarTvAdapter.ViewHolder>() {
 
-    private var onItemClickListener: ((ResponseTvSimilar.Result) -> Unit)? = null
-    fun setOnItemClickListener(listener: (ResponseTvSimilar.Result) -> Unit) {
+    private var onItemClickListener: ((ResponseTvDetails.Similar.Result) -> Unit)? = null
+    fun setOnItemClickListener(listener: (ResponseTvDetails.Similar.Result) -> Unit) {
         onItemClickListener = listener
     }
 
@@ -25,7 +25,7 @@ class SimilarTvAdapter  :
         RecyclerView.ViewHolder(binding.root) {
         private val originalScaleType: ImageView.ScaleType = binding.imgPoster.scaleType
 
-        fun bind(item: ResponseTvSimilar.Result) {
+        fun bind(item: ResponseTvDetails.Similar.Result) {
             binding.apply {
                 val baseUrl = Constants.Network.IMAGE_BASE_URL
                 val fullPosterPath = if (item.posterPath.isNullOrEmpty()) {
@@ -76,12 +76,12 @@ class SimilarTvAdapter  :
         }
     }
 
-    private val diffCallback = object : DiffUtil.ItemCallback<ResponseTvSimilar.Result>() {
-        override fun areItemsTheSame(oldItem: ResponseTvSimilar.Result, newItem: ResponseTvSimilar.Result): Boolean {
+    private val diffCallback = object : DiffUtil.ItemCallback<ResponseTvDetails.Similar.Result>() {
+        override fun areItemsTheSame(oldItem: ResponseTvDetails.Similar.Result, newItem: ResponseTvDetails.Similar.Result): Boolean {
             return oldItem.id == newItem.id
         }
 
-        override fun areContentsTheSame(oldItem: ResponseTvSimilar.Result, newItem: ResponseTvSimilar.Result): Boolean {
+        override fun areContentsTheSame(oldItem: ResponseTvDetails.Similar.Result, newItem: ResponseTvDetails.Similar.Result): Boolean {
             return oldItem == newItem
         }
     }

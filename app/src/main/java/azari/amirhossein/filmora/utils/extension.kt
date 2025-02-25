@@ -17,10 +17,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import azari.amirhossein.filmora.data.SessionManager
 import azari.amirhossein.filmora.models.ResponseLanguage
-import azari.amirhossein.filmora.models.detail.CreatedBy
-import azari.amirhossein.filmora.models.detail.Network
 import azari.amirhossein.filmora.models.detail.ProductionCompany
 import azari.amirhossein.filmora.models.detail.ProductionCountry
+import azari.amirhossein.filmora.models.detail.ResponseTvDetails
 import azari.amirhossein.filmora.models.detail.SpokenLanguage
 import coil3.load
 import coil3.request.crossfade
@@ -147,12 +146,12 @@ fun List<ProductionCompany?>?.toCompanyNames(): String {
         ?: Constants.Defaults.NOT_APPLICABLE
 }
 
-fun List<CreatedBy?>?.toCreatorNames(): String {
+fun List<ResponseTvDetails.CreatedBy?>?.toCreatorNames(): String {
     return this?.filterNotNull()?.joinToString("\n") { "${it.name}" }
         ?: Constants.Defaults.NOT_APPLICABLE
 }
 
-fun List<Network?>?.toNetworkNames(): String {
+fun List<ResponseTvDetails.Network?>?.toNetworkNames(): String {
     return this?.filterNotNull()?.joinToString("\n") { "${it.name}" }
         ?: Constants.Defaults.NOT_APPLICABLE
 }
