@@ -1,4 +1,6 @@
-package azari.amirhossein.filmora.models.detail
+package azari.amirhossein.filmora.models.detail.people
+
+import azari.amirhossein.filmora.models.detail.ResponseCredit
 
 sealed class CastAndCrewListItem {
     data class Header(val title: String) : CastAndCrewListItem() {

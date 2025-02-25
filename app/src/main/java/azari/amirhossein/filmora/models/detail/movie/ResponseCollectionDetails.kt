@@ -1,4 +1,4 @@
-package azari.amirhossein.filmora.models.detail
+package azari.amirhossein.filmora.models.detail.movie
 
 
 import com.google.gson.annotations.SerializedName

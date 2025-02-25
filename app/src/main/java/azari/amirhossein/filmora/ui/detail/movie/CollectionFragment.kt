@@ -17,8 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import azari.amirhossein.filmora.R
 import azari.amirhossein.filmora.adapter.CollectionPartsAdapter
 import azari.amirhossein.filmora.databinding.FragmentCollectionBinding
-import azari.amirhossein.filmora.models.detail.ResponseCollectionDetails
-import azari.amirhossein.filmora.ui.people.PeopleSectionFragmentDirections
+import azari.amirhossein.filmora.models.detail.movie.ResponseCollectionDetails
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.NetworkRequest
 import azari.amirhossein.filmora.utils.customize

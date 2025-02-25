@@ -23,7 +23,7 @@ import azari.amirhossein.filmora.adapter.SimilarMovieRecommendationsPagerAdapter
 import azari.amirhossein.filmora.data.SessionManager
 import azari.amirhossein.filmora.databinding.FragmentMovieDetailBinding
 import azari.amirhossein.filmora.models.detail.ResponseCredit
-import azari.amirhossein.filmora.models.detail.ResponseMovieDetails
+import azari.amirhossein.filmora.models.detail.movie.ResponseMovieDetails
 import azari.amirhossein.filmora.models.detail.ResponseReviews
 import azari.amirhossein.filmora.models.detail.SpokenLanguage
 import azari.amirhossein.filmora.utils.Constants

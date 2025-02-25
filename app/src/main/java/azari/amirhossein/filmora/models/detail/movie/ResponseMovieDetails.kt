@@ -1,6 +1,13 @@
-package azari.amirhossein.filmora.models.detail
+package azari.amirhossein.filmora.models.detail.movie
 
 import android.os.Parcelable
+import azari.amirhossein.filmora.models.detail.ProductionCompany
+import azari.amirhossein.filmora.models.detail.ProductionCountry
+import azari.amirhossein.filmora.models.detail.ResponseCredit
+import azari.amirhossein.filmora.models.detail.ResponseImage
+import azari.amirhossein.filmora.models.detail.ResponseReviews
+import azari.amirhossein.filmora.models.detail.ResponseVideo
+import azari.amirhossein.filmora.models.detail.SpokenLanguage
 import azari.amirhossein.filmora.models.prefences.ResponseGenresList
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize

@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import azari.amirhossein.filmora.R
 import azari.amirhossein.filmora.databinding.ItemSimilarRemommendationBinding
-import azari.amirhossein.filmora.models.detail.ResponseMovieDetails
+import azari.amirhossein.filmora.models.detail.movie.ResponseMovieDetails
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.loadImageWithShimmer
 import azari.amirhossein.filmora.utils.setClickAnimation

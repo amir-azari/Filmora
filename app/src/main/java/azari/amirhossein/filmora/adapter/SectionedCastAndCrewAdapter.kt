@@ -10,7 +10,7 @@ import azari.amirhossein.filmora.R
 import azari.amirhossein.filmora.databinding.ItemCastAndCrewHeaderBinding
 import azari.amirhossein.filmora.databinding.ItemCelebrityRectangleBinding
 import azari.amirhossein.filmora.databinding.ItemDepartmentHeaderBinding
-import azari.amirhossein.filmora.models.detail.CastAndCrewListItem
+import azari.amirhossein.filmora.models.detail.people.CastAndCrewListItem
 import azari.amirhossein.filmora.models.detail.ResponseCredit
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.loadImageWithShimmer

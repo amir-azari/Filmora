@@ -1,4 +1,4 @@
-package azari.amirhossein.filmora.models.detail
+package azari.amirhossein.filmora.models.detail.people
 
 sealed class CreditListItem {
     data class DepartmentHeader(val name: String) : CreditListItem() {

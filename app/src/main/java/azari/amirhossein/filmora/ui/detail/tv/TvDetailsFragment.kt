@@ -25,7 +25,7 @@ import azari.amirhossein.filmora.data.SessionManager
 import azari.amirhossein.filmora.databinding.FragmentTvDetailsBinding
 import azari.amirhossein.filmora.models.detail.ResponseCredit
 import azari.amirhossein.filmora.models.detail.ResponseReviews
-import azari.amirhossein.filmora.models.detail.ResponseTvDetails
+import azari.amirhossein.filmora.models.detail.tv.ResponseTvDetails
 import azari.amirhossein.filmora.models.detail.SpokenLanguage
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.NetworkRequest

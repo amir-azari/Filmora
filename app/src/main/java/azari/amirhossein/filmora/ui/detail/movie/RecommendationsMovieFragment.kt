@@ -13,7 +13,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import azari.amirhossein.filmora.adapter.RecommendationMovieAdapter
 import azari.amirhossein.filmora.databinding.FragmentRecommendationsMovieBinding
-import azari.amirhossein.filmora.models.detail.ResponseMovieDetails
+import azari.amirhossein.filmora.models.detail.movie.ResponseMovieDetails
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.NetworkRequest
 import azari.amirhossein.filmora.viewmodel.MovieDetailViewModel

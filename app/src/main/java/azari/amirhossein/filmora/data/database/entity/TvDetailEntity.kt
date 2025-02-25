@@ -2,7 +2,7 @@ package azari.amirhossein.filmora.data.database.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import azari.amirhossein.filmora.models.detail.ResponseTvDetails
+import azari.amirhossein.filmora.models.detail.tv.ResponseTvDetails
 import azari.amirhossein.filmora.utils.Constants
 
 @Entity(tableName = Constants.Database.TV_DETAIL_TABLE)

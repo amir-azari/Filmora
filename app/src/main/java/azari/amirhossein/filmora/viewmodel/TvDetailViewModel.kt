@@ -3,7 +3,7 @@ package azari.amirhossein.filmora.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import azari.amirhossein.filmora.data.repository.TvDetailRepository
-import azari.amirhossein.filmora.models.detail.ResponseTvDetails
+import azari.amirhossein.filmora.models.detail.tv.ResponseTvDetails
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.NetworkChecker
 import azari.amirhossein.filmora.utils.NetworkRequest

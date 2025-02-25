@@ -3,7 +3,7 @@ package azari.amirhossein.filmora.data.repository
 import azari.amirhossein.filmora.data.database.entity.MovieDetailEntity
 import azari.amirhossein.filmora.data.source.LocalDataSource
 import azari.amirhossein.filmora.data.source.RemoteDataSource
-import azari.amirhossein.filmora.models.detail.ResponseMovieDetails
+import azari.amirhossein.filmora.models.detail.movie.ResponseMovieDetails
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.NetworkRequest
 import azari.amirhossein.filmora.utils.NetworkResponse

@@ -7,13 +7,9 @@ import azari.amirhossein.filmora.models.celebtiry.ResponsePopularCelebrity
 import azari.amirhossein.filmora.models.celebtiry.ResponseTrendingCelebrity
 import azari.amirhossein.filmora.models.detail.ResponseCredit
 import azari.amirhossein.filmora.models.detail.ResponseImage
-import azari.amirhossein.filmora.models.detail.ResponseMovieDetails
-import azari.amirhossein.filmora.models.detail.ResponseMovieRecommendations
-import azari.amirhossein.filmora.models.detail.ResponseMovieSimilar
+import azari.amirhossein.filmora.models.detail.movie.ResponseMovieDetails
 import azari.amirhossein.filmora.models.detail.ResponseReviews
-import azari.amirhossein.filmora.models.detail.ResponseTvDetails
-import azari.amirhossein.filmora.models.detail.ResponseTvRecommendations
-import azari.amirhossein.filmora.models.detail.ResponseTvSimilar
+import azari.amirhossein.filmora.models.detail.tv.ResponseTvDetails
 import azari.amirhossein.filmora.models.detail.ResponseVideo
 import azari.amirhossein.filmora.models.home.ResponseTrendingList
 import azari.amirhossein.filmora.models.movie.ResponseTrendingMovie
@@ -104,47 +100,6 @@ class ResponseTypeConverter {
     fun toLanguage(value: String): ResponseLanguage? {
         return gson.fromJson(value, ResponseLanguage::class.java)
     }
-
-    @TypeConverter
-    fun fromMovieSimilar(value: ResponseMovieSimilar?): String {
-        return gson.toJson(value)
-    }
-
-    @TypeConverter
-    fun toMovieSimilar(value: String): ResponseMovieSimilar? {
-        return gson.fromJson(value, ResponseMovieSimilar::class.java)
-    }
-
-    @TypeConverter
-    fun fromMovieRecommendations(value: ResponseMovieRecommendations?): String {
-        return gson.toJson(value)
-    }
-
-    @TypeConverter
-    fun toMovieRecommendations(value: String): ResponseMovieRecommendations? {
-        return gson.fromJson(value, ResponseMovieRecommendations::class.java)
-    }
-
-    @TypeConverter
-    fun fromTvSimilar(value: ResponseTvSimilar?): String {
-        return gson.toJson(value)
-    }
-
-    @TypeConverter
-    fun toTvSimilar(value: String): ResponseTvSimilar? {
-        return gson.fromJson(value, ResponseTvSimilar::class.java)
-    }
-
-    @TypeConverter
-    fun fromTvRecommendations(value: ResponseTvRecommendations?): String {
-        return gson.toJson(value)
-    }
-
-    @TypeConverter
-    fun toTvRecommendations(value: String): ResponseTvRecommendations? {
-        return gson.fromJson(value, ResponseTvRecommendations::class.java)
-    }
-
     @TypeConverter
     fun fromVideos(value: ResponseVideo?): String {
         return gson.toJson(value)

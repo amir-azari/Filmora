@@ -1,4 +1,4 @@
-package azari.amirhossein.filmora.models.detail
+package azari.amirhossein.filmora.models.detail.people
 
 data class CreditItem(
     val id : Int,

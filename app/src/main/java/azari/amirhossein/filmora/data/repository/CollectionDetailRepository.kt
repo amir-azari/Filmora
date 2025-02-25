@@ -2,7 +2,7 @@ package azari.amirhossein.filmora.data.repository
 
 import azari.amirhossein.filmora.data.source.LocalDataSource
 import azari.amirhossein.filmora.data.source.RemoteDataSource
-import azari.amirhossein.filmora.models.detail.ResponseCollectionDetails
+import azari.amirhossein.filmora.models.detail.movie.ResponseCollectionDetails
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.NetworkRequest
 import kotlinx.coroutines.flow.Flow

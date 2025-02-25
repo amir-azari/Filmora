@@ -19,7 +19,7 @@ import azari.amirhossein.filmora.data.SessionManager
 import azari.amirhossein.filmora.models.ResponseLanguage
 import azari.amirhossein.filmora.models.detail.ProductionCompany
 import azari.amirhossein.filmora.models.detail.ProductionCountry
-import azari.amirhossein.filmora.models.detail.ResponseTvDetails
+import azari.amirhossein.filmora.models.detail.tv.ResponseTvDetails
 import azari.amirhossein.filmora.models.detail.SpokenLanguage
 import coil3.load
 import coil3.request.crossfade

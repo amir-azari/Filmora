@@ -11,9 +11,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import azari.amirhossein.filmora.adapter.SectionedCreditsAdapter
 import azari.amirhossein.filmora.databinding.FragmentCreditsBinding
 import azari.amirhossein.filmora.models.celebtiry.ResponsePeopleDetails
-import azari.amirhossein.filmora.models.detail.CreditItem
-import azari.amirhossein.filmora.models.detail.DepartmentSection
-import azari.amirhossein.filmora.models.detail.YearSection
+import azari.amirhossein.filmora.models.detail.people.CreditItem
+import azari.amirhossein.filmora.models.detail.people.DepartmentSection
+import azari.amirhossein.filmora.models.detail.people.YearSection
 import azari.amirhossein.filmora.utils.Constants
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject

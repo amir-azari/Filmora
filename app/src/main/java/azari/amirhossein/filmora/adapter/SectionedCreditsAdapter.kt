@@ -2,10 +2,6 @@ package azari.amirhossein.filmora.adapter
 
 import android.content.Context
 import android.graphics.Paint
-import android.text.Spannable
-import android.text.SpannableString
-import android.text.style.UnderlineSpan
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,9 +11,9 @@ import azari.amirhossein.filmora.R
 import azari.amirhossein.filmora.databinding.ItemCreditBinding
 import azari.amirhossein.filmora.databinding.ItemDepartmentHeaderBinding
 import azari.amirhossein.filmora.databinding.ItemYearHeaderBinding
-import azari.amirhossein.filmora.models.detail.CreditItem
-import azari.amirhossein.filmora.models.detail.CreditListItem
-import azari.amirhossein.filmora.models.detail.DepartmentSection
+import azari.amirhossein.filmora.models.detail.people.CreditItem
+import azari.amirhossein.filmora.models.detail.people.CreditListItem
+import azari.amirhossein.filmora.models.detail.people.DepartmentSection
 import azari.amirhossein.filmora.utils.setClickAnimation
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
