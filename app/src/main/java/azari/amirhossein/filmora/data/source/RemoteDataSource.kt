@@ -46,7 +46,7 @@ class RemoteDataSource @Inject constructor(private val api : ApiServices) {
     suspend fun getUpcoming(page : Int) = api.getUpcoming(page)
     suspend fun getMovieAccountStates(movieId: Int, sessionId: String) = api.getMovieAccountStates(movieId, sessionId)
     suspend fun addRateMovie(movieId: Int, sessionId: String, request: RateRequest) = api.rateMovie(movieId, sessionId, request)
-    suspend fun deleteRating(movieId: Int, sessionId: String) = api.deleteRating(movieId, sessionId)
+    suspend fun deleteMovieRating(movieId: Int, sessionId: String) = api.deleteMovieRating(movieId, sessionId)
 
     //---------TVs---------
 

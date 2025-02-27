@@ -122,7 +122,7 @@ interface ApiServices {
     ): Response<ResponseDefault>
 
     @DELETE("movie/{movie_id}/rating")
-    suspend fun deleteRating(
+    suspend fun deleteMovieRating(
         @Path("movie_id") movieId: Int,
         @Query("session_id") sessionId: String
     ): Response<ResponseDefault>

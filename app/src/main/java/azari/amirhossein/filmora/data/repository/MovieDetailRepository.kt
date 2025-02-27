@@ -133,7 +133,7 @@ class MovieDetailRepository @Inject constructor(
             if (sessionId.isNullOrEmpty()) {
                 emit(NetworkRequest.Error("Missing session id"))
             } else {
-                val response = remote.deleteRating(movieId, sessionId)
+                val response = remote.deleteMovieRating(movieId, sessionId)
                 emit(NetworkResponse(response).handleNetworkResponse())
             }
         } catch (e: Exception) {
