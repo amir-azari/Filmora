@@ -127,6 +127,19 @@ interface ApiServices {
         @Query("session_id") sessionId: String
     ): Response<ResponseDefault>
 
+    @POST("tv/{series_id}/rating")
+    suspend fun rateTv(
+        @Path("series_id") seriesId: Int,
+        @Query("session_id") sessionId: String,
+        @Body rating: RateRequest
+    ): Response<ResponseDefault>
+
+    @DELETE("tv/{series_id}/rating")
+    suspend fun deleteTvRating(
+        @Path("series_id") seriesId: Int,
+        @Query("session_id") sessionId: String
+    ): Response<ResponseDefault>
+
     //---------Movies---------
 
     // Search Movie
@@ -209,6 +222,12 @@ interface ApiServices {
 
     @GET("tv/on_the_air")
     suspend fun getOnTheAir(@Query("page") page: Int): Response<ResponseTvsList>
+
+    @GET("tv/{series_id}/account_states")
+    suspend fun getTvAccountStates(
+        @Path("series_id") seriesId: Int,
+        @Query("session_id") sessionId: String
+    ): Response<ResponseAccountStates>
 
     //---------People---------
 
