@@ -1,8 +1,11 @@
 package azari.amirhossein.filmora.data.source
 
 import azari.amirhossein.filmora.data.network.ApiServices
+import azari.amirhossein.filmora.models.acccount.FavoriteRequest
+import azari.amirhossein.filmora.models.acccount.WatchlistRequest
 import azari.amirhossein.filmora.models.authentication.RequestLogin
 import azari.amirhossein.filmora.models.authentication.RequestSession
+import azari.amirhossein.filmora.models.detail.RateRequest
 import javax.inject.Inject
 
 class RemoteDataSource @Inject constructor(private val api : ApiServices) {
@@ -26,6 +29,9 @@ class RemoteDataSource @Inject constructor(private val api : ApiServices) {
     suspend fun getRatedMovies(accountId: Int, sessionId: String, page: Int) = api.getRatedMovies(accountId, sessionId, page)
     suspend fun getRatedTvs(accountId: Int, sessionId: String, page: Int) = api.getRatedTvs(accountId, sessionId, page)
 
+    suspend fun markAsFavorite(accountId: Int, sessionId: String, requestFavorite: FavoriteRequest) = api.markAsFavorite(accountId, sessionId, requestFavorite)
+    suspend fun markWatchlist(accountId: Int, sessionId: String, requestWatchlist: WatchlistRequest) = api.markWatchlist(accountId, sessionId, requestWatchlist)
+
     //---------Movies---------
 
     suspend fun searchMovie(page :Int ,query:String) = api.searchMovie(page,query)
@@ -33,17 +39,14 @@ class RemoteDataSource @Inject constructor(private val api : ApiServices) {
     suspend fun getMovieKeywords(movieId:String) = api.getMovieKeywords(movieId)
     suspend fun discoverMovies(params: Map<String, String>) = api.discoverMovies(params)
     suspend fun getMovieDetails(movieId: Int,params: Map<String, String>) = api.getMovieDetails(movieId,params)
-//    suspend fun getMovieCredits(movieId: Int) = api.getMovieCredits(movieId)
-//    suspend fun getMovieSimilar(movieId: Int) = api.getMovieSimilar(movieId)
-//    suspend fun getMovieRecommendations(movieId: Int) = api.getMovieRecommendations(movieId)
-//    suspend fun getMovieVideos(movieId: Int) = api.getMovieVideos(movieId)
-//    suspend fun getMovieImages(movieId: Int) = api.getMovieImages(movieId)
-//    suspend fun getMovieReviews(movieId: Int) = api.getMovieReviews(movieId)
     suspend fun getTrendingMovie(timeWindow:String ,page : Int) = api.getTrendingMovie(timeWindow , page)
     suspend fun getPopularMovie(page : Int) = api.getPopularMovie(page)
     suspend fun getNowPlaying(page : Int) = api.getNowPlaying(page)
     suspend fun getTopRatedMovie(page : Int) = api.getTopRatedMovie(page)
     suspend fun getUpcoming(page : Int) = api.getUpcoming(page)
+    suspend fun getMovieAccountStates(movieId: Int, sessionId: String) = api.getMovieAccountStates(movieId, sessionId)
+    suspend fun addRateMovie(movieId: Int, sessionId: String, request: RateRequest) = api.rateMovie(movieId, sessionId, request)
+    suspend fun deleteRating(movieId: Int, sessionId: String) = api.deleteRating(movieId, sessionId)
 
     //---------TVs---------
 
@@ -52,12 +55,6 @@ class RemoteDataSource @Inject constructor(private val api : ApiServices) {
     suspend fun getTvKeywords(tvId:Int) = api.getTvKeywords(tvId)
     suspend fun discoverTvShows(params: Map<String, String>) = api.discoverTvShows(params)
     suspend fun getTvDetails(seriesId: Int, params: Map<String, String>) = api.getDetailsTvSeries(seriesId,params)
-//    suspend fun getTvCredits(seriesId: Int) = api.getTvCredits(seriesId)
-//    suspend fun getTvSimilar(seriesId: Int) = api.getTvSimilar(seriesId)
-//    suspend fun getTvRecommendations(seriesId: Int) = api.getTvRecommendations(seriesId)
-//    suspend fun getTvVideos(seriesId: Int) = api.getTvVideos(seriesId)
-//    suspend fun getTvImages(seriesId: Int) = api.getTvImages(seriesId)
-//    suspend fun getTvReviews(seriesId: Int) = api.getTvReviews(seriesId)
     suspend fun getTrendingTv(timeWindow:String,page : Int) = api.getTrendingTv(timeWindow ,page )
     suspend fun getPopularTv(page : Int) = api.getPopularTv(page)
     suspend fun getNowAiringToday(page : Int) = api.getNowAiringToday(page)

@@ -1,7 +1,10 @@
 package azari.amirhossein.filmora.data.network
 
 import azari.amirhossein.filmora.models.ResponseLanguage
+import azari.amirhossein.filmora.models.acccount.FavoriteRequest
 import azari.amirhossein.filmora.models.acccount.ResponseAccountDetails
+import azari.amirhossein.filmora.models.acccount.ResponseDefault
+import azari.amirhossein.filmora.models.acccount.WatchlistRequest
 import azari.amirhossein.filmora.models.authentication.RequestLogin
 import azari.amirhossein.filmora.models.authentication.RequestSession
 import azari.amirhossein.filmora.models.authentication.ResponseGuestSession
@@ -10,13 +13,11 @@ import azari.amirhossein.filmora.models.authentication.ResponseToken
 import azari.amirhossein.filmora.models.celebtiry.ResponsePeopleDetails
 import azari.amirhossein.filmora.models.celebtiry.ResponsePopularCelebrity
 import azari.amirhossein.filmora.models.celebtiry.ResponseTrendingCelebrity
+import azari.amirhossein.filmora.models.detail.RateRequest
+import azari.amirhossein.filmora.models.detail.ResponseAccountStates
 import azari.amirhossein.filmora.models.detail.movie.ResponseCollectionDetails
-import azari.amirhossein.filmora.models.detail.ResponseCredit
-import azari.amirhossein.filmora.models.detail.ResponseImage
 import azari.amirhossein.filmora.models.detail.movie.ResponseMovieDetails
-import azari.amirhossein.filmora.models.detail.ResponseReviews
 import azari.amirhossein.filmora.models.detail.tv.ResponseTvDetails
-import azari.amirhossein.filmora.models.detail.ResponseVideo
 import azari.amirhossein.filmora.models.home.ResponseTrendingList
 import azari.amirhossein.filmora.models.movie.ResponseTrendingMovie
 import azari.amirhossein.filmora.models.prefences.ResponseGenresList
@@ -27,6 +28,7 @@ import azari.amirhossein.filmora.models.prefences.tv.ResponseTvsList
 import azari.amirhossein.filmora.models.tv.ResponseTrendingTv
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
@@ -98,6 +100,32 @@ interface ApiServices {
         @Query("page") page: Int = 1,
     ): Response<ResponseTvsList>
 
+    @POST("account/{account_id}/favorite")
+    suspend fun markAsFavorite(
+        @Path("account_id") accountId: Int,
+        @Query("session_id") sessionId: String,
+        @Body requestFavorite: FavoriteRequest
+    ): Response<ResponseDefault>
+
+    @POST("account/{account_id}/watchlist")
+    suspend fun markWatchlist(
+        @Path("account_id") accountId: Int,
+        @Query("session_id") sessionId: String,
+        @Body requestWatchlist: WatchlistRequest
+    ): Response<ResponseDefault>
+
+    @POST("movie/{movie_id}/rating")
+    suspend fun rateMovie(
+        @Path("movie_id") movieId: Int,
+        @Query("session_id") sessionId: String,
+        @Body rating: RateRequest
+    ): Response<ResponseDefault>
+
+    @DELETE("movie/{movie_id}/rating")
+    suspend fun deleteRating(
+        @Path("movie_id") movieId: Int,
+        @Query("session_id") sessionId: String
+    ): Response<ResponseDefault>
 
     //---------Movies---------
 
@@ -138,6 +166,12 @@ interface ApiServices {
 
     @GET("collection/{collection_id}")
     suspend fun getCollectionDetail (@Path("collection_id")collectionId: Int): Response<ResponseCollectionDetails>
+
+    @GET("movie/{movie_id}/account_states")
+    suspend fun getMovieAccountStates(
+        @Path("movie_id") movieId: Int,
+        @Query("session_id") sessionId: String
+    ): Response<ResponseAccountStates>
 
     //---------TVs---------
 
