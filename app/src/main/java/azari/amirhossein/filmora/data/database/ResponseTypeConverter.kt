@@ -5,6 +5,7 @@ import azari.amirhossein.filmora.models.ResponseLanguage
 import azari.amirhossein.filmora.models.celebtiry.ResponsePeopleDetails
 import azari.amirhossein.filmora.models.celebtiry.ResponsePopularCelebrity
 import azari.amirhossein.filmora.models.celebtiry.ResponseTrendingCelebrity
+import azari.amirhossein.filmora.models.detail.ResponseAccountStates
 import azari.amirhossein.filmora.models.detail.ResponseCredit
 import azari.amirhossein.filmora.models.detail.ResponseImage
 import azari.amirhossein.filmora.models.detail.movie.ResponseMovieDetails
@@ -180,5 +181,13 @@ class ResponseTypeConverter {
         return gson.fromJson(value, ResponsePeopleDetails::class.java)
     }
 
+    @TypeConverter
+    fun fromAccountStates(value: ResponseAccountStates?): String {
+        return gson.toJson(value)
+    }
 
+    @TypeConverter
+    fun toAccountStates(value: String): ResponseAccountStates? {
+        return gson.fromJson(value, ResponseAccountStates::class.java)
+    }
 }

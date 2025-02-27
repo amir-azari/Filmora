@@ -4,6 +4,7 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import azari.amirhossein.filmora.data.database.entity.HomeEntity
+import azari.amirhossein.filmora.data.database.entity.MovieAccountStatesEntity
 import azari.amirhossein.filmora.data.database.entity.MovieDetailEntity
 import azari.amirhossein.filmora.data.database.entity.MovieEntity
 import azari.amirhossein.filmora.data.database.entity.PeopleDetailEntity
@@ -13,8 +14,8 @@ import azari.amirhossein.filmora.data.database.entity.TvEntity
 
 
 @Database(
-    entities = [HomeEntity::class, MovieEntity::class, MovieDetailEntity::class, TvDetailEntity::class, PeopleDetailEntity::class, PeopleEntity::class, TvEntity::class],
-    version = 13,
+    entities = [HomeEntity::class, MovieEntity::class, MovieDetailEntity::class, TvDetailEntity::class, PeopleDetailEntity::class, PeopleEntity::class, TvEntity::class, MovieAccountStatesEntity::class],
+    version = 15,
     exportSchema = false
 )
 @TypeConverters(ResponseTypeConverter::class)

@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import azari.amirhossein.filmora.data.database.entity.HomeEntity
+import azari.amirhossein.filmora.data.database.entity.MovieAccountStatesEntity
 import azari.amirhossein.filmora.data.database.entity.MovieDetailEntity
 import azari.amirhossein.filmora.data.database.entity.MovieEntity
 import azari.amirhossein.filmora.data.database.entity.PeopleDetailEntity
@@ -73,4 +74,13 @@ interface AppDao {
     @Query("DELETE FROM ${Constants.Database.PEOPLE_DETAIL_TABLE} WHERE timestamp < :expirationTime")
     suspend fun deleteExpiredPeopleDetailData(expirationTime: Long)
 
+    // Movie Account States
+    @Query("SELECT * FROM ${Constants.Database.MOVIE_ACCOUNT_STATES_TABLE} WHERE id = :movieId")
+    fun getMovieAccountStates(movieId: Int): Flow<MovieAccountStatesEntity?>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun saveMovieAccountStates(states: MovieAccountStatesEntity)
+
+    @Query("DELETE FROM ${Constants.Database.MOVIE_ACCOUNT_STATES_TABLE} WHERE timestamp < :expirationTime")
+    suspend fun deleteExpiredMovieAccountStates(expirationTime: Long)
 }
