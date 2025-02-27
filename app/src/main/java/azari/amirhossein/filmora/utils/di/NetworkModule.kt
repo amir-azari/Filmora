@@ -2,7 +2,9 @@ package azari.amirhossein.filmora.utils.di
 
 import android.util.Log
 import azari.amirhossein.filmora.data.network.ApiServices
+import azari.amirhossein.filmora.models.detail.ResponseAccountStates
 import azari.amirhossein.filmora.utils.Constants
+import azari.amirhossein.filmora.utils.RatedDeserializer
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -28,6 +30,7 @@ object NetworkModule {
     @Singleton
     fun provideGson(): Gson {
         return GsonBuilder()
+            .registerTypeAdapter(ResponseAccountStates.Rated::class.java, RatedDeserializer())
             .setLenient()
             .create()
     }
