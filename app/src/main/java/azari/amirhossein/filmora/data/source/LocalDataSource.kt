@@ -7,6 +7,7 @@ import azari.amirhossein.filmora.data.database.entity.MovieDetailEntity
 import azari.amirhossein.filmora.data.database.entity.MovieEntity
 import azari.amirhossein.filmora.data.database.entity.PeopleDetailEntity
 import azari.amirhossein.filmora.data.database.entity.PeopleEntity
+import azari.amirhossein.filmora.data.database.entity.TvAccountStatesEntity
 import azari.amirhossein.filmora.data.database.entity.TvDetailEntity
 import azari.amirhossein.filmora.data.database.entity.TvEntity
 import javax.inject.Inject
@@ -45,4 +46,9 @@ class LocalDataSource @Inject constructor(private val dao: AppDao) {
     suspend fun saveMovieAccountStates(entity: MovieAccountStatesEntity) = dao.saveMovieAccountStates(entity)
     fun getMovieAccountStates(movieId: Int) = dao.getMovieAccountStates(movieId)
     suspend fun deleteExpiredMovieAccountStates(expirationTime: Long) = dao.deleteExpiredMovieAccountStates(expirationTime)
+
+    // Tv Account States
+    suspend fun saveTvAccountStates(entity: TvAccountStatesEntity) = dao.saveTvAccountStates(entity)
+    fun getTvAccountStates(tvId: Int) = dao.getTvAccountStates(tvId)
+    suspend fun deleteExpiredTvAccountStates(expirationTime: Long) = dao.deleteExpiredTvAccountStates(expirationTime)
 }

@@ -90,6 +90,7 @@ object Constants {
         const val MEDIA_DETAIL_TABLE = "media_detail_table"
         const val MOVIE_DETAIL_TABLE = "movie_detail_table"
         const val MOVIE_ACCOUNT_STATES_TABLE = "movie_account_states_table"
+        const val TV_ACCOUNT_STATES_TABLE = "tv_account_states_table"
         const val TV_DETAIL_TABLE = "tv_detail_table"
         const val PEOPLE_DETAIL_TABLE = "People_detail_table"
         const val TV_SHOW_TABLE = "tv_show_table"

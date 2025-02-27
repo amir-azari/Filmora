@@ -10,6 +10,7 @@ import azari.amirhossein.filmora.data.database.entity.MovieDetailEntity
 import azari.amirhossein.filmora.data.database.entity.MovieEntity
 import azari.amirhossein.filmora.data.database.entity.PeopleDetailEntity
 import azari.amirhossein.filmora.data.database.entity.PeopleEntity
+import azari.amirhossein.filmora.data.database.entity.TvAccountStatesEntity
 import azari.amirhossein.filmora.data.database.entity.TvDetailEntity
 import azari.amirhossein.filmora.data.database.entity.TvEntity
 import azari.amirhossein.filmora.utils.Constants
@@ -83,4 +84,14 @@ interface AppDao {
 
     @Query("DELETE FROM ${Constants.Database.MOVIE_ACCOUNT_STATES_TABLE} WHERE timestamp < :expirationTime")
     suspend fun deleteExpiredMovieAccountStates(expirationTime: Long)
+
+    // Tv Account States
+    @Query("SELECT * FROM ${Constants.Database.TV_ACCOUNT_STATES_TABLE} WHERE id = :tvId")
+    fun getTvAccountStates(tvId: Int): Flow<TvAccountStatesEntity?>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun saveTvAccountStates(states: TvAccountStatesEntity)
+
+    @Query("DELETE FROM ${Constants.Database.TV_ACCOUNT_STATES_TABLE} WHERE timestamp < :expirationTime")
+    suspend fun deleteExpiredTvAccountStates(expirationTime: Long)
 }

@@ -9,13 +9,14 @@ import azari.amirhossein.filmora.data.database.entity.MovieDetailEntity
 import azari.amirhossein.filmora.data.database.entity.MovieEntity
 import azari.amirhossein.filmora.data.database.entity.PeopleDetailEntity
 import azari.amirhossein.filmora.data.database.entity.PeopleEntity
+import azari.amirhossein.filmora.data.database.entity.TvAccountStatesEntity
 import azari.amirhossein.filmora.data.database.entity.TvDetailEntity
 import azari.amirhossein.filmora.data.database.entity.TvEntity
 
 
 @Database(
-    entities = [HomeEntity::class, MovieEntity::class, MovieDetailEntity::class, TvDetailEntity::class, PeopleDetailEntity::class, PeopleEntity::class, TvEntity::class, MovieAccountStatesEntity::class],
-    version = 15,
+    entities = [HomeEntity::class, MovieEntity::class, MovieDetailEntity::class, TvDetailEntity::class, PeopleDetailEntity::class, PeopleEntity::class, TvEntity::class, MovieAccountStatesEntity::class, TvAccountStatesEntity::class],
+    version = 16,
     exportSchema = false
 )
 @TypeConverters(ResponseTypeConverter::class)
