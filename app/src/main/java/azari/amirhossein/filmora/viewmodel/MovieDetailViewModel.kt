@@ -122,6 +122,11 @@ class MovieDetailViewModel @Inject constructor(
         viewModelScope.launch {
             _movieDetails.value = NetworkRequest.Loading()
 
+            movieDetailsCache[movieId]?.let {
+                _movieDetails.value = NetworkRequest.Success(it)
+                return@launch
+            }
+
             try {
                 if (networkChecker.isNetworkAvailable.value) {
                     repository.getMovieDetails(movieId).collect { result ->
@@ -138,6 +143,7 @@ class MovieDetailViewModel @Inject constructor(
             }
         }
     }
+
 
     fun getMovieAccountStates(movieId: Int) {
         viewModelScope.launch {
@@ -282,7 +288,7 @@ class MovieDetailViewModel @Inject constructor(
     override fun onCleared() {
         super.onCleared()
         cleanupJob.cancel()
-        networkChecker.stopMonitoring()
         movieDetailsCache.clear()
+        networkChecker.stopMonitoring()
     }
 }
