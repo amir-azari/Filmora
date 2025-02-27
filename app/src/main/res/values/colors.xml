@@ -51,6 +51,11 @@
     <color name="rate_icon">#054176</color>
     <color name="rate_icon_Secondary">#FFBC00</color>
 
+    <color name="watchlist">#2E294E</color>
+    <color name="favorite">#E71D36</color>
+    <color name="rate">#fdc500</color>
+
+    <color name="successBtn">#1B998B</color>
 
 
 </resources>

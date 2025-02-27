@@ -7,7 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -22,10 +24,11 @@ import azari.amirhossein.filmora.adapter.MovieGalleryPagerAdapter
 import azari.amirhossein.filmora.adapter.SimilarMovieRecommendationsPagerAdapter
 import azari.amirhossein.filmora.data.SessionManager
 import azari.amirhossein.filmora.databinding.FragmentMovieDetailBinding
+import azari.amirhossein.filmora.models.detail.ResponseAccountStates
 import azari.amirhossein.filmora.models.detail.ResponseCredit
-import azari.amirhossein.filmora.models.detail.movie.ResponseMovieDetails
 import azari.amirhossein.filmora.models.detail.ResponseReviews
 import azari.amirhossein.filmora.models.detail.SpokenLanguage
+import azari.amirhossein.filmora.models.detail.movie.ResponseMovieDetails
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.NetworkRequest
 import azari.amirhossein.filmora.utils.customize
@@ -40,7 +43,9 @@ import azari.amirhossein.filmora.utils.toFormattedRuntime
 import azari.amirhossein.filmora.utils.toFormattedVoteAverage
 import azari.amirhossein.filmora.utils.toFormattedWithUnits
 import azari.amirhossein.filmora.utils.toSpokenLanguagesText
+import azari.amirhossein.filmora.ui.detail.AccountStatesUiState
 import azari.amirhossein.filmora.viewmodel.MovieDetailViewModel
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
@@ -62,7 +67,7 @@ class MovieDetailFragment : Fragment() {
     @Inject
     lateinit var castAndCrewAdapter: CastAndCrewAdapter
 
-    private lateinit var similarAndRecommendationsPagerAdapter : SimilarMovieRecommendationsPagerAdapter
+    private lateinit var similarAndRecommendationsPagerAdapter: SimilarMovieRecommendationsPagerAdapter
     private var movieGalleryPagerAdapter: MovieGalleryPagerAdapter? = null
 
     // State variables for overview expansion and configuration
@@ -103,6 +108,7 @@ class MovieDetailFragment : Fragment() {
         mediaId = args.id
         mediaType = args.mediaType
 
+        viewModel.getMovieAccountStates(mediaId)
         // Set an empty title initially
         setActionBarTitle("")
 
@@ -140,6 +146,10 @@ class MovieDetailFragment : Fragment() {
                 binding.cvMediaAction.visibility = View.VISIBLE
             }
         )
+        setupAccountActions()
+        observeAccountStates()
+        observeMediaActionStates()
+
         savedInstanceState?.getInt("scroll_position")?.let { scrollPosition ->
             binding.nestedScrollView.post {
                 binding.nestedScrollView.scrollTo(0, scrollPosition)
@@ -147,6 +157,7 @@ class MovieDetailFragment : Fragment() {
         }
 
     }
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putInt("scroll_position", binding.nestedScrollView.scrollY)
@@ -208,9 +219,9 @@ class MovieDetailFragment : Fragment() {
     }
 
     private fun setupVisual(mediaItem: ResponseMovieDetails) {
-        val hasVideos = !mediaItem.videos?.results.isNullOrEmpty()
-        val hasBackdrops = !mediaItem.images?.backdrops.isNullOrEmpty()
-        val hasPosters = !mediaItem.images?.posters.isNullOrEmpty()
+        val hasVideos = !mediaItem.videos.results.isNullOrEmpty()
+        val hasBackdrops = !mediaItem.images.backdrops.isNullOrEmpty()
+        val hasPosters = !mediaItem.images.posters.isNullOrEmpty()
 
         if (!hasVideos && !hasBackdrops && !hasPosters) {
             binding.cvVisualContent.visibility = View.GONE
@@ -280,6 +291,64 @@ class MovieDetailFragment : Fragment() {
 
     }
 
+    private fun updateAccountActionsUI(states: ResponseAccountStates) {
+        binding.apply {
+            // Update favorite button
+            btnFavorite.setColorFilter(
+                ContextCompat.getColor(
+                    requireContext(),
+                    if (states.favorite == true) R.color.favorite else R.color.btn_icon
+                )
+            )
+
+            // Update watchlist button
+            btnWatchlist.setColorFilter(
+                ContextCompat.getColor(
+                    requireContext(),
+                    if (states.watchlist == true) R.color.watchlist else R.color.btn_icon
+                )
+            )
+
+            // Update rate button
+            btnRate.setColorFilter(
+                ContextCompat.getColor(
+                    requireContext(),
+                    if (states.rated != null) R.color.rate else R.color.btn_icon
+                )
+            )
+        }
+    }
+
+    private fun setupAccountActions() {
+        binding.apply {
+            btnFavorite.setClickAnimation {
+                val currentState =
+                    (viewModel.accountStates.value as? AccountStatesUiState.Success)?.data?.favorite
+                        ?: false
+                viewModel.toggleFavorite(mediaId, !currentState)
+            }
+
+            btnWatchlist.setClickAnimation {
+                val currentState =
+                    (viewModel.accountStates.value as? AccountStatesUiState.Success)?.data?.watchlist
+                        ?: false
+                viewModel.toggleWatchlist(mediaId, !currentState)
+            }
+
+            btnRate.setClickAnimation {
+                showRatingDialog()
+            }
+        }
+    }
+
+
+    private fun setAccountActionsEnabled(enabled: Boolean) {
+        binding.apply {
+            btnFavorite.isEnabled = enabled
+            btnWatchlist.isEnabled = enabled
+            btnRate.isEnabled = enabled
+        }
+    }
 
     private fun observeViewModel() {
         viewLifecycleOwner.lifecycleScope.launch {
@@ -315,6 +384,49 @@ class MovieDetailFragment : Fragment() {
         }
     }
 
+    private fun observeAccountStates() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            sessionManager.isGuest().collect { isGuest ->
+                if (!isGuest) {
+                    viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                        viewModel.accountStates.collect { state ->
+                            when (state) {
+                                is AccountStatesUiState.Loading -> {
+                                    setAccountActionsEnabled(false)
+                                }
+
+                                is AccountStatesUiState.Success -> {
+                                    updateAccountActionsUI(state.data)
+                                    setAccountActionsEnabled(true)
+                                }
+
+                                is AccountStatesUiState.Error -> {
+                                    setAccountActionsEnabled(true)
+                                    showErrorSnackbar(binding.root, state.message)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun observeMediaActionStates() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.mediaActionState.collect { state ->
+                    binding.apply {
+                        btnFavorite.isEnabled = !state.isFavoriteLoading
+                        btnWatchlist.isEnabled = !state.isWatchlistLoading
+                        btnRate.isEnabled = !state.isRatingLoading
+
+                    }
+                }
+            }
+        }
+    }
+
     private fun showErrorSnackbar(root: View, message: String) {
         Snackbar.make(root, message, Snackbar.LENGTH_SHORT).apply {
             customize(R.color.error, R.color.white, Gravity.TOP)
@@ -331,7 +443,7 @@ class MovieDetailFragment : Fragment() {
     }
 
     private fun showSuccess() {
-        binding.internetLay.visibility  =View.GONE
+        binding.internetLay.visibility = View.GONE
         binding.progressBar.visibility = View.GONE
         binding.mainContentContainer.visibility = View.VISIBLE
     }
@@ -370,7 +482,8 @@ class MovieDetailFragment : Fragment() {
                 layout.getEllipsisCount(layout.lineCount - 1) > 0
             } ?: false
 
-            binding.imgReviewContentExpand.visibility = if (isEllipsized) View.VISIBLE else View.INVISIBLE
+            binding.imgReviewContentExpand.visibility =
+                if (isEllipsized) View.VISIBLE else View.INVISIBLE
         }
     }
 
@@ -394,11 +507,12 @@ class MovieDetailFragment : Fragment() {
             } else {
                 cvReview.visibility = View.VISIBLE
 
-                val posterFullPath = if (data.results?.get(0)?.authorDetails?.avatarPath.isNullOrEmpty()) {
-                    null
-                } else {
-                    baseUrl + Constants.ImageSize.ORIGINAL + data.results?.get(0)?.authorDetails?.avatarPath
-                }
+                val posterFullPath =
+                    if (data.results?.get(0)?.authorDetails?.avatarPath.isNullOrEmpty()) {
+                        null
+                    } else {
+                        baseUrl + Constants.ImageSize.ORIGINAL + data.results?.get(0)?.authorDetails?.avatarPath
+                    }
 
                 ivProfileReviewAuthor.loadImageWithoutShimmer(
                     posterFullPath,
@@ -424,7 +538,6 @@ class MovieDetailFragment : Fragment() {
             }
         }
     }
-
 
 
     private fun bindUiDetail(data: ResponseMovieDetails) {
@@ -551,7 +664,62 @@ class MovieDetailFragment : Fragment() {
         }
     }
 
-    private val clickCast = { cast : ResponseCredit.Cast ->
+    private fun showRatingDialog() {
+        // Inflate custom dialog layout
+        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_rate, null)
+
+        // Initialize rating bar
+        val ratingBar = dialogView.findViewById<com.willy.ratingbar.BaseRatingBar>(R.id.ratingBar)
+        ratingBar.setMinimumStars(0.5f)
+
+        // Set existing rating if available
+        val currentRating =
+            (viewModel.accountStates.value as? AccountStatesUiState.Success)?.data?.rated?.value
+        currentRating?.toFloat()?.let {
+            ratingBar.rating = it
+        }
+
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Your Rating")
+            .setView(dialogView)
+            .setPositiveButton("Save") { dialog, _ ->
+                viewLifecycleOwner.lifecycleScope.launch {
+                    try {
+                        val ratingValue = ratingBar.rating
+                        viewModel.addRating(mediaId, ratingValue)
+                        dialog.dismiss()
+                    } catch (e: Exception) {
+                        showErrorSnackbar(binding.root, e.message ?: "Error submitting rating")
+                    }
+                }
+            }
+            .setNegativeButton("Clear") { dialog, _ ->
+                viewLifecycleOwner.lifecycleScope.launch {
+                    try {
+                        viewModel.removeRating(mediaId)
+                        dialog.dismiss()
+                    } catch (e: Exception) {
+                        showErrorSnackbar(binding.root, e.message ?: "Error removing rating")
+                    }
+                }
+            }
+            .create()
+            .apply {
+                show()
+
+                getButton(AlertDialog.BUTTON_POSITIVE)?.apply {
+                    setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.successBtn))
+                    setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+                }
+
+                getButton(AlertDialog.BUTTON_NEGATIVE)?.apply {
+                    setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.error))
+                    setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+                }
+            }
+    }
+
+    private val clickCast = { cast: ResponseCredit.Cast ->
         val action = MovieDetailFragmentDirections.actionToPeopleDetailFragment(cast.id)
         findNavController().navigate(action)
     }

@@ -8,7 +8,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:srb_numStars="10"
-        app:srb_stepSize="0.5"
+        app:srb_stepSize="1"
         android:scaleY="0.9"
         app:srb_starWidth="@dimen/_18mdp"
         app:srb_starHeight="@dimen/_18mdp"
