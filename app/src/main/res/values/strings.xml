@@ -123,5 +123,8 @@
     <string name="create_updates_and_manage_yor_personal_lists">Create, updates and manage yor personal lists</string>
     <string name="sing_in_sing_up">Sing in / Sing up</string>
     <string name="no_data_found">No Data Found</string>
+    <string name="dialog_login_required_message">Please sign in with your username or register if you don\'t have an account.</string>
+
+
 
 </resources>
