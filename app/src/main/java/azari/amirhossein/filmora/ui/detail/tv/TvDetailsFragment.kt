@@ -7,7 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -23,10 +25,12 @@ import azari.amirhossein.filmora.adapter.SimilarTvRecommendationsPagerAdapter
 import azari.amirhossein.filmora.adapter.TvGalleryPagerAdapter
 import azari.amirhossein.filmora.data.SessionManager
 import azari.amirhossein.filmora.databinding.FragmentTvDetailsBinding
+import azari.amirhossein.filmora.models.detail.ResponseAccountStates
 import azari.amirhossein.filmora.models.detail.ResponseCredit
 import azari.amirhossein.filmora.models.detail.ResponseReviews
 import azari.amirhossein.filmora.models.detail.tv.ResponseTvDetails
 import azari.amirhossein.filmora.models.detail.SpokenLanguage
+import azari.amirhossein.filmora.ui.detail.AccountStatesUiState
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.NetworkRequest
 import azari.amirhossein.filmora.utils.customize
@@ -42,6 +46,7 @@ import azari.amirhossein.filmora.utils.toFormattedVoteAverage
 import azari.amirhossein.filmora.utils.toNetworkNames
 import azari.amirhossein.filmora.utils.toSpokenLanguagesText
 import azari.amirhossein.filmora.viewmodel.TvDetailViewModel
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
@@ -106,6 +111,8 @@ class TvDetailsFragment : Fragment() {
         mediaId = args.id
         mediaType = args.mediaType
 
+        viewModel.getTvAccountStates(mediaId)
+
         // Set an empty title initially
         setActionBarTitle("")
 
@@ -147,6 +154,11 @@ class TvDetailsFragment : Fragment() {
                 binding.cvMediaAction.visibility = View.VISIBLE
             }
         )
+
+        setupAccountActions()
+        observeAccountStates()
+        observeMediaActionStates()
+
         savedInstanceState?.getInt("scroll_position")?.let { scrollPosition ->
             binding.nestedScrollView.post {
                 binding.nestedScrollView.scrollTo(0, scrollPosition)
@@ -294,7 +306,63 @@ class TvDetailsFragment : Fragment() {
         }
     }
 
+    private fun updateAccountActionsUI(states: ResponseAccountStates) {
+        binding.apply {
+            // Update favorite button
+            btnFavorite.setColorFilter(
+                ContextCompat.getColor(
+                    requireContext(),
+                    if (states.favorite == true) R.color.favorite else R.color.btn_icon
+                )
+            )
 
+            // Update watchlist button
+            btnWatchlist.setColorFilter(
+                ContextCompat.getColor(
+                    requireContext(),
+                    if (states.watchlist == true) R.color.watchlist else R.color.btn_icon
+                )
+            )
+
+            // Update rate button
+            btnRate.setColorFilter(
+                ContextCompat.getColor(
+                    requireContext(),
+                    if (states.rated != null) R.color.rate else R.color.btn_icon
+                )
+            )
+        }
+    }
+
+    private fun setupAccountActions() {
+        binding.apply {
+            btnFavorite.setClickAnimation {
+                val currentState =
+                    (viewModel.accountStates.value as? AccountStatesUiState.Success)?.data?.favorite
+                        ?: false
+                viewModel.toggleFavorite(mediaId, !currentState)
+            }
+
+            btnWatchlist.setClickAnimation {
+                val currentState =
+                    (viewModel.accountStates.value as? AccountStatesUiState.Success)?.data?.watchlist
+                        ?: false
+                viewModel.toggleWatchlist(mediaId, !currentState)
+            }
+
+            btnRate.setClickAnimation {
+                showRatingDialog()
+            }
+        }
+    }
+
+    private fun setAccountActionsEnabled(enabled: Boolean) {
+        binding.apply {
+            btnFavorite.isEnabled = enabled
+            btnWatchlist.isEnabled = enabled
+            btnRate.isEnabled = enabled
+        }
+    }
     private fun observeViewModel() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -330,6 +398,48 @@ class TvDetailsFragment : Fragment() {
         }
     }
 
+    private fun observeAccountStates() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            sessionManager.isGuest().collect { isGuest ->
+                if (!isGuest) {
+                    viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                        viewModel.accountStates.collect { state ->
+                            when (state) {
+                                is AccountStatesUiState.Loading -> {
+                                    setAccountActionsEnabled(false)
+                                }
+
+                                is AccountStatesUiState.Success -> {
+                                    updateAccountActionsUI(state.data)
+                                    setAccountActionsEnabled(true)
+                                }
+
+                                is AccountStatesUiState.Error -> {
+                                    setAccountActionsEnabled(true)
+                                    showErrorSnackbar(binding.root, state.message)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun observeMediaActionStates() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.mediaActionState.collect { state ->
+                    binding.apply {
+                        btnFavorite.isEnabled = !state.isFavoriteLoading
+                        btnWatchlist.isEnabled = !state.isWatchlistLoading
+                        btnRate.isEnabled = !state.isRatingLoading
+
+                    }
+                }
+            }
+        }
+    }
     private fun showErrorSnackbar(root: View, message: String) {
         Snackbar.make(root, message, Snackbar.LENGTH_SHORT).apply {
             customize(R.color.error, R.color.white, Gravity.TOP)
@@ -546,6 +656,60 @@ class TvDetailsFragment : Fragment() {
                 cast.filterNotNull()
             )
         }
+    }
+    private fun showRatingDialog() {
+        // Inflate custom dialog layout
+        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_rate, null)
+
+        // Initialize rating bar
+        val ratingBar = dialogView.findViewById<com.willy.ratingbar.BaseRatingBar>(R.id.ratingBar)
+        ratingBar.setMinimumStars(0.5f)
+
+        // Set existing rating if available
+        val currentRating =
+            (viewModel.accountStates.value as? AccountStatesUiState.Success)?.data?.rated?.value
+        currentRating?.toFloat()?.let {
+            ratingBar.rating = it
+        }
+
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Your Rating")
+            .setView(dialogView)
+            .setPositiveButton("Save") { dialog, _ ->
+                viewLifecycleOwner.lifecycleScope.launch {
+                    try {
+                        val ratingValue = ratingBar.rating
+                        viewModel.addRating(mediaId, ratingValue)
+                        dialog.dismiss()
+                    } catch (e: Exception) {
+                        showErrorSnackbar(binding.root, e.message ?: "Error submitting rating")
+                    }
+                }
+            }
+            .setNegativeButton("Clear") { dialog, _ ->
+                viewLifecycleOwner.lifecycleScope.launch {
+                    try {
+                        viewModel.removeRating(mediaId)
+                        dialog.dismiss()
+                    } catch (e: Exception) {
+                        showErrorSnackbar(binding.root, e.message ?: "Error removing rating")
+                    }
+                }
+            }
+            .create()
+            .apply {
+                show()
+
+                getButton(AlertDialog.BUTTON_POSITIVE)?.apply {
+                    setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.successBtn))
+                    setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+                }
+
+                getButton(AlertDialog.BUTTON_NEGATIVE)?.apply {
+                    setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.error))
+                    setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+                }
+            }
     }
     private val clickCast = { cast : ResponseCredit.Cast ->
         val action = TvDetailsFragmentDirections.actionToPeopleDetailFragment(cast.id)
