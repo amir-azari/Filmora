@@ -43,32 +43,27 @@ amir-azari-filmora/
 └── build.gradle.kts                  # Project-level build configuration
 ```
 
-
 ## Demo
 
 <p align="center">
-    <img src="/docs/screenshots/login screen.png" alt="Login Screen" width="245" height="auto" />
-    <img src="/docs/screenshots/home screen.png" alt="Home Screen" width="245" height="auto" />
-    <img src="/docs/screenshots/celebrities screen.png" alt="Celebrities Screen" width="245" height="auto" />
-    <img src="/docs/screenshots/tv show details.png" alt="tv show details Screen" width="245" height="auto" />
+    <img src="/docs/screenshots/login screen.png" alt="Login Screen" width="24%" height="auto" />
+    <img src="/docs/screenshots/home screen.png" alt="Home Screen" width="24%" height="auto" />
+    <img src="/docs/screenshots/celebrities screen.png" alt="Celebrities Screen" width="24%" height="auto" />
+    <img src="/docs/screenshots/tv show details.png" alt="tv show details Screen" width="24%" height="auto" />
 </p>
 
 <details>
 <summary>Show more images</summary>
 
   <p align="center">
-      <img src="/docs/screenshots/movies screen.png" alt="Movies Screen" width="245" height="auto" />
-      <img src="/docs/screenshots/tv shows screen.png" alt="tv shows Screen" width="245" height="auto" />
-      <img src="/docs/screenshots/search screen.png" alt="Search Screen" width="245" height="auto" />
-      <img src="/docs/screenshots/movie details.png" alt="movie details Screen" width="245" height="auto" />
-      <img src="/docs/screenshots/people deatils.png" alt="people deatils Screen" width="245" height="auto" />
-      <img src="/docs/screenshots/profile screen.png" alt="Profile Screen" width="245" height="auto" />
-      <img src="/docs/screenshots/movies taste screen.png" alt="Profile Screen" width="245" height="auto" />
-      <img src="/docs/screenshots/series taste screen.png" alt="Profile Screen" width="245" height="auto" />
-
-
-    
+      <img src="/docs/screenshots/movies screen.png" alt="Movies Screen" width="24%" height="auto" />
+      <img src="/docs/screenshots/tv shows screen.png" alt="tv shows Screen" width="24%" height="auto" />
+      <img src="/docs/screenshots/search screen.png" alt="Search Screen" width="24%" height="auto" />
+      <img src="/docs/screenshots/movie details.png" alt="movie details Screen" width="24%" height="auto" />
+      <img src="/docs/screenshots/people deatils.png" alt="people deatils Screen" width="24%" height="auto" />
+      <img src="/docs/screenshots/profile screen.png" alt="Profile Screen" width="24%" height="auto" />
+      <img src="/docs/screenshots/movies taste screen.png" alt="Movies Taste Screen" width="24%" height="auto" />
+      <img src="/docs/screenshots/series taste screen.png" alt="Series Taste Screen" width="24%" height="auto" />
   </p>
 
 </details>
-
