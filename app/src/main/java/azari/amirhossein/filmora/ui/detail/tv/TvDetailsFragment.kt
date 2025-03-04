@@ -55,7 +55,8 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class TvDetailsFragment : Fragment() {
-    //Binding
+
+    // Binding and injected dependencies
     private var _binding: FragmentTvDetailsBinding? = null
     private val binding get() = _binding!!
 
@@ -71,23 +72,24 @@ class TvDetailsFragment : Fragment() {
     @Inject
     lateinit var castAndCrewAdapter: CastAndCrewAdapter
 
-    private lateinit var similarAndRecommendationsPagerAdapter: SimilarTvRecommendationsPagerAdapter
-    private  var tvGalleryPagerAdapter: TvGalleryPagerAdapter? = null
+    // Adapter for similar and recommendations
+    private var similarAndRecommendationsPagerAdapter: SimilarTvRecommendationsPagerAdapter? = null
+    private var tvGalleryPagerAdapter: TvGalleryPagerAdapter? = null
 
-    // State variables for overview expansion and configuration
+    // State variables for overview expansion
     private var isOverviewExpanded = false
     private val overviewMaxLines = Constants.Defaults.OVERVIEW_MAX_LINES
     private val overviewReviewsMaxLines = 3
 
     private val viewModel: TvDetailViewModel by viewModels()
 
-    // Arguments passed to the fragment
+    // Fragment arguments and media info
     private lateinit var args: TvDetailsFragmentArgs
     private var mediaId: Int = -1
     private var mediaType: String = ""
 
-    // Base URL for loading images
-    val baseUrl = Constants.Network.IMAGE_BASE_URL
+    // Base URL for images and original image scale type
+    private val baseUrl = Constants.Network.IMAGE_BASE_URL
     private lateinit var originalScaleType: ImageView.ScaleType
 
     override fun onCreateView(
@@ -95,201 +97,91 @@ class TvDetailsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        // Inflate the layout for this fragment
         _binding = FragmentTvDetailsBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupViewPagersSimilarAndRecommendations()
+        originalScaleType = binding.imgPoster.scaleType
 
-        castAndCrewAdapter.setOnItemClickListener(clickCast)
+        // Initialize data and UI
+        initializeFragmentData()
+        initializeUIComponents()
+        setupObservers()
+        restoreScrollPosition(savedInstanceState)
+    }
 
-        // Extract fragment arguments
+    // Initialize fragment data
+    private fun initializeFragmentData() {
         args = TvDetailsFragmentArgs.fromBundle(requireArguments())
         mediaId = args.id
         mediaType = args.mediaType
-
-        viewModel.getTvAccountStates(mediaId)
-
-        // Set an empty title initially
         setActionBarTitle("")
-
-        // Fetch media details
+        viewModel.getTvAccountStates(mediaId)
         viewModel.getTvDetails(mediaId)
+    }
 
-        originalScaleType = binding.imgPoster.scaleType
+    // Initialize views and UI settings
+    private fun initializeUIComponents() {
+        setupViewPagersSimilarAndRecommendations()
+        setupOverviewExpansions()
+        setupRecyclerViews()
+        setupAccountActions()
+        castAndCrewAdapter.setOnItemClickListener { cast ->
+            findNavController().navigate(
+                TvDetailsFragmentDirections.actionToPeopleDetailFragment(cast.id)
+            )
+        }
+    }
 
+    // Retrieve the scroll position if any
+    private fun restoreScrollPosition(savedInstanceState: Bundle?) {
+        savedInstanceState?.getInt("scroll_position")?.let { pos ->
+            binding.nestedScrollView.post { binding.nestedScrollView.scrollTo(0, pos) }
+        }
+    }
 
-        setupUI()
+    // Setting the development of texts (overview and review)
+    private fun setupOverviewExpansions() {
         binding.overviewContainer.setupOverviewExpansion(
             txtOverview = binding.txtOverview,
             imgExpand = binding.imgExpand,
             overviewMaxLines = overviewMaxLines,
             isOverviewExpanded = false
         ) { isExpanded ->
-
             isOverviewExpanded = isExpanded
         }
-
         binding.reviewContainer.setupOverviewExpansion(
             txtOverview = binding.tvReviewContent,
             imgExpand = binding.imgReviewContentExpand,
             overviewMaxLines = overviewReviewsMaxLines,
             isOverviewExpanded = false
         ) { isExpanded ->
-
             isOverviewExpanded = isExpanded
         }
-
-        observeViewModel()
-
-        viewLifecycleOwner.observeLoginStatus(
-            sessionManager = sessionManager,
-            onGuestAction = {
-                binding.cvMediaAction.visibility = View.GONE
-            },
-            onUserAction = {
-                binding.cvMediaAction.visibility = View.VISIBLE
-            }
-        )
-
-        setupAccountActions()
-        observeAccountStates()
-        observeMediaActionStates()
-
-        savedInstanceState?.getInt("scroll_position")?.let { scrollPosition ->
-            binding.nestedScrollView.post {
-                binding.nestedScrollView.scrollTo(0, scrollPosition)
-            }
-        }
-
     }
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putInt("scroll_position", binding.nestedScrollView.scrollY)
-    }
-    private fun setupUI() {
-        setupRecyclerViews()
-    }
+
+    // Set ViewPager for similar and recommended videos
     private fun setupViewPagersSimilarAndRecommendations() {
-        val similarAndRecommendationsViewPager = binding.vpSimilarRecommendation
-        val similarAndRecommendationsTabLayout = binding.tlSimilarRecommendation
+        val viewPager = binding.vpSimilarRecommendation
+        val tabLayout = binding.tlSimilarRecommendation
 
-        // Initialize pagerAdapter property
         similarAndRecommendationsPagerAdapter = SimilarTvRecommendationsPagerAdapter(this)
-        similarAndRecommendationsViewPager.adapter = similarAndRecommendationsPagerAdapter
-        similarAndRecommendationsViewPager.isUserInputEnabled = false
-
-        TabLayoutMediator(similarAndRecommendationsTabLayout, similarAndRecommendationsViewPager) { tab, position ->
-            when (position) {
-                0 -> tab.text = getString(R.string.similar_tv_show)
-
-                1 -> tab.text = getString(R.string.recommendations)
-
-            }
-        }.attach()
-
-    }
-    private fun setupVisual(mediaItem: ResponseTvDetails) {
-        val hasVideos = !mediaItem.videos?.results.isNullOrEmpty()
-        val hasBackdrops = !mediaItem.images?.backdrops.isNullOrEmpty()
-        val hasPosters = !mediaItem.images?.posters.isNullOrEmpty()
-
-        if (!hasVideos && !hasBackdrops && !hasPosters) {
-            binding.cvVisualContent.visibility = View.GONE
-            return
-        }
-
-        binding.cvVisualContent.visibility = View.VISIBLE
-
-        val tabLayout = binding.tlVisualContent
-        val viewPager = binding.vpVisualContent
+        viewPager.adapter = similarAndRecommendationsPagerAdapter
         viewPager.isUserInputEnabled = false
-        viewPager.offscreenPageLimit = 1
-
-        val visibleTabs = mutableListOf<Int>()
-
-        if (hasVideos) {
-            visibleTabs.add(0) // Videos tab
-        }
-        if (hasBackdrops) {
-            visibleTabs.add(1) // Backdrops tab
-        }
-        if (hasPosters) {
-            visibleTabs.add(2) // Posters tab
-        }
-
-        if (visibleTabs.size == 1) {
-            tabLayout.visibility = View.GONE
-            binding.txtHeaderVisualContent.visibility = View.VISIBLE
-
-            when (visibleTabs[0]) {
-                0 -> binding.txtHeaderVisualContent.text = getString(R.string.videos)
-                1 -> binding.txtHeaderVisualContent.text = getString(R.string.backdrops)
-                2 -> binding.txtHeaderVisualContent.text = getString(R.string.posters)
-            }
-
-            viewPager.setCurrentItem(0, false)
-        } else {
-            tabLayout.visibility = View.VISIBLE
-            binding.txtHeaderVisualContent.visibility = View.GONE
-        }
-
-        tvGalleryPagerAdapter = TvGalleryPagerAdapter(this, visibleTabs)
-        viewPager.adapter = tvGalleryPagerAdapter
-
-        for (i in 0 until tabLayout.tabCount) {
-            val tab = tabLayout.getTabAt(i)
-            if (tab != null && !visibleTabs.contains(i)) {
-                tabLayout.removeTab(tab)
-            }
-        }
 
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
-            when (visibleTabs[position]) {
-                0 -> tab.text = getString(R.string.videos)
-                1 -> tab.text = getString(R.string.backdrops)
-                2 -> tab.text = getString(R.string.posters)
+            tab.text = when (position) {
+                0 -> getString(R.string.similar_tv_show)
+                1 -> getString(R.string.recommendations)
+                else -> ""
             }
         }.attach()
-
     }
 
-
-
-    private fun setupSimilarAndRecommendations(mediaItem: ResponseTvDetails) {
-        val hasSimilar = !mediaItem.similar?.results.isNullOrEmpty()
-        val hasRecommendations = !mediaItem.recommendations?.results.isNullOrEmpty()
-
-        if (!hasRecommendations && !hasSimilar) {
-            binding.cvSimilarRecommendations.visibility = View.GONE
-            return
-        }
-
-        binding.cvSimilarRecommendations.visibility = View.VISIBLE
-
-        if (hasSimilar xor hasRecommendations) {
-            binding.tlSimilarRecommendation.visibility = View.GONE
-            binding.txtHeaderSimilarRecommendation.visibility = View.VISIBLE
-            binding.txtHeaderSimilarRecommendation.text = if (hasSimilar) {
-                getString(R.string.similar_tv_show)
-            } else {
-                getString(R.string.recommendations)
-            }
-        } else {
-            binding.tlSimilarRecommendation.visibility = View.VISIBLE
-            binding.txtHeaderSimilarRecommendation.visibility = View.GONE
-        }
-
-        if (hasSimilar xor hasRecommendations) {
-            binding.vpSimilarRecommendation.setCurrentItem(if (hasSimilar) 0 else 1, false)
-        }
-    }
-
+    // Set up RecyclerView for genres and actors
     private fun setupRecyclerViews() {
-        // Set up the RecyclerView for displaying genres
         binding.rvGenre.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             adapter = genresAdapter
@@ -298,7 +190,6 @@ class TvDetailsFragment : Fragment() {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             adapter = seasonsAdapter
         }
-
         binding.rvCastAndCrew.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             adapter = castAndCrewAdapter
@@ -306,34 +197,7 @@ class TvDetailsFragment : Fragment() {
         }
     }
 
-    private fun updateAccountActionsUI(states: ResponseAccountStates) {
-        binding.apply {
-            // Update favorite button
-            btnFavorite.setColorFilter(
-                ContextCompat.getColor(
-                    requireContext(),
-                    if (states.favorite == true) R.color.favorite else R.color.btn_icon
-                )
-            )
-
-            // Update watchlist button
-            btnWatchlist.setColorFilter(
-                ContextCompat.getColor(
-                    requireContext(),
-                    if (states.watchlist == true) R.color.watchlist else R.color.btn_icon
-                )
-            )
-
-            // Update rate button
-            btnRate.setColorFilter(
-                ContextCompat.getColor(
-                    requireContext(),
-                    if (states.rated != null) R.color.rate else R.color.btn_icon
-                )
-            )
-        }
-    }
-
+    // Set action buttons (Favorite, Watchlist, Rate)
     private fun setupAccountActions() {
         binding.apply {
             btnFavorite.setClickAnimation {
@@ -342,55 +206,44 @@ class TvDetailsFragment : Fragment() {
                         ?: false
                 viewModel.toggleFavorite(mediaId, !currentState)
             }
-
             btnWatchlist.setClickAnimation {
                 val currentState =
                     (viewModel.accountStates.value as? AccountStatesUiState.Success)?.data?.watchlist
                         ?: false
                 viewModel.toggleWatchlist(mediaId, !currentState)
             }
-
-            btnRate.setClickAnimation {
-                showRatingDialog()
-            }
+            btnRate.setClickAnimation { showRatingDialog() }
         }
     }
 
-    private fun setAccountActionsEnabled(enabled: Boolean) {
-        binding.apply {
-            btnFavorite.isEnabled = enabled
-            btnWatchlist.isEnabled = enabled
-            btnRate.isEnabled = enabled
-        }
+    // View ViewModel changes
+    private fun setupObservers() {
+        observeTvDetails()
+        observeAccountStates()
+        observeMediaActionStates()
+        observeLoginStatus()
     }
-    private fun observeViewModel() {
+
+    private fun observeTvDetails() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.tvDetails.collect { result ->
-                    result.let { it ->
-                        when (it) {
-                            is NetworkRequest.Loading -> {
-                                showLoading()
+                    when (result) {
+                        is NetworkRequest.Loading -> showLoading()
+                        is NetworkRequest.Success -> {
+                            result.data?.let { tvDetails ->
+                                showSuccess()
+                                bindUI(tvDetails)
+                                setupMovieGallery(tvDetails)
+                                setupSimilarAndRecommendations(tvDetails)
                             }
-
-                            is NetworkRequest.Success -> {
-                                it.data?.let { mediaItem ->
-                                    showSuccess()
-                                    bindUI(mediaItem)
-                                    setupVisual(mediaItem)
-                                    setupSimilarAndRecommendations(mediaItem)
-
-                                }
+                        }
+                        is NetworkRequest.Error -> {
+                            showError()
+                            if (result.message == Constants.Message.NO_INTERNET_CONNECTION) {
+                                binding.internetLay.visibility = View.VISIBLE
                             }
-
-                            is NetworkRequest.Error -> {
-                                showError()
-                                if (it.message == Constants.Message.NO_INTERNET_CONNECTION) {
-                                    // Show no internet UI
-                                    binding.internetLay.visibility = View.VISIBLE
-                                }
-                                showErrorSnackbar(binding.root, it.message.toString())
-                            }
+                            showErrorSnackbar(binding.root, result.message.toString())
                         }
                     }
                 }
@@ -405,15 +258,11 @@ class TvDetailsFragment : Fragment() {
                     viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                         viewModel.accountStates.collect { state ->
                             when (state) {
-                                is AccountStatesUiState.Loading -> {
-                                    setAccountActionsEnabled(false)
-                                }
-
+                                is AccountStatesUiState.Loading -> setAccountActionsEnabled(false)
                                 is AccountStatesUiState.Success -> {
                                     updateAccountActionsUI(state.data)
                                     setAccountActionsEnabled(true)
                                 }
-
                                 is AccountStatesUiState.Error -> {
                                     setAccountActionsEnabled(true)
                                     showErrorSnackbar(binding.root, state.message)
@@ -428,18 +277,57 @@ class TvDetailsFragment : Fragment() {
 
     private fun observeMediaActionStates() {
         viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.mediaActionState.collect { state ->
                     binding.apply {
                         btnFavorite.isEnabled = !state.isFavoriteLoading
                         btnWatchlist.isEnabled = !state.isWatchlistLoading
                         btnRate.isEnabled = !state.isRatingLoading
-
                     }
                 }
             }
         }
     }
+
+    private fun observeLoginStatus() {
+        viewLifecycleOwner.observeLoginStatus(
+            sessionManager = sessionManager,
+            onGuestAction = { binding.cvMediaAction.visibility = View.GONE },
+            onUserAction = { binding.cvMediaAction.visibility = View.VISIBLE }
+        )
+    }
+
+    private fun updateAccountActionsUI(states: ResponseAccountStates) {
+        binding.apply {
+            btnFavorite.setColorFilter(
+                ContextCompat.getColor(
+                    requireContext(),
+                    if (states.favorite) R.color.favorite else R.color.btn_icon
+                )
+            )
+            btnWatchlist.setColorFilter(
+                ContextCompat.getColor(
+                    requireContext(),
+                    if (states.watchlist) R.color.watchlist else R.color.btn_icon
+                )
+            )
+            btnRate.setColorFilter(
+                ContextCompat.getColor(
+                    requireContext(),
+                    if (states.rated != null) R.color.rate else R.color.btn_icon
+                )
+            )
+        }
+    }
+
+    private fun setAccountActionsEnabled(enabled: Boolean) {
+        binding.apply {
+            btnFavorite.isEnabled = enabled
+            btnWatchlist.isEnabled = enabled
+            btnRate.isEnabled = enabled
+        }
+    }
+
     private fun showErrorSnackbar(root: View, message: String) {
         Snackbar.make(root, message, Snackbar.LENGTH_SHORT).apply {
             customize(R.color.error, R.color.white, Gravity.TOP)
@@ -469,54 +357,140 @@ class TvDetailsFragment : Fragment() {
         }
     }
 
-
     private fun setActionBarTitle(title: String?) {
         (requireActivity() as AppCompatActivity).supportActionBar?.title = title
     }
 
-    private fun handleOverviewExpansion() {
-        binding.txtOverview.maxLines = overviewMaxLines
-        binding.txtOverview.ellipsize = TextUtils.TruncateAt.END
+    // Helper function to generate the full image path
+    private fun getImageFullPath(path: String?): String? {
+        return if (path.isNullOrEmpty()) null else baseUrl + Constants.ImageSize.ORIGINAL + path
+    }
 
-        binding.txtOverview.post {
-            val isEllipsized = binding.txtOverview.layout?.let { layout ->
-                layout.getEllipsisCount(layout.lineCount - 1) > 0
-            } ?: false
+    // Bind data to UI
+    private fun bindUI(data: ResponseTvDetails) {
+        bindUiDetail(data)
+        bindUiCast(data.credits)
+        bindUiLanguage(data.spokenLanguages, data.originalLanguage)
+        bindUiReview(data.reviews!!)
+    }
 
-            binding.imgExpand.visibility = if (isEllipsized) View.VISIBLE else View.INVISIBLE
+    private fun bindUiDetail(data: ResponseTvDetails) {
+        binding.apply {
+            txtTitle.text = data.name ?: Constants.Defaults.NOT_APPLICABLE
+            setActionBarTitle(data.name)
+            txtOverview.text = data.overview ?: Constants.Defaults.OVERVIEW
+            handleOverviewExpansion()
+
+            txtVoteCount.text = data.voteCount?.toString() ?: Constants.Defaults.VOTE_COUNT
+            txtVoteAverage.text = data.voteAverage?.toFormattedVoteAverage()
+                ?: Constants.Defaults.VOTE_AVERAGE.toString()
+            ratingBar.rating = data.voteAverage?.div(2)?.toFloat() ?: 0f
+
+            genresAdapter.differ.submitList(data.genres)
+
+            imgPoster.loadImageWithoutShimmer(
+                getImageFullPath(data.posterPath),
+                R.drawable.image_slash_medium,
+                R.drawable.image_medium,
+                originalScaleType,
+                true
+            )
+
+            imgBackdrop.loadImageWithoutShimmer(
+                getImageFullPath(data.backdropPath),
+                R.drawable.image_slash_large,
+                R.drawable.image_large,
+                originalScaleType,
+                false
+            )
+
+            // Set the seasons
+            if (data.seasons.isNullOrEmpty()) {
+                cvTvSeasons.visibility = View.GONE
+            } else {
+                cvTvSeasons.visibility = View.VISIBLE
+                seasonsAdapter.differ.submitList(data.seasons)
+            }
+
+            // Creators
+            if (data.createdBy.isNullOrEmpty()) {
+                txtCreatorValue.visibility = View.GONE
+                txtCreator.visibility = View.GONE
+            } else {
+                txtCreatorValue.visibility = View.VISIBLE
+                txtCreator.visibility = View.VISIBLE
+                txtCreatorValue.text = data.createdBy.toCreatorNames()
+            }
+
+            // Release date and status
+            if (data.firstAirDate.isNullOrEmpty()) {
+                txtReleaseValue.visibility = View.GONE
+                txtRelease.visibility = View.GONE
+            } else {
+                txtReleaseValue.visibility = View.VISIBLE
+                txtRelease.visibility = View.VISIBLE
+                txtReleaseValue.text = getString(
+                    R.string.release_value,
+                    data.firstAirDate.toFormattedDate(),
+                    data.status
+                )
+            }
+
+            // Networks
+            txtNetworksValue.text = data.networks.toNetworkNames()
+
+            txtLanguageValue.text = data.originalLanguage
+
+            // Languages spoken and number of chapters/episodes
+            txtSpokenLanguagesValue.text = data.spokenLanguages.toSpokenLanguagesText()
+            txtSeasonsAndEpisodesValue.text = getString(
+                R.string.seasons_and_episodes,
+                data.numberOfSeasons?.toString() ?: Constants.Defaults.NOT_APPLICABLE,
+                data.numberOfEpisodes?.toString() ?: Constants.Defaults.NOT_APPLICABLE
+            )
+
+            txtTypeValue.text = data.type
+
+            // Tagline
+            if (data.tagline.isNullOrEmpty()) {
+                txtTag.visibility = View.GONE
+            } else {
+                txtTag.visibility = View.VISIBLE
+                txtTag.text = data.tagline
+            }
+
+            txtProductionCountriesValue.text = data.productionCountries.toCountryNames()
+            txtProductionCompaniesValue.text = data.productionCompanies?.toCompanyNames()
         }
     }
-    private fun handleOverviewReviewsExpansion() {
-        binding.tvReviewContent.maxLines = overviewReviewsMaxLines
-        binding.tvReviewContent.ellipsize = TextUtils.TruncateAt.END
 
-        binding.tvReviewContent.post {
-            val isEllipsized = binding.tvReviewContent.layout?.let { layout ->
-                layout.getEllipsisCount(layout.lineCount - 1) > 0
-            } ?: false
-
-            binding.imgReviewContentExpand.visibility = if (isEllipsized) View.VISIBLE else View.INVISIBLE
+    private fun bindUiCast(data: ResponseCredit) {
+        binding.layoutSeeAllCastAndCrew.setClickAnimation {
+            findNavController().navigate(
+                TvDetailsFragmentDirections.actionToCastAndCrewFragment(data)
+            )
+        }
+        data.cast?.let { castList ->
+            if (castList.isNotEmpty()) {
+                binding.cvCastAndCrew.visibility = View.VISIBLE
+            }
+            castAndCrewAdapter.submitList(castList.filterNotNull())
         }
     }
+
     private fun bindUiReview(data: ResponseReviews) {
         binding.layoutSeeAllReviews.setClickAnimation {
             findNavController().navigate(
                 TvDetailsFragmentDirections.actionTvDetailsFragmentToReviewsFragment(data)
             )
         }
-
         binding.apply {
-            if (data.results?.isEmpty() == true) {
+            if (data.results.isNullOrEmpty()) {
                 cvReview.visibility = View.GONE
             } else {
                 cvReview.visibility = View.VISIBLE
-
-                val posterFullPath = if (data.results?.get(0)?.authorDetails?.avatarPath.isNullOrEmpty()) {
-                    null
-                } else {
-                    baseUrl + Constants.ImageSize.ORIGINAL + data.results?.get(0)?.authorDetails?.avatarPath
-                }
-
+                val review = data.results[0]
+                val posterFullPath = getImageFullPath(review?.authorDetails?.avatarPath)
                 ivProfileReviewAuthor.loadImageWithoutShimmer(
                     posterFullPath,
                     R.drawable.image_slash_small,
@@ -524,162 +498,152 @@ class TvDetailsFragment : Fragment() {
                     originalScaleType,
                     false
                 )
-                tvReviewAuthor.text = data.results?.get(0)?.author
-                val createdAt = data.results?.get(0)?.createdAt?.toFormattedDate()
-                tvReviewDate.text = getString(R.string.written_on_date, createdAt ?: Constants.Defaults.NOT_APPLICABLE)
-
-                val rating = data.results?.get(0)?.authorDetails?.rating?.toString()
-                tvReviewRating.text = getString(R.string.review_rating, rating ?: Constants.Defaults.NOT_APPLICABLE)
-
-                tvReviewContent.text = data.results?.get(0)?.content ?: ""
+                tvReviewAuthor.text = review?.author
+                tvReviewDate.text = getString(
+                    R.string.written_on_date,
+                    review?.createdAt?.toFormattedDate() ?: Constants.Defaults.NOT_APPLICABLE
+                )
+                tvReviewRating.text = getString(
+                    R.string.review_rating,
+                    review?.authorDetails?.rating?.toString() ?: Constants.Defaults.NOT_APPLICABLE
+                )
+                tvReviewContent.text = review?.content ?: ""
                 handleOverviewReviewsExpansion()
-                layoutSeeAllReviews.visibility = if (data.results?.size!! > 1) {
-                    View.VISIBLE
-                } else {
-                    View.GONE
-                }
+                layoutSeeAllReviews.visibility = if (data.results.size > 1) View.VISIBLE else View.GONE
             }
         }
     }
 
-    private fun bindUiDetail(data: ResponseTvDetails) {
-        binding.apply {
-            data.apply {
-                // Tv show name and overview
-                txtTitle.text = name ?: Constants.Defaults.NOT_APPLICABLE
-                setActionBarTitle(name)
-                txtOverview.text = overview ?: Constants.Defaults.OVERVIEW
-                handleOverviewExpansion()
-
-                // Vote details
-                txtVoteCount.text = voteCount?.toString() ?: Constants.Defaults.VOTE_COUNT
-                txtVoteAverage.text = voteAverage?.toFormattedVoteAverage()
-                    ?: Constants.Defaults.VOTE_AVERAGE.toString()
-                ratingBar.rating = voteAverage?.div(2)?.toFloat() ?: 0f
-
-                genresAdapter.differ.submitList(genres)
-
-                // Load poster
-                imgPoster.loadImageWithoutShimmer(
-                    baseUrl + Constants.ImageSize.ORIGINAL + posterPath,
-                    R.drawable.image_slash_medium,
-                    R.drawable.image_medium,
-                    originalScaleType,
-                    true
-                )
-
-
-                // Load backdrop
-                imgBackdrop.loadImageWithoutShimmer(
-                    baseUrl + Constants.ImageSize.ORIGINAL + backdropPath,
-                    R.drawable.image_slash_large,
-                    R.drawable.image_large,
-                    originalScaleType,
-                    false
-                )
-                // Seasons
-                if (seasons.isNullOrEmpty()){
-                    cvTvSeasons.visibility = View.GONE
-                }
-                seasonsAdapter.differ.submitList(seasons)
-
-                // Creators
-                if (createdBy.isNullOrEmpty()) {
-                    txtCreatorValue.visibility = View.GONE
-                    txtCreator.visibility = View.GONE
-                }
-                txtCreatorValue.text = createdBy.toCreatorNames()
-
-
-                // release
-                if (firstAirDate.isNullOrEmpty()) {
-                    txtReleaseValue.visibility = View.GONE
-                    txtRelease.visibility = View.GONE
-                }
-                txtReleaseValue.text = getString(
-                    R.string.release_value,
-                    firstAirDate?.toFormattedDate() ?: Constants.Defaults.NOT_APPLICABLE,
-                    status
-                )
-
-                // Networks
-                txtNetworksValue.text = networks.toNetworkNames()
-
-                txtLanguageValue.text = originalLanguage
-
-
-                // Spoken Languages
-                txtSpokenLanguagesValue.text = spokenLanguages.toSpokenLanguagesText()
-                txtSeasonsAndEpisodesValue.text = getString(
-                    R.string.seasons_and_episodes,
-                    numberOfSeasons?.toString() ?: Constants.Defaults.NOT_APPLICABLE,
-                    numberOfEpisodes?.toString() ?: Constants.Defaults.NOT_APPLICABLE
-                )
-
-                txtTypeValue.text = type
-
-                // Tagline
-                if (tagline.isNullOrEmpty()) {
-                    txtTag.visibility = View.GONE
-                } else {
-                    txtTag.visibility = View.VISIBLE
-                    txtTag.text = tagline
-                }
-
-                // Production companies and countries
-                txtProductionCountriesValue.text = productionCountries.toCountryNames()
-                txtProductionCompaniesValue.text = productionCompanies?.toCompanyNames()
-            }
-
-            }
-        }
-
-    private fun bindUI(data: ResponseTvDetails) {
-        bindUiDetail(data)
-        bindUiCast(data.credits)
-        bindUiLanguage(data.spokenLanguages, data.originalLanguage)
-        bindUiReview(data.reviews!!)
-
+    private fun bindUiLanguage(spokenLanguages: List<SpokenLanguage?>?, originalLanguage: String?) {
+        val primaryLanguage = spokenLanguages?.filterNotNull()
+            ?.find { it.iso6391 == originalLanguage }
+            ?.englishName ?: Constants.Defaults.NOT_APPLICABLE
+        binding.txtLanguageValue.text = primaryLanguage
     }
 
-    private fun bindUiCast(data : ResponseCredit){
-        binding.layoutSeeAllCastAndCrew.setClickAnimation {
-            findNavController().navigate(
-                TvDetailsFragmentDirections.actionToCastAndCrewFragment(data)
-            )
-        }
-        data.cast?.let { cast ->
-            if (cast.isNotEmpty()){
-                binding.cvCastAndCrew.visibility = View.VISIBLE
-            }
-            castAndCrewAdapter.submitList(
-                cast.filterNotNull()
-            )
+    // Control text expansion for overview and review
+    private fun handleOverviewExpansion() {
+        binding.txtOverview.maxLines = overviewMaxLines
+        binding.txtOverview.ellipsize = TextUtils.TruncateAt.END
+        binding.txtOverview.post {
+            val isEllipsized = binding.txtOverview.layout?.let { layout ->
+                layout.getEllipsisCount(layout.lineCount - 1) > 0
+            } ?: false
+            binding.imgExpand.visibility = if (isEllipsized) View.VISIBLE else View.INVISIBLE
         }
     }
+
+    private fun handleOverviewReviewsExpansion() {
+        binding.tvReviewContent.maxLines = overviewReviewsMaxLines
+        binding.tvReviewContent.ellipsize = TextUtils.TruncateAt.END
+        binding.tvReviewContent.post {
+            val isEllipsized = binding.tvReviewContent.layout?.let { layout ->
+                layout.getEllipsisCount(layout.lineCount - 1) > 0
+            } ?: false
+            binding.imgReviewContentExpand.visibility = if (isEllipsized) View.VISIBLE else View.INVISIBLE
+        }
+    }
+
+    // Set similar and recommended sections
+    private fun setupSimilarAndRecommendations(data: ResponseTvDetails) {
+        val hasSimilar = !data.similar?.results.isNullOrEmpty()
+        val hasRecommendations = !data.recommendations?.results.isNullOrEmpty()
+
+        if (!hasSimilar && !hasRecommendations) {
+            binding.cvSimilarRecommendations.visibility = View.GONE
+            return
+        }
+        binding.cvSimilarRecommendations.visibility = View.VISIBLE
+
+        if (hasSimilar xor hasRecommendations) {
+            binding.tlSimilarRecommendation.visibility = View.GONE
+            binding.txtHeaderSimilarRecommendation.visibility = View.VISIBLE
+            binding.txtHeaderSimilarRecommendation.text = if (hasSimilar)
+                getString(R.string.similar_tv_show) else getString(R.string.recommendations)
+        } else {
+            binding.tlSimilarRecommendation.visibility = View.VISIBLE
+            binding.txtHeaderSimilarRecommendation.visibility = View.GONE
+        }
+
+        if (hasSimilar xor hasRecommendations) {
+            binding.vpSimilarRecommendation.setCurrentItem(if (hasSimilar) 0 else 1, false)
+        }
+    }
+
+    // Set up the video, backdrop, and poster sections
+    private fun setupMovieGallery(data: ResponseTvDetails) {
+        val hasVideos = !data.videos?.results.isNullOrEmpty()
+        val hasBackdrops = !data.images?.backdrops.isNullOrEmpty()
+        val hasPosters = !data.images?.posters.isNullOrEmpty()
+
+        if (!hasVideos && !hasBackdrops && !hasPosters) {
+            binding.cvVisualContent.visibility = View.GONE
+            return
+        }
+        binding.cvVisualContent.visibility = View.VISIBLE
+
+        val tabLayout = binding.tlVisualContent
+        val viewPager = binding.vpVisualContent
+        viewPager.isUserInputEnabled = false
+        viewPager.offscreenPageLimit = 1
+
+        val visibleTabs = mutableListOf<Int>().apply {
+            if (hasVideos) add(0)
+            if (hasBackdrops) add(1)
+            if (hasPosters) add(2)
+        }
+
+        if (visibleTabs.size == 1) {
+            tabLayout.visibility = View.GONE
+            binding.txtHeaderVisualContent.visibility = View.VISIBLE
+            binding.txtHeaderVisualContent.text = when (visibleTabs[0]) {
+                0 -> getString(R.string.videos)
+                1 -> getString(R.string.backdrops)
+                2 -> getString(R.string.posters)
+                else -> ""
+            }
+            viewPager.setCurrentItem(0, false)
+        } else {
+            tabLayout.visibility = View.VISIBLE
+            binding.txtHeaderVisualContent.visibility = View.GONE
+        }
+
+        tvGalleryPagerAdapter = TvGalleryPagerAdapter(this, visibleTabs)
+        viewPager.adapter = tvGalleryPagerAdapter
+
+        for (i in 0 until tabLayout.tabCount) {
+            tabLayout.getTabAt(i)?.let { tab ->
+                if (!visibleTabs.contains(i)) {
+                    tabLayout.removeTab(tab)
+                }
+            }
+        }
+
+        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+            tab.text = when (visibleTabs[position]) {
+                0 -> getString(R.string.videos)
+                1 -> getString(R.string.backdrops)
+                2 -> getString(R.string.posters)
+                else -> ""
+            }
+        }.attach()
+    }
+
+    // Show the scoring dialog
     private fun showRatingDialog() {
-        // Inflate custom dialog layout
         val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_rate, null)
-
-        // Initialize rating bar
         val ratingBar = dialogView.findViewById<com.willy.ratingbar.BaseRatingBar>(R.id.ratingBar)
         ratingBar.setMinimumStars(0.5f)
-
-        // Set existing rating if available
         val currentRating =
             (viewModel.accountStates.value as? AccountStatesUiState.Success)?.data?.rated?.value
-        currentRating?.toFloat()?.let {
-            ratingBar.rating = it
-        }
-
+        currentRating?.toFloat()?.let { ratingBar.rating = it }
         MaterialAlertDialogBuilder(requireContext())
             .setTitle("Your Rating")
             .setView(dialogView)
             .setPositiveButton("Save") { dialog, _ ->
                 viewLifecycleOwner.lifecycleScope.launch {
                     try {
-                        val ratingValue = ratingBar.rating
-                        viewModel.addRating(mediaId, ratingValue)
+                        viewModel.addRating(mediaId, ratingBar.rating)
                         dialog.dismiss()
                     } catch (e: Exception) {
                         showErrorSnackbar(binding.root, e.message ?: "Error submitting rating")
@@ -699,30 +663,22 @@ class TvDetailsFragment : Fragment() {
             .create()
             .apply {
                 show()
-
                 getButton(AlertDialog.BUTTON_POSITIVE)?.apply {
                     setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.successBtn))
                     setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
                 }
-
                 getButton(AlertDialog.BUTTON_NEGATIVE)?.apply {
                     setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.error))
                     setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
                 }
             }
     }
-    private val clickCast = { cast : ResponseCredit.Cast ->
-        val action = TvDetailsFragmentDirections.actionToPeopleDetailFragment(cast.id)
-        findNavController().navigate(action)
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt("scroll_position", binding.nestedScrollView.scrollY)
     }
 
-    private fun bindUiLanguage(spokenLanguages: List<SpokenLanguage?>?, originalLanguage: String?) {
-        val primaryLanguage = spokenLanguages?.filterNotNull()
-            ?.find { it.iso6391 == originalLanguage }
-            ?.englishName ?: Constants.Defaults.NOT_APPLICABLE
-
-        binding.txtLanguageValue.text = primaryLanguage
-    }
     override fun onDestroyView() {
         super.onDestroyView()
         tvGalleryPagerAdapter = null
