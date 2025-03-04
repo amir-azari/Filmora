@@ -114,6 +114,11 @@ class TvDetailViewModel @Inject constructor(
         viewModelScope.launch {
             _tvDetails.value = NetworkRequest.Loading()
 
+
+            tvDetailsCache[tvId]?.let {
+                _tvDetails.value = NetworkRequest.Success(it)
+                return@launch
+            }
             try {
                 if (networkChecker.isNetworkAvailable.value) {
                     repository.getTvDetails(tvId).collect { result ->
