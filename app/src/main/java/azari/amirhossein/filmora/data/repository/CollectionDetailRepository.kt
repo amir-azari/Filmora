@@ -8,7 +8,9 @@ import azari.amirhossein.filmora.utils.NetworkRequest
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class CollectionDetailRepository @Inject constructor(
     private val remote: RemoteDataSource,
     private val local: LocalDataSource

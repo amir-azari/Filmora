@@ -11,7 +11,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class MayLikeMoviesRepository @Inject constructor(
     private val sessionManager: SessionManager,
     private val remote: RemoteDataSource

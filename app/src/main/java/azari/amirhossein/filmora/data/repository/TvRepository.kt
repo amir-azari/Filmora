@@ -1,10 +1,8 @@
 package azari.amirhossein.filmora.data.repository
 
-import azari.amirhossein.filmora.data.database.entity.MovieEntity
 import azari.amirhossein.filmora.data.database.entity.TvEntity
 import azari.amirhossein.filmora.data.source.LocalDataSource
 import azari.amirhossein.filmora.data.source.RemoteDataSource
-import azari.amirhossein.filmora.models.movie.MoviePageData
 import azari.amirhossein.filmora.models.tv.TvPageData
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.NetworkRequest
@@ -15,7 +13,9 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class TvRepository @Inject constructor(
     private val remote: RemoteDataSource,
     private val local: LocalDataSource
