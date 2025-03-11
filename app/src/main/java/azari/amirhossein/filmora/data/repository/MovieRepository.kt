@@ -13,6 +13,9 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
+import javax.inject.Singleton
+
+@Singleton
 
 class MovieRepository @Inject constructor(
     private val remote: RemoteDataSource,

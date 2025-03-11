@@ -13,7 +13,9 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class PeopleDetailsRepository @Inject constructor(
     private val remote: RemoteDataSource,
     private val local: LocalDataSource,

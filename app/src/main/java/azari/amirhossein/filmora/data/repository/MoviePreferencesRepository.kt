@@ -11,7 +11,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class MoviePreferencesRepository @Inject constructor(private val remote: RemoteDataSource) {
     fun searchMovies(query: String): Flow<NetworkRequest<ResponseMoviesList>> = flow {
         emit(NetworkRequest.Loading())

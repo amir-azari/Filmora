@@ -6,14 +6,19 @@ import androidx.paging.PagingData
 import azari.amirhossein.filmora.data.SessionManager
 import azari.amirhossein.filmora.data.source.RemoteDataSource
 import azari.amirhossein.filmora.models.movie.ResponseMovieType
-import azari.amirhossein.filmora.models.prefences.movie.ResponseMoviesList
-import azari.amirhossein.filmora.paging.*
+import azari.amirhossein.filmora.paging.NowPlayingPagingSource
+import azari.amirhossein.filmora.paging.PopularMoviesPagingSource
+import azari.amirhossein.filmora.paging.TopRatedMoviesPagingSource
+import azari.amirhossein.filmora.paging.TrendingMoviesPagingSource
+import azari.amirhossein.filmora.paging.UpcomingPagingSource
 import azari.amirhossein.filmora.utils.Constants
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class MovieSectionRepository @Inject constructor(
     private val sessionManager: SessionManager,
     private val remote: RemoteDataSource
