@@ -132,18 +132,27 @@
         <action
             android:id="@+id/actionHomeToMayLikeMovies"
             app:destination="@id/mayLikeMoviesFragment"
-            app:enterAnim="@anim/nav_fade_in"
-            app:exitAnim="@anim/nav_fade_out"
-            app:popEnterAnim="@anim/nav_fade_in"
-            app:popExitAnim="@anim/nav_fade_out"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
             />
         <action
             android:id="@+id/actionHomeToMayLikeTvs"
             app:destination="@id/mayLikeTvsFragment"
-            app:enterAnim="@anim/nav_fade_in"
-            app:exitAnim="@anim/nav_fade_out"
-            app:popEnterAnim="@anim/nav_fade_in"
-            app:popExitAnim="@anim/nav_fade_out"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            />
+
+        <action
+            android:id="@+id/actionToProfileFragment"
+            app:destination="@id/profileFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
             />
     </fragment>
 
@@ -156,21 +165,14 @@
         <action
             android:id="@+id/actionToMovieSectionFragment"
             app:destination="@id/movieSectionFragment"
-            app:enterAnim="@anim/nav_fade_in"
-            app:exitAnim="@anim/nav_fade_out"
-            app:popEnterAnim="@anim/nav_fade_in"
-            app:popExitAnim="@anim/nav_fade_out"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
             />
 
     </fragment>
-    <action
-        android:id="@+id/actionToProfileFragment"
-        app:destination="@id/profileFragment"
-        app:enterAnim="@anim/nav_fade_in"
-        app:exitAnim="@anim/nav_fade_out"
-        app:popEnterAnim="@anim/nav_fade_in"
-        app:popExitAnim="@anim/nav_fade_out"
-        />
+
 
     <fragment
         android:id="@+id/tvFragment"
@@ -179,10 +181,10 @@
         tools:layout="@layout/fragment_tv" >
         <action
             android:id="@+id/actionToTvSectionFragment"
-            app:enterAnim="@anim/nav_fade_in"
-            app:exitAnim="@anim/nav_fade_out"
-            app:popEnterAnim="@anim/nav_fade_in"
-            app:popExitAnim="@anim/nav_fade_out"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
             app:destination="@id/tvSectionFragment" />
     </fragment>
     <fragment
@@ -192,10 +194,10 @@
         tools:layout="@layout/fragment_people" >
         <action
             android:id="@+id/actionToPeopleSectionFragment"
-            app:enterAnim="@anim/nav_fade_in"
-            app:exitAnim="@anim/nav_fade_out"
-            app:popEnterAnim="@anim/nav_fade_in"
-            app:popExitAnim="@anim/nav_fade_out"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
             app:destination="@id/peopleSectionFragment" />
 
     </fragment>
@@ -220,17 +222,17 @@
         <action
             android:id="@+id/action_movieDetailFragment_to_collectionFragment"
             app:destination="@id/collectionFragment"
-            app:enterAnim="@anim/nav_fade_in"
-            app:exitAnim="@anim/nav_fade_out"
-            app:popEnterAnim="@anim/nav_fade_in"
-            app:popExitAnim="@anim/nav_fade_out" />
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
         <action
             android:id="@+id/action_movieDetailFragment_to_reviewsFragment"
             app:destination="@id/reviewsFragment"
-            app:enterAnim="@anim/nav_fade_in"
-            app:exitAnim="@anim/nav_fade_out"
-            app:popEnterAnim="@anim/nav_fade_in"
-            app:popExitAnim="@anim/nav_fade_out" />
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
 
     </fragment>
     <action
@@ -337,10 +339,10 @@
         <action
             android:id="@+id/action_peopleDetailFragment_to_creditsFragment"
             app:destination="@id/creditsFragment"
-            app:enterAnim="@anim/nav_fade_in"
-            app:exitAnim="@anim/nav_fade_out"
-            app:popEnterAnim="@anim/nav_fade_in"
-            app:popExitAnim="@anim/nav_fade_out"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
             />
     </fragment>
     <fragment
@@ -432,32 +434,32 @@
         <action
             android:id="@+id/action_profileFragment_to_loginFragment"
             app:destination="@id/loginFragment"
-            app:enterAnim="@anim/nav_fade_in"
-            app:exitAnim="@anim/nav_fade_out"
-            app:popEnterAnim="@anim/nav_fade_in"
-            app:popExitAnim="@anim/nav_fade_out"/>
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
         <action
             android:id="@+id/action_profileFragment_to_favoriteFragment"
             app:destination="@id/favoriteFragment"
-            app:enterAnim="@anim/nav_fade_in"
-            app:exitAnim="@anim/nav_fade_out"
-            app:popEnterAnim="@anim/nav_fade_in"
-            app:popExitAnim="@anim/nav_fade_out"/>
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
         <action
             android:id="@+id/action_profileFragment_to_watchlistFragment"
             app:destination="@id/watchlistFragment"
-            app:enterAnim="@anim/nav_fade_in"
-            app:exitAnim="@anim/nav_fade_out"
-            app:popEnterAnim="@anim/nav_fade_in"
-            app:popExitAnim="@anim/nav_fade_out"/>
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
 
         <action
             android:id="@+id/action_profileFragment_to_ratedFragment"
             app:destination="@id/ratedFragment"
-            app:enterAnim="@anim/nav_fade_in"
-            app:exitAnim="@anim/nav_fade_out"
-            app:popEnterAnim="@anim/nav_fade_in"
-            app:popExitAnim="@anim/nav_fade_out"/>
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
     </fragment>
 
     <fragment

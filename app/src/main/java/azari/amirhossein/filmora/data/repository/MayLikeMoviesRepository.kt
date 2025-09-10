@@ -21,9 +21,9 @@ class MayLikeMoviesRepository @Inject constructor(
     fun getMovies(): Flow<PagingData<ResponseMovieType>> {
         return Pager(
             config = PagingConfig(
-                pageSize = 1,
+                pageSize = 2,
                 enablePlaceholders = false,
-                initialLoadSize = 20
+                initialLoadSize = 40
             ),
             pagingSourceFactory = { MayLikeMoviesPagingSource(remote, sessionManager) }
         ).flow
