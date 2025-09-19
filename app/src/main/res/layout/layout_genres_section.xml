@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_favoriteGenres"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_normal"
+        android:alpha="0.8"
+        android:text="@string/what_genres_do_you_love"
+        android:textSize="@dimen/text_label"
+        android:textStyle="bold" />
+
+    <HorizontalScrollView
+        android:id="@+id/scroll_favoriteGenres"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_small"
+        android:scrollbars="none">
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/cg_favoriteGenres"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:chipSpacingHorizontal="@dimen/spacing_small"
+            app:singleLine="true" />
+    </HorizontalScrollView>
+
+    <TextView
+        android:id="@+id/tv_dislikedGenres"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_normal"
+        android:alpha="0.8"
+        android:text="@string/what_genres_do_you_dislike"
+        android:textSize="@dimen/text_label"
+        android:textStyle="bold" />
+
+    <HorizontalScrollView
+        android:id="@+id/scroll_dislikedGenres"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_small"
+        android:scrollbars="none">
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/cg_dislikedGenres"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:chipSpacingHorizontal="@dimen/spacing_small"
+            app:singleLine="true" />
+    </HorizontalScrollView>
+
+</LinearLayout>
