@@ -1,26 +1,21 @@
 package azari.amirhossein.filmora.ui.splash
 
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import azari.amirhossein.filmora.R
-import azari.amirhossein.filmora.data.SessionManager
 import azari.amirhossein.filmora.databinding.FragmentSplashBinding
-import azari.amirhossein.filmora.models.prefences.TvAndMoviePreferences
-import azari.amirhossein.filmora.viewmodel.LoginViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class SplashFragment : Fragment() {
@@ -28,67 +23,48 @@ class SplashFragment : Fragment() {
     private var _binding: FragmentSplashBinding? = null
     private val binding get() = _binding!!
 
-    //ViewModel
-    private val viewModel: LoginViewModel by viewModels()
-    @Inject
-    lateinit var sessionManager: SessionManager
+    // ViewModel
+    private val viewModel: SplashViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // Inflate the layout for this fragment
+        // Inflate the layout with binding
         _binding = FragmentSplashBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //InitViews
-        binding.apply {
-            lifecycleScope.launch {
-                viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
-                    delay(2500)
 
-                    try {
-                        val sessionId = viewModel.getSessionId()
+        // Collect destination after a 2-second delay
+        lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                delay(2000)
 
-                        if (sessionId.isNullOrEmpty()) {
-                            findNavController().navigate(R.id.splashToLogin)
-                        } else {
-                            val moviePrefs = sessionManager.getMoviePreferences().firstOrNull()
-                            val tvPrefs = sessionManager.getTvPreferences().firstOrNull()
+                val destination = viewModel.destination.first { it != null }
 
-                            Log.d("Preferences", "Movie preferences: ${moviePrefs?.isEmpty()}")
-                            Log.d("Preferences", "TV preferences: ${tvPrefs?.isEmpty()}")
+                // Navigate based on the destination type
+                when (destination) {
+                    is SplashNavigation.ToLogin ->
+                        findNavController().navigate(R.id.action_splashFragment_to_loginFragment)
 
-                            when {
-                                moviePrefs == null || moviePrefs.isEmpty() -> {
-                                    findNavController().navigate(R.id.actionSplashToMoviePreferences)
-                                }
-                                tvPrefs == null || tvPrefs.isEmpty() -> {
-                                    findNavController().navigate(R.id.actionSplashToMoviePreferences)
-                                }
-                                else -> {
-                                    findNavController().navigate(R.id.actionSplashToHome)
-                                }
-                            }
-                        }
-                    } catch (e: Exception) {
-                        Log.e("SplashFragment", "Navigation error: ${e.message}")
-                        findNavController().navigate(R.id.loginFragment)
+                    is SplashNavigation.ToPreferences ->
+                        findNavController().navigate(R.id.action_splashFragment_to_movieSelection)
+
+                    is SplashNavigation.ToHome ->
+                        findNavController().navigate(R.id.action_global_to_bottom_home)
+
+                    else -> {
+
                     }
                 }
             }
         }
     }
-    private fun TvAndMoviePreferences.isEmpty(): Boolean {
-        return selectedIds.isEmpty() &&
-                favoriteGenres.isEmpty() &&
-                dislikedGenres.isEmpty() &&
-                selectedKeywords.isEmpty() &&
-                selectedGenres.isEmpty()
-    }
+
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
