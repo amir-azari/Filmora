@@ -6,17 +6,17 @@
         android:icon="@drawable/house"/>
 
     <item
-        android:id="@+id/movieFragment"
+        android:id="@+id/moviesFragment"
         android:title="@string/movies"
         android:icon="@drawable/movie"/>
 
     <item
-        android:id="@+id/tvFragment"
+        android:id="@+id/tvShowsFragment"
         android:title="@string/tv_shows"
         android:icon="@drawable/tv_retro"/>
 
     <item
-        android:id="@+id/peopleFragment"
+        android:id="@+id/celebritiesFragment"
         android:title="@string/celebrities"
         android:icon="@drawable/people"/>
 </menu>
