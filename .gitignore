@@ -16,3 +16,4 @@ local.properties
 /.idea/deploymentTargetSelector.xml
 /.idea/misc.xml
 .idea/studiobot.xml
+/errors/
