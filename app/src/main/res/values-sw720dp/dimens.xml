@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- ============================================ -->
+    <!-- SPACING -->
+    <!-- ============================================ -->
+
+    <!-- Standard Spacing -->
+    <dimen name="spacing_micro">4dp</dimen>
+    <dimen name="spacing_xsmall">8dp</dimen>
+    <dimen name="spacing_small">16dp</dimen>
+    <dimen name="spacing_medium">24dp</dimen>
+    <dimen name="spacing_normal">32dp</dimen>
+    <dimen name="spacing_large">48dp</dimen>
+    <dimen name="spacing_xlarge">64dp</dimen>
+    <dimen name="spacing_xxlarge">96dp</dimen>
+
+
+    <!-- ============================================ -->
+    <!-- TYPOGRAPHY -->
+    <!-- ============================================ -->
+
+    <dimen name="text_micro">16sp</dimen>
+    <dimen name="text_tiny">20sp</dimen>
+    <dimen name="text_label">24sp</dimen>
+    <dimen name="text_body">28sp</dimen>
+    <dimen name="text_title">36sp</dimen>
+    <dimen name="text_headline">48sp</dimen>
+    <dimen name="text_display">56sp</dimen>
+
+    <!-- ============================================ -->
+    <!-- ICONS -->
+    <!-- ============================================ -->
+
+    <dimen name="icon_size_tiny">24dp</dimen>
+    <dimen name="icon_size_small">32dp</dimen>
+    <dimen name="icon_size_normal">48dp</dimen>
+    <dimen name="icon_size_medium">64dp</dimen>
+    <dimen name="icon_size_large">80dp</dimen>
+    <dimen name="icon_size_extra_large">96dp</dimen>
+
+    <!-- ============================================ -->
+    <!-- COMPONENTS -->
+    <!-- ============================================ -->
+
+    <dimen name="button_height">96dp</dimen>
+    <dimen name="text_field_height">112dp</dimen>
+    <dimen name="input_field_height">120dp</dimen>
+
+
+    <!-- ============================================ -->
+    <!-- DIVIDERS -->
+    <!-- ============================================ -->
+
+    <dimen name="line_divider_height">2dp</dimen>
+    <dimen name="line_divider_height_bold">4dp</dimen>
+
+    <!-- ============================================ -->
+    <!-- TOOLBAR -->
+    <!-- ============================================ -->
+
+    <dimen name="toolbar_height">112dp</dimen>
+
+    <!-- ============================================ -->
+    <!-- BOTTOM NAVIGATION -->
+    <!-- ============================================ -->
+
+    <dimen name="bottom_nav_height">128dp</dimen>
+
+
+    <!-- ============================================ -->
+    <!-- LOGIN SCREEN -->
+    <!-- ============================================ -->
+
+    <dimen name="login_logo_size">240dp</dimen>
+
+    <!-- ============================================ -->
+    <!-- PROFILE -->
+    <!-- ============================================ -->
+
+    <dimen name="profile_avatar_size">80dp</dimen>
+    <dimen name="profile_avatar_loading_size">50dp</dimen>
+    <dimen name="profile_avatar_strokeWidth_size">1dp</dimen>
+    <dimen name="profile_name_max_width">240dp</dimen>
+
+    <!-- ============================================ -->
+    <!-- SPLASH SCREEN -->
+    <!-- ============================================ -->
+
+    <dimen name="splash_logo_size">260dp</dimen>
+    <dimen name="splash_text_size">40sp</dimen>
+
+
+    <!-- ============================================ -->
+    <!-- ELEVATION (Standard) -->
+    <!-- ============================================ -->
+    <dimen name="elevation_low">2dp</dimen>
+    <dimen name="elevation_medium">4dp</dimen>
+    <dimen name="elevation_high">8dp</dimen>
+    <dimen name="elevation_xhigh">16dp</dimen>
+
+    <!-- ============================================ -->
+    <!-- MOVIE/SEARCH RELATED -->
+    <!-- ============================================ -->
+
+    <dimen name="selected_movies_recycler_min_height">376dp</dimen>
+    <dimen name="search_results_recycler_height">540dp</dimen>
+    <dimen name="poster_width_search_item">80dp</dimen>
+    <dimen name="poster_width_selected_item">160dp</dimen>
+    <dimen name="selected_item_title_height">64dp</dimen>
+
+</resources>

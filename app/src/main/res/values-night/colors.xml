@@ -1,48 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <!-- CUSTOM APPLICATION COLORS -->
+    <color name="alice_blue_colors">#F5FAFD</color>
+    <color name="bg_shimmer">#D7D7D7</color>
+    <color name="icon_primary">#ECF2F4</color>
+    <color name="icon_secondary">#9AA5A7</color>
+    <color name="icon_accent">#FFBC00</color>
+    <color name="icon_error_extra">#FFC9C9</color>
+    <color name="icon_success">#81C784</color>
+    <color name="icon_disabled">#546E7A</color>
 
+    <!-- TMDB Dark Theme Brand Colors -->
+    <color name="tmdb_background">#021729</color>
+    <color name="tmdb_surface">#0B2238</color>
+    <color name="tmdb_light_green">#90CEA1</color>
+    <color name="tmdb_medium_green">#7BB3A0</color>
+    <color name="tmdb_teal">#5F9EA0</color>
+    <color name="tmdb_light_blue">#4DD0E1</color>
+    <color name="tmdb_medium_blue">#26C6DA</color>
+    <color name="tmdb_blue">#00D4FF</color>
+
+
+    <!-- Primary color palette for main brand identity in dark mode -->
+    <color name="md_theme_primary">#4DD0E1</color>
+    <color name="md_theme_onPrimary">#003542</color>
+    <color name="md_theme_primaryContainer">#26C6DA</color>
+    <color name="md_theme_onPrimaryContainer">#B4EBFF</color>
+    <color name="md_theme_inversePrimary">#00838F</color>
+
+    <!-- Secondary color palette for supporting elements in dark mode -->
+    <color name="md_theme_secondary">#90CEA1</color>
+    <color name="md_theme_onSecondary">#1B4A3B</color>
+    <color name="md_theme_secondaryContainer">#2E5A4B</color>
+    <color name="md_theme_onSecondaryContainer">#C8E6C9</color>
+
+    <!-- Tertiary color palette for accent elements in dark mode -->
+    <color name="md_theme_tertiary">#80CBC4</color>
+    <color name="md_theme_onTertiary">#1C4B4C</color>
+    <color name="md_theme_tertiaryContainer">#2F5C5D</color>
+    <color name="md_theme_onTertiaryContainer">#B2DFDB</color>
+
+    <!-- Error states and warning indicators for dark mode -->
+    <color name="md_theme_error">#FFB3AD</color>
+    <color name="md_theme_onError">#68000A</color>
+    <color name="md_theme_errorContainer">#930006</color>
+    <color name="md_theme_onErrorContainer">#FFD2CE</color>
+
+    <!-- Background and surface color variations for dark mode -->
     <color name="md_theme_background">#021729</color>
-    <color name="md_theme_onBackground">#C4E9E5</color>
+    <color name="md_theme_onBackground">#E0F2F1</color>
+    <color name="md_theme_surface">#021729</color>
+    <color name="md_theme_onSurface">#E0F2F1</color>
+    <color name="md_theme_surfaceVariant">#3D494D</color>
+    <color name="md_theme_onSurfaceVariant">#B8C9CC</color>
+    <color name="md_theme_inverseSurface">#E0F2F1</color>
+    <color name="md_theme_inverseOnSurface">#2B3134</color>
 
-    <color name="md_theme_primary">#40BEC6</color>
-    <color name="md_theme_onPrimary">#021729</color>
+    <!-- Dark theme surface container variations -->
+    <color name="md_theme_surfaceDim">#021729</color>
+    <color name="md_theme_surfaceBright">#1E3A52</color>
+    <color name="md_theme_surfaceContainerLowest">#011D2F</color>
+    <color name="md_theme_surfaceContainerLow">#0B2238</color>
+    <color name="md_theme_surfaceContainer">#132740</color>
+    <color name="md_theme_surfaceContainerHigh">#1B2F47</color>
+    <color name="md_theme_surfaceContainerHighest">#23374F</color>
 
-    <color name="md_theme_primaryContainer">#40BEC6</color>
-    <color name="md_theme_onPrimaryContainer">#021729</color>
+    <!-- Border and divider colors for dark mode -->
+    <color name="md_theme_outline">#6D7B7E</color>
+    <color name="md_theme_outlineVariant">#3D494D</color>
+    <color name="md_theme_scrim">#000000</color>
 
-    <color name="md_theme_secondaryContainer">#34A5AD</color>
+    <!-- Fixed color variants for consistent appearance in dark mode -->
 
-    <color name="md_theme_colorSurface">#21696E</color>
-    <color name="md_theme_colorOnSurface">#CCEBE8</color>
-    <color name="md_theme_colorSurfaceContainer">#021729</color>
+    <!-- Primary Fixed -->
+    <color name="md_theme_primaryFixed">#B4EBFF</color>
+    <color name="md_theme_onPrimaryFixed">#001F27</color>
+    <color name="md_theme_primaryFixedDim">#4DD0E1</color>
+    <color name="md_theme_onPrimaryFixedVariant">#00738A</color>
 
+    <!-- Secondary Fixed -->
+    <color name="md_theme_secondaryFixed">#C8E6C9</color>
+    <color name="md_theme_onSecondaryFixed">#1B4A3B</color>
+    <color name="md_theme_secondaryFixedDim">#90CEA1</color>
+    <color name="md_theme_onSecondaryFixedVariant">#2E5A4B</color>
 
-    <color name="md_theme_primary2">#7ACBB0</color>
-    <color name="md_theme_outline">#A4C4E9E5</color>
-
-    <color name="cardBackgroundColor">#15212C</color>
-    <color name="cardTextColor">#C5CAD0</color>
-
-    <color name="textColor">#C5CAD0</color>
-    <color name="textColor_secondary">#CCC5CAD0</color>
-    <color name="textColor_tertiary">#40BEC6</color>
-
-    <color name="cardTextColorAlpha">#81D4D9</color>
-    <color name="iconColor">#A4A5C6C3</color>
-
-    <color name="shimmerColor">#dddddd</color>
-    <color name="line">#0DFFFFFF</color>
-
-    <color name="shadow_background">#021729</color>
-    <color name="shadow_background_alpha">#99021729</color>
-    <color name="shadow_background_alpha10">#0D021729</color>
-
-    <color name="rate_icon">#40BEC6</color>
-    <color name="rate_icon_Secondary">#FFBC00</color>
-
-    <color name="ripple">#4D021729</color>
-    <color name="btn_icon">#1D6166</color>
+    <!-- Tertiary Fixed -->
+    <color name="md_theme_tertiaryFixed">#B2DFDB</color>
+    <color name="md_theme_onTertiaryFixed">#1C4B4C</color>
+    <color name="md_theme_tertiaryFixedDim">#80CBC4</color>
+    <color name="md_theme_onTertiaryFixedVariant">#2F5C5D</color>
 
 </resources>

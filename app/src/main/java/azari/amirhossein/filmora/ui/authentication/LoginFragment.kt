@@ -1,77 +1,77 @@
 package azari.amirhossein.filmora.ui.authentication
 
+
+import android.content.ActivityNotFoundException
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import android.widget.Toast
+import androidx.browser.customtabs.CustomTabColorSchemeParams
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.content.ContextCompat
-import androidx.core.widget.doAfterTextChanged
+import androidx.core.view.isVisible
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.Navigation.findNavController
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import azari.amirhossein.filmora.R
 import azari.amirhossein.filmora.databinding.FragmentLoginBinding
 import azari.amirhossein.filmora.utils.Constants
-import azari.amirhossein.filmora.utils.NetworkRequest
-import azari.amirhossein.filmora.utils.customize
-import azari.amirhossein.filmora.utils.setClickAnimation
-import azari.amirhossein.filmora.viewmodel.LoginViewModel
-import azari.amirhossein.filmora.viewmodel.SharedAccountViewModel
-import com.google.android.material.snackbar.Snackbar
+import azari.amirhossein.filmora.utils.view.UiText
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class LoginFragment : Fragment() {
-    // Binding
+
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
 
-    // View Model
-    private val accountViewModel: SharedAccountViewModel by activityViewModels()
-    private val viewModel: LoginViewModel by viewModels()
-    private var currentAuthType: AuthType = AuthType.LOGIN
-
-    private val args: LoginFragmentArgs by navArgs()
-
-    private enum class AuthType {
-        LOGIN, CONTINUE
-    }
+    // Shared Authentication ViewModel
+    private val viewModel: AuthenticationViewModel by hiltNavGraphViewModels(R.id.auth_nav)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // Inflate the layout for this fragment
+        // Inflate layout with binding
         _binding = FragmentLoginBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val loginType = args.loginType
+        setupListeners()      // Setup UI interactions
+        observeViewModel()    // Observe state and navigation events
+    }
 
-        binding.btnContinue.isEnabled = loginType != Constants.LoginType.PROFILE
-
+    // --- UI Listeners ---
+    private fun setupListeners() {
         binding.apply {
-            // Set up text watchers
-            etUsername.doAfterTextChanged { validateUsername(it.toString()) }
-            etPassword.doAfterTextChanged { validatePassword(it.toString()) }
+            // Text change listeners
+            etUsername.doOnTextChanged { text, _, _, _ ->
+                validateUsername(text.toString())
+                viewModel.onUsernameChanged(text.toString())
+            }
+            etPassword.doOnTextChanged { text, _, _, _ ->
+                validatePassword(text.toString())
+                viewModel.onPasswordChanged(text.toString())
+            }
 
-            // Handle "next" action in the keyboard
+            // Editor actions
             etUsername.setOnEditorActionListener { _, actionId, _ ->
                 handleEditorAction(actionId, etPassword)
             }
-
             etPassword.setOnEditorActionListener { _, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_GO) {
                     btnLogin.performClick()
@@ -80,78 +80,61 @@ class LoginFragment : Fragment() {
                     false
                 }
             }
-            // Authenticate as user TMDB
+
+            // Button clicks
             btnLogin.setOnClickListener {
-                currentAuthType = AuthType.LOGIN
+                if (validateUsername(etUsername.text.toString()) && validatePassword(etPassword.text.toString())) {
+                    viewModel.login()
+                }
+            }
+            btnContinue.setOnClickListener { viewModel.continueAsGuest() }
 
-                val username = etUsername.text.toString()
-                val password = etPassword.text.toString()
+            // Open external URLs
+            tvForgotPassword.setOnClickListener {
+                openUrlInBrowser(Constants.Web.RESET_PASSWORD_URL)
+            }
+            tvSignup.setOnClickListener {
+                openUrlInBrowser(Constants.Web.SIGNUP_URL)
+            }
+        }
+    }
 
-                // Validate inputs
-                if (username.isNotEmpty() && password.isNotEmpty()) {
-                    if (validateUsername(username) && validatePassword(password)) {
-                        viewModel.authenticateUser(username, password)
+    // --- Observe ViewModel State ---
+    private fun observeViewModel() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState.collect { state ->
+                    // Show/hide progress bars
+                    binding.loginProgressbar.isVisible = state.isLoading && state.currentAction == AuthAction.LOGIN
+                    binding.continueProgressbar.isVisible = state.isLoading && state.currentAction == AuthAction.CONTINUE
+
+                    // Enable/disable buttons
+                    binding.btnLogin.isEnabled = !state.isLoading
+                    binding.btnContinue.isEnabled = !state.isLoading
+
+                    // Update button text during loading
+                    binding.btnLogin.text = if (state.isLoading && state.currentAction == AuthAction.LOGIN) "" else getString(R.string.btn_login)
+                    binding.btnContinue.text = if (state.isLoading && state.currentAction == AuthAction.CONTINUE) "" else getString(R.string.btn_continue)
+
+                    // Show user messages
+                    state.userMessage ?.getContentIfNotHandled()?.let { uiText ->
+                        val message = when (uiText) {
+                            is UiText.DynamicString -> uiText.value
+                            is UiText.StringResource -> getString(uiText.id)
+                        }
+                        if (message.isNotEmpty()) {
+                            Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
+                        }
                     }
-                } else {
-                    // Show an error if any field is empty
-                    showErrorSnackbar(root, ContextCompat.getString(requireContext(), R.string.fillRequiredFields))
-                }
-            }
-            // Authenticate as guest
-            btnContinue.setOnClickListener {
-                currentAuthType = AuthType.CONTINUE
-                viewModel.authenticateGuest()
-            }
-            // Navigates to reset password screen
-            tvForgotPassword.setClickAnimation {
-                val url = Constants.WebView.RESET_PASSWORD_URL
-                val bundle = Bundle().apply {
-                    putString(Constants.BundleKey.URL_BUNDLE_KEY, url)
-                }
-                findNavController(tvForgotPassword).navigate(R.id.actionToWebView, bundle)
-            }
-            // Navigates to sign-up screen
-            tvSignup.setClickAnimation {
-                val url = Constants.WebView.SIGNUP_URL
-                val bundle = Bundle().apply {
-                    putString(Constants.BundleKey.URL_BUNDLE_KEY, url)
-                }
 
-                findNavController(tvSignup).navigate(R.id.actionToWebView, bundle)
-            }
-
-            // Authentication result collector
-            viewLifecycleOwner.lifecycleScope.launch {
-                repeatOnLifecycle(Lifecycle.State.STARTED) {
-                    viewModel.authResult.collect { result ->
-                        result?.getContentIfNotHandled()?.let {
-                            when (it) {
-                                is NetworkRequest.Loading -> {
-                                    toggleLoadingState(true)
-                                }
-
-                                is NetworkRequest.Success -> {
-                                    toggleLoadingState(false)
-
-                                    val sessionId = it.data
-                                    if (!sessionId.isNullOrEmpty()) {
-                                        accountViewModel.fetchAccountDetails()
-
-                                        if (loginType ==  Constants.LoginType.PROFILE) {
-                                            findNavController().navigate(R.id.actionLoginToHomeFromProfile)
-                                        } else {
-                                            findNavController().navigate(R.id.actionLoginToMoviePreferences)
-                                        }
-                                    } else {
-                                        showErrorSnackbar(root, Constants.Message.SESSION_EMPTY)
-                                    }
-                                }
-
-                                is NetworkRequest.Error -> {
-                                    toggleLoadingState(false)
-                                    showErrorSnackbar(root, it.message.toString())
-
-                                }
+                    // Handle navigation events
+                    state.navigationEvent?.getContentIfNotHandled()?.let { destination ->
+                        when (destination) {
+                            is AuthNavigation.ToPreferences -> {
+                                findNavController().navigate(R.id.action_loginFragment_to_movieSelection)
+                            }
+                            is AuthNavigation.ToHome -> {
+                                findNavController().navigate(R.id.action_global_to_bottom_home)
                             }
                         }
                     }
@@ -160,70 +143,64 @@ class LoginFragment : Fragment() {
         }
     }
 
+    // --- Input Validation ---
     private fun validateUsername(username: String): Boolean {
-        return if (!username.contains(" ")) {
+        return if (username.isBlank()) {
+            binding.tilUsername.error = getString(R.string.error_field_required)
+            false
+        } else if (username.contains(" ")) {
+            binding.tilUsername.error = getString(R.string.error_contains_space)
+            false
+        } else {
             binding.tilUsername.isErrorEnabled = false
             true
-        } else {
-            binding.tilUsername.error = if (username.isEmpty()) {
-                getString(R.string.usernameEmpty)
-            } else {
-                getString(R.string.usernameContainsSpace)
-            }
-            false
         }
     }
 
     private fun validatePassword(password: String): Boolean {
-        return if (password.isNotEmpty()) {
-            if (password.length >= 4) {
-                binding.tilPassword.isErrorEnabled = false
-                true
-            } else {
-                binding.tilPassword.error = getString(R.string.passwordTooShort)
-                false
-            }
+        return if (password.isBlank()) {
+            binding.tilPassword.error = getString(R.string.error_field_required)
+            false
+        } else if (password.length < 4) {
+            binding.tilPassword.error = getString(R.string.error_password_short)
+            false
         } else {
             binding.tilPassword.isErrorEnabled = false
+            true
+        }
+    }
+
+    // --- Keyboard Actions ---
+    private fun handleEditorAction(actionId: Int, nextField: View): Boolean {
+        return if (actionId == EditorInfo.IME_ACTION_NEXT) {
+            nextField.requestFocus()
+            true
+        } else {
             false
         }
     }
 
-    private fun handleEditorAction(actionId: Int, nextField: View): Boolean {
-        return when (actionId) {
-            EditorInfo.IME_ACTION_NEXT -> {
-                nextField.requestFocus()
-                true
+    // --- Open URLs in browser ---
+    private fun openUrlInBrowser(url: String) {
+        try {
+            val colorSchemeParams = CustomTabColorSchemeParams.Builder()
+                .setToolbarColor(ContextCompat.getColor(requireContext(), R.color.md_theme_primary))
+                .build()
+
+            val customTabsIntent = CustomTabsIntent.Builder()
+                .setDefaultColorSchemeParams(colorSchemeParams)
+                .build()
+
+            customTabsIntent.launchUrl(requireContext(), Uri.parse(url))
+
+        } catch (e: ActivityNotFoundException) {
+            // Fallback if no browser
+            try {
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                startActivity(intent)
+            } catch (e2: ActivityNotFoundException) {
+                Toast.makeText(requireContext(), getString(R.string.error_no_browser_found), Toast.LENGTH_SHORT).show()
             }
-
-            else -> false
-        }
-    }
-
-    private fun toggleLoadingState(isLoading: Boolean) {
-        binding.apply {
-            when (currentAuthType) {
-                AuthType.LOGIN -> {
-                    root.transitionToState(if (isLoading) R.id.login_end else R.id.login_start)
-                    btnContinue.isEnabled = !isLoading
-                }
-
-                AuthType.CONTINUE -> {
-                    root.transitionToState(if (isLoading) R.id.continue_end else R.id.login_start)
-                    btnLogin.isEnabled = !isLoading
-                }
-            }
-        }
-    }
-
-    private fun showErrorSnackbar(root: View, errorMessage: String) {
-        Snackbar.make(root, errorMessage, Snackbar.LENGTH_SHORT).apply {
-            customize(
-                R.color.error,
-                R.color.white,
-                Gravity.TOP,
-            )
-            show()
         }
     }
 

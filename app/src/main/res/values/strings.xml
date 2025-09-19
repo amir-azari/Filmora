@@ -1,18 +1,8 @@
 <resources>
     <string name="app_name">Filmora</string>
-    <string name="forgot_password">Forgot Password?</string>
-    <string name="login">Login</string>
-    <string name="password">Password</string>
-    <string name="sign_up">Sign Up</string>
-    <string name="don_t_have_an_account">Don\'t have an account?</string>
-    <string name="app_logo">App Logo</string>
-    <string name="username">Username</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="name_app">Ｆｉｌｍｏｒａ</string>
-    <string name="or">\u00A0\u00A0OR\u00A0\u00A0</string>
-    <string name="usernameContainsSpace">Username cannot contain spaces.</string>
     <string name="usernameEmpty">Username cannot be empty.</string>
-    <string name="passwordTooShort">The password is short (at least 4 characters).</string>
     <string name="fillRequiredFields">Please fill in all the required fields correctly before proceeding.</string>
     <string name="check_your_connection">Check your connection</string>
     <string name="search_movies">Search movies...</string>
@@ -126,5 +116,35 @@
     <string name="dialog_login_required_message">Please sign in with your username or register if you don\'t have an account.</string>
 
 
+
+    <string name="app_logo">App Logo</string>
+    <string name="label_username">Username</string>
+    <string name="label_password">Password</string>
+    <string name="action_forgot_password">Forgot Password?</string>
+    <string name="btn_login">Login</string>
+    <string name="label_no_account">Don\'t have an account?</string>
+    <string name="action_sign_up">Sign Up</string>
+    <string name="label_or">\u00A0\u00A0OR\u00A0\u00A0</string>
+    <string name="btn_continue">Continue</string>
+
+
+    <string name="error_no_internet_connection">No internet connection.</string>
+    <string name="error_server">A server error occurred.</string>
+    <string name="error_unknown">An unknown error occurred.</string>
+    <string name="error_empty_credentials">Username and Password must not be empty</string>
+    <string name="error_empty_response">No data available</string>
+    <!-- Login process -->
+    <string name="error_failed_request_token">Failed to get request token.</string>
+    <string name="error_failed_validate_token">Failed to validate token.</string>
+
+    <string name="error_password_short">The password is short (at least 4 characters).</string>
+    <string name="error_contains_space">Username cannot contain spaces.</string>
+    <string name="error_select_limit">You can only select up to 5 items.</string>
+    <string name="error_already_selected">This item is already selected.</string>
+    <string name="error_minimum_selection">Please select 5 items.</string>
+    <string name="error_genre_preferences">Please select your genre preferences.</string>
+    <string name="error_load_genres">Failed to load genres.</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="error_no_browser_found">No browser found to open link</string>
 
 </resources>

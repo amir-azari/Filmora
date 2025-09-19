@@ -3,90 +3,135 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
+    android:fitsSystemWindows="false"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.MainActivity">
 
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/toolbar"
+    <!-- *************** Toolbar Section *************** -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/toolbar_container"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_42mdp"
-        app:menu="@menu/toolbar_menu"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="false"
+        android:visibility="gone"
         app:layout_constraintTop_toTopOf="parent">
 
-        <!-- Profile Section -->
-        <LinearLayout
-            android:id="@+id/profile_section"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
+        <!-- Toolbar -->
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/toolbar_height"
+            style="@style/CustomToolbar"
+            android:fitsSystemWindows="false"
+            app:layout_constraintTop_toTopOf="parent"
+            app:menu="@menu/toolbar_menu"
+            app:title="">
 
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/img_profile"
-                android:layout_width="@dimen/_30mdp"
-                android:layout_height="@dimen/_30mdp"
-                app:strokeWidth="0.5dp"
-                android:layout_marginStart="@dimen/_1mdp"
-                android:padding="@dimen/_1mdp"
-                android:src="@drawable/profile"
-                android:contentDescription="@string/profile"
-                app:shapeAppearanceOverlay="@style/CircleImage" />
-
-            <LinearLayout
+            <!-- Profile Section -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/profile_section"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginStart="@dimen/_6mdp">
+                android:layout_height="wrap_content">
 
+                <!-- Avatar -->
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/iv_avatar"
+                    android:layout_width="@dimen/profile_avatar_size"
+                    android:layout_height="@dimen/profile_avatar_size"
+                    android:elevation="@dimen/elevation_high"
+                    android:padding="@dimen/spacing_micro"
+                    android:background="@color/alice_blue_colors"
+                    android:scaleType="centerCrop"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:shapeAppearance="@style/CircleImage"
+                    app:strokeWidth="@dimen/profile_avatar_strokeWidth_size" />
+
+                <ProgressBar
+                    android:id="@+id/avatarLoading"
+                    android:layout_width="@dimen/profile_avatar_loading_size"
+                    android:layout_height="@dimen/profile_avatar_loading_size"
+                    android:elevation="20dp"
+                    android:visibility="visible"
+                    app:layout_constraintBottom_toBottomOf="@id/iv_avatar"
+                    app:layout_constraintEnd_toEndOf="@id/iv_avatar"
+                    app:layout_constraintStart_toStartOf="@id/iv_avatar"
+                    app:layout_constraintTop_toTopOf="@id/iv_avatar" />
+
+                <!-- user name -->
                 <TextView
                     android:id="@+id/tv_name"
-                    android:layout_width="@dimen/_70mdp"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:textSize="@dimen/_12mdp"
-                    android:textColor="@color/textColor"
-                    android:textStyle="bold"
-                    android:layout_marginBottom="@dimen/_1mdp"
-                    tools:text="Amir"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/spacing_small"
+                    android:ellipsize="end"
+                    android:maxWidth="@dimen/profile_name_max_width"
                     android:maxLines="1"
-                    android:ellipsize="end" />
+                    android:textSize="@dimen/text_body"
+                    android:fontFamily="@font/funnelsans_bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/iv_avatar"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="Amir Hossein" />
 
-            </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-        </LinearLayout>
+        </com.google.android.material.appbar.MaterialToolbar>
 
-    </com.google.android.material.appbar.MaterialToolbar>
+        <!-- Divider -->
+        <View
+            android:id="@+id/toolbar_divider"
+            android:background="@color/md_theme_onSurface"
+            android:layout_width="match_parent"
+            android:alpha="0.1"
+            android:layout_height="@dimen/line_divider_height"
+            app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="@color/line"
-        app:layout_constraintTop_toBottomOf="@id/toolbar" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <!-- *************** Fragment Container (NavHost) *************** -->
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/nav_host_fragment"
         android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:fitsSystemWindows="false"
         app:defaultNavHost="true"
-        app:layout_constraintBottom_toTopOf="@+id/bottom_nav"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_nav_container"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_container"
         app:navGraph="@navigation/nav_main" />
 
-    <View
+    <!-- *************** Bottom Navigation Section *************** -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/bottom_nav_container"
         android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="@color/line"
-        app:layout_constraintBottom_toTopOf="@id/bottom_nav" />
-
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottom_nav"
-        android:layout_width="match_parent"
-        app:labelVisibilityMode="labeled"
         android:layout_height="wrap_content"
-        android:background="@color/md_theme_background"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:menu="@menu/menu_bottom_nav" />
+        android:fitsSystemWindows="false"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <!-- Divider -->
+        <View
+            android:id="@+id/bottom_nav_divider"
+            android:layout_width="match_parent"
+            android:alpha="0.1"
+            android:background="@color/md_theme_onSurface"
+            android:layout_height="@dimen/line_divider_height"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- Bottom Navigation -->
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottom_nav"
+            style="@style/CustomBottomNavigationView"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/bottom_nav_height"
+            android:fitsSystemWindows="false"
+            app:labelVisibilityMode="labeled"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/bottom_nav_divider"
+            app:menu="@menu/menu_bottom_nav" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

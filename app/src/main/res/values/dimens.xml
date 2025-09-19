@@ -1,6 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="spacing">@dimen/_2mdp</dimen>
-    <dimen name="spacing_8mdp">@dimen/_8mdp</dimen>
-    <dimen name="size_125mdp">@dimen/_125mdp</dimen>
+
+    <!-- ============================================ -->
+    <!-- SPACING -->
+    <!-- ============================================ -->
+
+    <!-- Standard Spacing -->
+    <dimen name="spacing_micro">2dp</dimen>
+    <dimen name="spacing_xsmall">4dp</dimen>
+    <dimen name="spacing_small">8dp</dimen>
+    <dimen name="spacing_medium">12dp</dimen>
+    <dimen name="spacing_normal">16dp</dimen>
+    <dimen name="spacing_large">24dp</dimen>
+    <dimen name="spacing_xlarge">32dp</dimen>
+    <dimen name="spacing_xxlarge">48dp</dimen>
+
+
+    <!-- ============================================ -->
+    <!-- TYPOGRAPHY -->
+    <!-- ============================================ -->
+
+    <dimen name="text_micro">8sp</dimen>
+    <dimen name="text_tiny">10sp</dimen>
+    <dimen name="text_label">12sp</dimen>
+    <dimen name="text_body">14sp</dimen>
+    <dimen name="text_title">18sp</dimen>
+    <dimen name="text_headline">24sp</dimen>
+    <dimen name="text_display">28sp</dimen>
+
+    <!-- ============================================ -->
+    <!-- ICONS -->
+    <!-- ============================================ -->
+
+    <dimen name="icon_size_tiny">12dp</dimen>
+    <dimen name="icon_size_small">16dp</dimen>
+    <dimen name="icon_size_normal">24dp</dimen>
+    <dimen name="icon_size_medium">32dp</dimen>
+    <dimen name="icon_size_large">40dp</dimen>
+    <dimen name="icon_size_extra_large">48dp</dimen>
+
+    <!-- ============================================ -->
+    <!-- COMPONENTS -->
+    <!-- ============================================ -->
+
+    <dimen name="button_height">48dp</dimen>
+    <dimen name="text_field_height">56dp</dimen>
+    <dimen name="input_field_height">60dp</dimen>
+
+
+    <!-- ============================================ -->
+    <!-- DIVIDERS -->
+    <!-- ============================================ -->
+
+    <dimen name="line_divider_height">1dp</dimen>
+    <dimen name="line_divider_height_bold">2dp</dimen>
+
+    <!-- ============================================ -->
+    <!-- TOOLBAR -->
+    <!-- ============================================ -->
+
+    <dimen name="toolbar_height">56dp</dimen>
+
+    <!-- ============================================ -->
+    <!-- BOTTOM NAVIGATION -->
+    <!-- ============================================ -->
+    <dimen name="bottom_nav_height">64dp</dimen>
+
+    <!-- ============================================ -->
+    <!-- LOGIN SCREEN -->
+    <!-- ============================================ -->
+
+    <dimen name="login_logo_size">120dp</dimen>
+
+    <!-- ============================================ -->
+    <!-- PROFILE -->
+    <!-- ============================================ -->
+
+    <dimen name="profile_avatar_size">40dp</dimen>
+    <dimen name="profile_avatar_loading_size">25dp</dimen>
+    <dimen name="profile_avatar_strokeWidth_size">0.5dp</dimen>
+    <dimen name="profile_name_max_width">120dp</dimen>
+
+    <!-- ============================================ -->
+    <!-- SPLASH SCREEN -->
+    <!-- ============================================ -->
+
+    <dimen name="splash_logo_size">130dp</dimen>
+    <dimen name="splash_text_size">20sp</dimen>
+
+    <!-- ============================================ -->
+    <!-- ELEVATION (Standard) -->
+    <!-- ============================================ -->
+    <dimen name="elevation_low">1dp</dimen>
+    <dimen name="elevation_medium">2dp</dimen>
+    <dimen name="elevation_high">4dp</dimen>
+    <dimen name="elevation_xhigh">8dp</dimen>
+
+    <!-- ============================================ -->
+    <!-- MOVIE/SEARCH RELATED -->
+    <!-- ============================================ -->
+
+    <dimen name="selected_movies_recycler_min_height">188dp</dimen>
+    <dimen name="search_results_recycler_height">270dp</dimen>
+    <dimen name="poster_width_search_item">40dp</dimen>
+    <dimen name="poster_width_selected_item">80dp</dimen>
+    <dimen name="selected_item_title_height">32dp</dimen>
+
+    <!-- ============================================ -->
+    <!-- CORNER RADIUS -->
+    <!-- ============================================ -->
+    <dimen name="corner_radius_micro">2dp</dimen>
+    <dimen name="corner_radius_small">4dp</dimen>
+    <dimen name="corner_radius_medium">6dp</dimen>
+    <dimen name="corner_radius_normal">8dp</dimen>
+    <dimen name="corner_radius_large">12dp</dimen>
+    <dimen name="corner_radius_xlarge">16dp</dimen>
+    <dimen name="corner_radius_circle">50%p</dimen>
 </resources>

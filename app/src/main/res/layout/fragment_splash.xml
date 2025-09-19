@@ -6,32 +6,32 @@
     android:layout_height="match_parent"
     tools:context=".ui.splash.SplashFragment">
 
-
+    <!-- Logo -->
     <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/lottieAnimationView"
-        android:layout_width="@dimen/_130mdp"
+        android:id="@+id/logoImageView"
+        android:layout_width="@dimen/splash_logo_size"
+        android:layout_height="@dimen/splash_logo_size"
         android:src="@drawable/tmdb_dark"
         android:scaleType="centerCrop"
-        android:elevation="@dimen/_8mdp"
+        android:elevation="@dimen/elevation_xhigh"
         app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.Corner.Rounded"
         android:contentDescription="@string/app_logo"
-        android:layout_height="@dimen/_130mdp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-
+    <!-- App name -->
     <com.google.android.material.textview.MaterialTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/name_app"
         android:textStyle="bold"
-        android:layout_marginTop="@dimen/_8mdp"
-        android:textSize="@dimen/_20font_mdp"
+        android:layout_marginTop="@dimen/spacing_small"
+        android:textSize="@dimen/splash_text_size"
         android:textColor="?attr/colorOnBackground"
-        app:layout_constraintEnd_toEndOf="@+id/lottieAnimationView"
-        app:layout_constraintStart_toStartOf="@+id/lottieAnimationView"
-        app:layout_constraintTop_toBottomOf="@+id/lottieAnimationView" />
+        app:layout_constraintEnd_toEndOf="@+id/logoImageView"
+        app:layout_constraintStart_toStartOf="@+id/logoImageView"
+        app:layout_constraintTop_toBottomOf="@+id/logoImageView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

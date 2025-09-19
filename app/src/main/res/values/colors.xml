@@ -1,61 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <!-- CUSTOM APPLICATION COLORS -->
+    <color name="alice_blue_colors">#F5FAFD</color>
+    <color name="bg_shimmer">#D7D7D7</color>
+    <color name="icon_primary">#171C1F</color>
+    <color name="icon_secondary">#6D7B7E</color>
+    <color name="icon_accent">#FFBC00</color>
+    <color name="icon_error_extra">#FFC9C9</color>
+    <color name="icon_success">#4CAF50</color>
+    <color name="icon_disabled">#B8C9CC</color>
 
-    <color name="md_theme_background">#F6F6F6</color>
-    <color name="md_theme_onBackground">#021729</color>
 
-    <color name="md_theme_primary">#38B4BC</color>
-    <color name="md_theme_onPrimary">#F6F6F6</color>
+    <!-- TMDB Brand Colors -->
+    <color name="tmdb_background">#F8FDFF</color>
+    <color name="tmdb_surface">#E6E9E9</color>
+    <color name="tmdb_light_green">#90CEA1</color>
+    <color name="tmdb_medium_green">#7BB3A0</color>
+    <color name="tmdb_teal">#5F9EA0</color>
+    <color name="tmdb_light_blue">#4DD0E1</color>
+    <color name="tmdb_medium_blue">#26C6DA</color>
+    <color name="tmdb_blue">#00ACC1</color>
 
-    <color name="md_theme_primaryContainer">#38B4BC</color>
-    <color name="md_theme_onPrimaryContainer">#F6F6F6</color>
 
-    <color name="md_theme_secondaryContainer">#4AC3D3</color>
+    <!-- Primary color palette for main brand identity -->
+    <color name="md_theme_primary">#00ACC1</color>
+    <color name="md_theme_onPrimary">#FFFFFF</color>
+    <color name="md_theme_primaryContainer">#26C6DA</color>
+    <color name="md_theme_onPrimaryContainer">#004D5C</color>
+    <color name="md_theme_inversePrimary">#4DD0E1</color>
 
-    <color name="md_theme_colorSurface">#A1DEE3</color>
-    <color name="md_theme_colorOnSurface">#021729</color>
-    <color name="md_theme_colorSurfaceContainer">#021729</color>
+    <!-- Secondary color palette for supporting elements -->
+    <color name="md_theme_secondary">#7BB3A0</color>
+    <color name="md_theme_onSecondary">#FFFFFF</color>
+    <color name="md_theme_secondaryContainer">#90CEA1</color>
+    <color name="md_theme_onSecondaryContainer">#1B4A3B</color>
 
-    <color name="md_theme_primary2">#5DC09F</color>
-    <color name="md_theme_outline">#0C7997</color>
+    <!-- Tertiary color palette for accent elements -->
+    <color name="md_theme_tertiary">#5F9EA0</color>
+    <color name="md_theme_onTertiary">#FFFFFF</color>
+    <color name="md_theme_tertiaryContainer">#4DD0E1</color>
+    <color name="md_theme_onTertiaryContainer">#1C4B4C</color>
 
-    <color name="cardBackgroundColor">#EFFAFB</color>
-    <color name="cardTextColor">#032B4E</color>
+    <!-- Error states and warning indicators -->
+    <color name="md_theme_error">#B62127</color>
+    <color name="md_theme_onError">#FFFFFF</color>
+    <color name="md_theme_errorContainer">#D93C3C</color>
+    <color name="md_theme_onErrorContainer">#FFFFFF</color>
 
-    <color name="textColor">#161414</color>
-    <color name="textColor_secondary">#CC161414</color>
-    <color name="textColor_tertiary">#054176</color>
+    <!-- Background and surface color variations -->
+    <color name="md_theme_background">#F8FDFF</color>
+    <color name="md_theme_onBackground">#171C1F</color>
+    <color name="md_theme_surface">#F8FDFF</color>
+    <color name="md_theme_onSurface">#171C1F</color>
+    <color name="md_theme_surfaceVariant">#E0F2F1</color>
+    <color name="md_theme_onSurfaceVariant">#3D494D</color>
+    <color name="md_theme_inverseSurface">#2B3134</color>
+    <color name="md_theme_inverseOnSurface">#ECF2F4</color>
 
-    <color name="cardTextColorAlpha">#054176</color>
-    <color name="iconColor">#05243F</color>
+    <!-- Surface container variations -->
+    <color name="md_theme_surfaceDim">#E8F5F5</color>
+    <color name="md_theme_surfaceBright">#F8FDFF</color>
+    <color name="md_theme_surfaceContainerLowest">#FFFFFF</color>
+    <color name="md_theme_surfaceContainerLow">#F2FFFE</color>
+    <color name="md_theme_surfaceContainer">#EDF8F8</color>
+    <color name="md_theme_surfaceContainerHigh">#E7F3F3</color>
+    <color name="md_theme_surfaceContainerHighest">#E1EEEE</color>
 
-    <color name="error">#e74c3c</color>
-    <color name="warning">#ffa630</color>
-    <color name="success">#27ae60</color>
-    <color name="info">#3498db</color>
+    <!-- Border and divider colors -->
+    <color name="md_theme_outline">#6D7B7E</color>
+    <color name="md_theme_outlineVariant">#B8C9CC</color>
+    <color name="md_theme_scrim">#000000</color>
 
-    <color name="Youtube">#FF0000</color>
+    <!-- Fixed color variants for consistent appearance -->
 
-    <color name="shimmerColor">#E6E6E6</color>
-    <color name="line">#0D000000</color>
+    <!-- Primary Fixed -->
+    <color name="md_theme_primaryFixed">#B4EBFF</color>
+    <color name="md_theme_onPrimaryFixed">#001F27</color>
+    <color name="md_theme_primaryFixedDim">#4DD0E1</color>
+    <color name="md_theme_onPrimaryFixedVariant">#00738A</color>
 
-    <color name="shadow_background">#F6F6F6</color>
-    <color name="shadow_background_alpha">#4DF6F6F6</color>
-    <color name="shadow_background_alpha10">#0DF6F6F6</color>
+    <!-- Secondary Fixed -->
+    <color name="md_theme_secondaryFixed">#C8E6C9</color>
+    <color name="md_theme_onSecondaryFixed">#1B4A3B</color>
+    <color name="md_theme_secondaryFixedDim">#90CEA1</color>
+    <color name="md_theme_onSecondaryFixedVariant">#2E5A4B</color>
 
-    <color name="btn_icon">#A1DEE3</color>
-
-    <color name="ripple">#4DF6F6F6</color>
-    <color name="rate_icon">#054176</color>
-    <color name="rate_icon_Secondary">#FFBC00</color>
-
-    <color name="watchlist">#2E294E</color>
-    <color name="favorite">#E71D36</color>
-    <color name="rate">#fdc500</color>
-
-    <color name="successBtn">#1B998B</color>
+    <!-- Tertiary Fixed -->
+    <color name="md_theme_tertiaryFixed">#B2DFDB</color>
+    <color name="md_theme_onTertiaryFixed">#1C4B4C</color>
+    <color name="md_theme_tertiaryFixedDim">#80CBC4</color>
+    <color name="md_theme_onTertiaryFixedVariant">#2F5C5D</color>
 
 
 </resources>

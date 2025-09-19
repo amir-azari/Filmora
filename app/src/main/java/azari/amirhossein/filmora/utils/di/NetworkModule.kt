@@ -1,17 +1,13 @@
 package azari.amirhossein.filmora.utils.di
 
-import android.util.Log
+import azari.amirhossein.filmora.BuildConfig
 import azari.amirhossein.filmora.data.network.ApiServices
-import azari.amirhossein.filmora.models.detail.ResponseAccountStates
-import azari.amirhossein.filmora.utils.Constants
-import azari.amirhossein.filmora.utils.RatedDeserializer
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
+import azari.amirhossein.filmora.utils.Constants.Network
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import `in`.nouri.dynamicsizeslib.BuildConfig
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -24,50 +20,52 @@ import javax.inject.Singleton
 object NetworkModule {
 
     @Provides
-    fun provideBaseUrl(): String = Constants.Network.BASE_URL
+    @Singleton
+    fun provideBaseUrl() = Network.BASE_URL
 
     @Provides
     @Singleton
-    fun provideGson(): Gson {
-        return GsonBuilder()
-            .registerTypeAdapter(ResponseAccountStates.Rated::class.java, RatedDeserializer())
-            .setLenient()
-            .create()
+    fun provideConnectionTimeout() = Network.CONNECT_TIMEOUT
+
+    @Provides
+    @Singleton
+    fun provideLoggingInterceptor() = HttpLoggingInterceptor().apply {
+        level = if (BuildConfig.DEBUG) {
+            HttpLoggingInterceptor.Level.BODY
+        } else {
+            HttpLoggingInterceptor.Level.NONE
+        }
     }
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(): OkHttpClient {
-        val loggingInterceptor = HttpLoggingInterceptor().apply {
-            level = if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY else HttpLoggingInterceptor.Level.NONE
+    fun provideOkHttpClient(timeout: Long, loggingInterceptor: HttpLoggingInterceptor): OkHttpClient {
+        val authInterceptor = Interceptor { chain ->
+            val originalRequest = chain.request()
+            val newRequest = originalRequest.newBuilder()
+                .addHeader(Network.HEADER_AUTHORIZATION, "${Network.HEADER_BEARER} ${BuildConfig.TMDB_API_KEY}")
+                .build()
+            chain.proceed(newRequest)
         }
 
         return OkHttpClient.Builder()
+            .addInterceptor(authInterceptor)
             .addInterceptor(loggingInterceptor)
-            .addInterceptor { chain ->
-                val originalRequest = chain.request()
-                val requestWithHeaders = originalRequest.newBuilder()
-                    .addHeader(Constants.Network.HEADER_ACCEPT, Constants.Network.CONTENT_TYPE_JSON)
-                    .addHeader(Constants.Network.HEADER_CONTENT_TYPE, Constants.Network.CONTENT_TYPE_JSON)
-                    .build()
-                chain.proceed(requestWithHeaders)
-            }
-            .connectTimeout(Constants.Network.CONNECT_TIMEOUT, TimeUnit.SECONDS)
-            .readTimeout(Constants.Network.READ_TIMEOUT, TimeUnit.SECONDS)
-            .writeTimeout(Constants.Network.WRITE_TIMEOUT, TimeUnit.SECONDS)
+            .connectTimeout(timeout, TimeUnit.SECONDS)
+            .readTimeout(timeout, TimeUnit.SECONDS)
+            .writeTimeout(timeout, TimeUnit.SECONDS)
             .retryOnConnectionFailure(true)
             .build()
     }
 
     @Provides
     @Singleton
-    fun provideRetrofit(baseUrl: String, okHttpClient: OkHttpClient, gson: Gson): ApiServices {
+    fun provideRetrofit(baseUrl: String, client: OkHttpClient): ApiServices {
         return Retrofit.Builder()
             .baseUrl(baseUrl)
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .client(okHttpClient)
+            .client(client)
+            .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(ApiServices::class.java)
     }
-
 }

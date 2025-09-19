@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -8,10 +10,17 @@ plugins {
     alias(libs.plugins.dagger.hilt.android)
     id("kotlin-parcelize")
 }
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists() && localPropertiesFile.isFile) {
+    localProperties.load(localPropertiesFile.inputStream())
+}
+val tmdbApiKey = localProperties.getProperty("TMDB_API_KEY", "")
 
 android {
     namespace = "azari.amirhossein.filmora"
     compileSdk = 35
+
 
     defaultConfig {
         applicationId = "azari.amirhossein.filmora"
@@ -20,21 +29,30 @@ android {
         versionCode = 1
         versionName = "1.0"
 
+        buildTypes {
+            debug {
+                applicationIdSuffix = "azari.amirhossein.filmora.debug" // نسخه جانبی
+            }
+        }
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField(
+            type = "String",
+            name = "TMDB_API_KEY",
+            value = "\"$tmdbApiKey\""
+        )
     }
 
-    buildTypes {
-        debug {
-            buildConfigField("Boolean", "DEBUG", "true")
-        }
 
-        release {
-            buildConfigField("Boolean", "DEBUG", "false")
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
+    buildTypes {
+
+        buildTypes {
+            release {
+                isMinifyEnabled = false
+                proguardFiles(
+                    getDefaultProguardFile("proguard-android-optimize.txt"),
+                    "proguard-rules.pro"
+                )
+            }
         }
     }
     compileOptions {
@@ -49,6 +67,11 @@ android {
         dataBinding = true
         buildConfig = true
     }
+
+    tasks.withType<JavaCompile>().configureEach {
+        options.compilerArgs.add("-Xlint:deprecation")
+    }
+
 }
 
 dependencies {
@@ -58,6 +81,8 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
+    implementation(libs.androidx.navigation.fragment.ktx)
+    implementation(libs.androidx.navigation.ui.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -82,6 +107,8 @@ dependencies {
     // Hilt
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
+    implementation(libs.androidx.hilt.navigation.fragment)
+
     // Lifecycle
     implementation(libs.lifecycle.viewmodel.ktx)
     implementation(libs.lifecycle.livedata.ktx)
@@ -101,8 +128,10 @@ dependencies {
     implementation(libs.androidx.paging.runtime)
     implementation(libs.carouselrecyclerview)
 
-    implementation("com.google.android.flexbox:flexbox:3.0.0")
-    implementation("com.github.ome450901:SimpleRatingBar:1.5.1")
+    implementation(libs.flexbox)
+    implementation(libs.simpleratingbar)
+    implementation(libs.androidx.browser)
+
 }
 kapt {
     correctErrorTypes = true
