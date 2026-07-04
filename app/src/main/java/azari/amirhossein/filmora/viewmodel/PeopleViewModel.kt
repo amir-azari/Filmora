@@ -47,6 +47,7 @@ class PeopleViewModel @Inject constructor(
 
     //-----Api-----
     private fun handleOnlineState() {
+        if (_peoplePageData.value is NetworkRequest.Success) return
         repository.getRemoteData()
             .catch { error ->
                 _peoplePageData.value =

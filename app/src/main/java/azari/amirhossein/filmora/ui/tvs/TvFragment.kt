@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -40,7 +40,7 @@ class TvFragment : Fragment() {
     private val binding get() = _binding!!
 
     // ViewModel
-    private val viewModel: TvViewModel by viewModels()
+    private val viewModel: TvViewModel by activityViewModels()
 
     @Inject
     lateinit var trendingAdapter : TrendingTvAdapter
@@ -57,67 +57,83 @@ class TvFragment : Fragment() {
     @Inject
     lateinit var onTheAirAdapter : MayLikeTvAdapter
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle? ): View {
-        // Inflate the layout for this fragment
-        _binding = FragmentTvBinding.inflate(inflater, container, false)
-        return binding.root
+    // Caching the root view to prevent layout inflation lag
+    private var rootView: View? = null
+    private var isFirstLoad = true
 
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View {
+        if (rootView == null) {
+            _binding = FragmentTvBinding.inflate(inflater, container, false)
+            rootView = binding.root
+        } else {
+            // Remove view from parent before returning it
+            (rootView?.parent as? ViewGroup)?.removeView(rootView)
+        }
+        return rootView!!
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupRecyclerViews()
-        observeViewModel()
+        
+        // Setup only once if adapters are not set up yet
+        if (binding.rvTrending.adapter == null) {
+            setupRecyclerViews()
+            observeViewModel()
 
-        trendingAdapter.setOnItemClickListener(clickTrending)
-        popularAdapter.setOnItemClickListener(clickTv)
-        airingTodayAdapter.setOnItemClickListener(clickTv)
-        topRatedAdapter.setOnItemClickListener(clickTv)
-        onTheAirAdapter.setOnItemClickListener(clickTv)
+            trendingAdapter.setOnItemClickListener(clickTrending)
+            popularAdapter.setOnItemClickListener(clickTv)
+            airingTodayAdapter.setOnItemClickListener(clickTv)
+            topRatedAdapter.setOnItemClickListener(clickTv)
+            onTheAirAdapter.setOnItemClickListener(clickTv)
 
-        binding.layoutSeeAllTrending.setClickAnimation {
-            findNavController().navigate(
-                R.id.actionToTvSectionFragment,
-                Bundle().apply {
-                    putString(Constants.SectionType.SECTION_TYPE, Constants.SectionType.TRENDING_TV)
-                }
-            )
-        }
+            binding.layoutSeeAllTrending.setClickAnimation {
+                findNavController().navigate(
+                    R.id.actionToTvSectionFragment,
+                    Bundle().apply {
+                        putString(Constants.SectionType.SECTION_TYPE, Constants.SectionType.TRENDING_TV)
+                    }
+                )
+            }
 
-        binding.layoutSeeAllPopular.setClickAnimation {
-            findNavController().navigate(
-                R.id.actionToTvSectionFragment,
-                Bundle().apply {
-                    putString(Constants.SectionType.SECTION_TYPE, Constants.SectionType.POPULAR_TV)
-                }
-            )
-        }
+            binding.layoutSeeAllPopular.setClickAnimation {
+                findNavController().navigate(
+                    R.id.actionToTvSectionFragment,
+                    Bundle().apply {
+                        putString(Constants.SectionType.SECTION_TYPE, Constants.SectionType.POPULAR_TV)
+                    }
+                )
+            }
 
-        binding.layoutSeeAllAiringToday.setClickAnimation {
-            findNavController().navigate(
-                R.id.actionToTvSectionFragment,
-                Bundle().apply {
-                    putString(Constants.SectionType.SECTION_TYPE, Constants.SectionType.AIRING_TODAY)
-                }
-            )
-        }
+            binding.layoutSeeAllAiringToday.setClickAnimation {
+                findNavController().navigate(
+                    R.id.actionToTvSectionFragment,
+                    Bundle().apply {
+                        putString(Constants.SectionType.SECTION_TYPE, Constants.SectionType.AIRING_TODAY)
+                    }
+                )
+            }
 
-        binding.layoutSeeAllTopRated.setClickAnimation {
-            findNavController().navigate(
-                R.id.actionToTvSectionFragment,
-                Bundle().apply {
-                    putString(Constants.SectionType.SECTION_TYPE, Constants.SectionType.TOP_RATED_TV)
-                }
-            )
-        }
+            binding.layoutSeeAllTopRated.setClickAnimation {
+                findNavController().navigate(
+                    R.id.actionToTvSectionFragment,
+                    Bundle().apply {
+                        putString(Constants.SectionType.SECTION_TYPE, Constants.SectionType.TOP_RATED_TV)
+                    }
+                )
+            }
 
-        binding.layoutSeeAllOnTheAir.setClickAnimation {
-            findNavController().navigate(
-                R.id.actionToTvSectionFragment,
-                Bundle().apply {
-                    putString(Constants.SectionType.SECTION_TYPE, Constants.SectionType.ON_THE_AIR)
-                }
-            )
+            binding.layoutSeeAllOnTheAir.setClickAnimation {
+                findNavController().navigate(
+                    R.id.actionToTvSectionFragment,
+                    Bundle().apply {
+                        putString(Constants.SectionType.SECTION_TYPE, Constants.SectionType.ON_THE_AIR)
+                    }
+                )
+            }
         }
     }
     // Setup recyclerView
@@ -130,7 +146,7 @@ class TvFragment : Fragment() {
                 setHasFixedSize(true)
             }
             rvPopular.apply {
-                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+                layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
                 adapter = popularAdapter
                 setHasFixedSize(true)
             }
@@ -141,12 +157,12 @@ class TvFragment : Fragment() {
                 setHasFixedSize(true)
             }
             rvAiringToday.apply {
-                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+                layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
                 adapter = airingTodayAdapter
                 setHasFixedSize(true)
             }
             rvOnTheAir.apply {
-                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+                layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
                 adapter = onTheAirAdapter
                 setHasFixedSize(true)
             }
@@ -155,63 +171,80 @@ class TvFragment : Fragment() {
 
     }
 
-    private fun observeViewModel() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.tvPageData.collect { state ->
-                    binding.mainContentContainer.visibility = View.GONE
-                    if (state != null) {
-                        when (state) {
-                            is NetworkRequest.Loading -> {
-                                showLoading()
-                            }
+    private var dataJob: kotlinx.coroutines.Job? = null
 
-                            is NetworkRequest.Success -> {
-                                showSuccess()
-                                state.data?.let { data ->
-                                    // Update adapters with the new data
-                                    trendingAdapter.differ.submitList(data.trending.data?.results)
-                                    popularAdapter.differ.submitList(data.popular.data?.results)
-                                    topRatedAdapter.differ.submitList(data.topRated.data?.results)
-                                    airingTodayAdapter.differ.submitList(data.airingToday.data?.results)
-                                    onTheAirAdapter.differ.submitList(data.onTheAir.data?.results)
+    private fun collectData() {
+        dataJob?.cancel()
+        dataJob = viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.tvPageData.collect { state ->
+                if (state != null) {
+                    when (state) {
+                        is NetworkRequest.Loading -> {
+                            showLoading()
+                        }
 
+                        is NetworkRequest.Success -> {
+                            showSuccess()
+                            isFirstLoad = false
+                            state.data?.let { data ->
+                                // Update adapters with the new data
+                                trendingAdapter.differ.submitList(data.trending.data?.results)
+                                popularAdapter.differ.submitList(data.popular.data?.results)
+                                topRatedAdapter.differ.submitList(data.topRated.data?.results)
+                                airingTodayAdapter.differ.submitList(data.airingToday.data?.results)
+                                onTheAirAdapter.differ.submitList(data.onTheAir.data?.results)
 
-                                    data.tvGenres.data?.genres?.let { genres ->
-                                        trendingAdapter.submitGenres(genres)
-                                        popularAdapter.submitGenres(genres)
-                                        topRatedAdapter.submitGenres(genres)
-                                        airingTodayAdapter.submitGenres(genres)
-                                        onTheAirAdapter.submitGenres(genres)
-
-                                    }
+                                data.tvGenres.data?.genres?.let { genres ->
+                                    trendingAdapter.submitGenres(genres)
+                                    popularAdapter.submitGenres(genres)
+                                    topRatedAdapter.submitGenres(genres)
+                                    airingTodayAdapter.submitGenres(genres)
+                                    onTheAirAdapter.submitGenres(genres)
                                 }
                             }
+                        }
 
-                            is NetworkRequest.Error -> {
-                                showError()
-                                if (state.message == Constants.Message.NO_INTERNET_CONNECTION) {
-                                    binding.internetLay.visibility = View.VISIBLE
-                                }
-                                showErrorSnackbar(binding.root, state.message.toString())
+                        is NetworkRequest.Error -> {
+                            showError()
+                            if (state.message == Constants.Message.NO_INTERNET_CONNECTION) {
+                                binding.internetLay.visibility = View.VISIBLE
                             }
+                            showErrorSnackbar(binding.root, state.message.toString())
                         }
                     }
                 }
             }
         }
+    }
 
-        // Observing random movie
+    private fun observeViewModel() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.randomMoviePoster.collect { url ->
-                    loadImage(url, binding.imgMoviePoster)
+                if (!isHidden) {
+                    collectData()
+                    launch {
+                        viewModel.randomMoviePoster.collect { url ->
+                            loadImage(url, binding.imgMoviePoster)
+                        }
+                    }
                 }
-
             }
         }
-
     }
+
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (!hidden && _binding != null) {
+            if (isFirstLoad) {
+                viewLifecycleOwner.lifecycleScope.launch {
+                    showLoading()
+                    kotlinx.coroutines.delay(220)
+                    collectData()
+                }
+            }
+        }
+    }
+
 
     private fun loadImage(url: String?, imageView: ImageView) {
         imageView.load(url) {
@@ -260,7 +293,12 @@ class TvFragment : Fragment() {
     }
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
+        // Do NOT clear _binding here because we are caching rootView
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
+        rootView = null
+    }
 }

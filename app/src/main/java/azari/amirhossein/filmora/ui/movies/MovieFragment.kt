@@ -7,7 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -40,88 +40,100 @@ class MovieFragment : Fragment() {
     private val binding get() = _binding!!
 
     // ViewModel
-    private val viewModel: MovieViewModel by viewModels()
+    private val viewModel: MovieViewModel by activityViewModels()
 
     @Inject
-    lateinit var trendingAdapter : TrendingMovieAdapter
+    lateinit var trendingAdapter: TrendingMovieAdapter
 
     @Inject
-    lateinit var popularAdapter : MayLikeMovieAdapter
+    lateinit var popularAdapter: MayLikeMovieAdapter
 
     @Inject
-    lateinit var nowPlayingAdapter : MayLikeMovieAdapter
+    lateinit var nowPlayingAdapter: MayLikeMovieAdapter
 
     @Inject
-    lateinit var topRatedAdapter : TopRatedMovieAdapter
+    lateinit var topRatedAdapter: TopRatedMovieAdapter
 
     @Inject
-    lateinit var upcomingAdapter : MayLikeMovieAdapter
+    lateinit var upcomingAdapter: MayLikeMovieAdapter
+
+    // Caching the root view to prevent layout inflation lag
+    private var rootView: View? = null
+    private var isFirstLoad = true
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        // Inflate the layout for this fragment
-        _binding = FragmentMovieBinding.inflate(inflater, container, false)
-        return binding.root
-
+        if (rootView == null) {
+            _binding = FragmentMovieBinding.inflate(inflater, container, false)
+            rootView = binding.root
+        } else {
+            // Remove view from parent before returning it
+            (rootView?.parent as? ViewGroup)?.removeView(rootView)
+        }
+        return rootView!!
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupRecyclerViews()
-        observeViewModel()
+        
+        // Setup only once if adapters are not set up yet
+        if (binding.rvTrending.adapter == null) {
+            setupRecyclerViews()
+            observeViewModel()
 
-        trendingAdapter.setOnItemClickListener(clickTrending)
-        popularAdapter.setOnItemClickListener(clickMovie)
-        nowPlayingAdapter.setOnItemClickListener(clickMovie)
-        topRatedAdapter.setOnItemClickListener(clickMovie)
-        upcomingAdapter.setOnItemClickListener(clickMovie)
+            trendingAdapter.setOnItemClickListener(clickTrending)
+            popularAdapter.setOnItemClickListener(clickMovie)
+            nowPlayingAdapter.setOnItemClickListener(clickMovie)
+            topRatedAdapter.setOnItemClickListener(clickMovie)
+            upcomingAdapter.setOnItemClickListener(clickMovie)
 
-        binding.layoutSeeAllTrending.setClickAnimation {
-            findNavController().navigate(
-                R.id.actionToMovieSectionFragment,
-                Bundle().apply {
-                putString(Constants.SectionType.SECTION_TYPE, Constants.SectionType.TRENDING_MOVIE)
-                }
-            )
-        }
+            binding.layoutSeeAllTrending.setClickAnimation {
+                findNavController().navigate(
+                    R.id.actionToMovieSectionFragment,
+                    Bundle().apply {
+                        putString(Constants.SectionType.SECTION_TYPE, Constants.SectionType.TRENDING_MOVIE)
+                    }
+                )
+            }
 
-        binding.layoutSeeAllPopular.setClickAnimation {
-            findNavController().navigate(
-                R.id.actionToMovieSectionFragment,
-                Bundle().apply {
-                    putString(Constants.SectionType.SECTION_TYPE, Constants.SectionType.POPULAR_MOVIE)
-                }
-            )
-        }
+            binding.layoutSeeAllPopular.setClickAnimation {
+                findNavController().navigate(
+                    R.id.actionToMovieSectionFragment,
+                    Bundle().apply {
+                        putString(Constants.SectionType.SECTION_TYPE, Constants.SectionType.POPULAR_MOVIE)
+                    }
+                )
+            }
 
-        binding.layoutSeeAllNowPlaying.setClickAnimation {
-            findNavController().navigate(
-                R.id.actionToMovieSectionFragment,
-                Bundle().apply {
-                    putString(Constants.SectionType.SECTION_TYPE, Constants.SectionType.NOW_PLAYING)
-                }
-            )
-        }
+            binding.layoutSeeAllNowPlaying.setClickAnimation {
+                findNavController().navigate(
+                    R.id.actionToMovieSectionFragment,
+                    Bundle().apply {
+                        putString(Constants.SectionType.SECTION_TYPE, Constants.SectionType.NOW_PLAYING)
+                    }
+                )
+            }
 
-        binding.layoutSeeAllTopRated.setClickAnimation {
-            findNavController().navigate(
-                R.id.actionToMovieSectionFragment,
-                Bundle().apply {
-                    putString(Constants.SectionType.SECTION_TYPE, Constants.SectionType.TOP_RATED_MOVIE)
-                }
-            )
-        }
+            binding.layoutSeeAllTopRated.setClickAnimation {
+                findNavController().navigate(
+                    R.id.actionToMovieSectionFragment,
+                    Bundle().apply {
+                        putString(Constants.SectionType.SECTION_TYPE, Constants.SectionType.TOP_RATED_MOVIE)
+                    }
+                )
+            }
 
-        binding.layoutSeeAllUpcoming.setClickAnimation {
-            findNavController().navigate(
-                R.id.actionToMovieSectionFragment,
-                Bundle().apply {
-                    putString(Constants.SectionType.SECTION_TYPE, Constants.SectionType.UPCOMING)
-                }
-            )
+            binding.layoutSeeAllUpcoming.setClickAnimation {
+                findNavController().navigate(
+                    R.id.actionToMovieSectionFragment,
+                    Bundle().apply {
+                        putString(Constants.SectionType.SECTION_TYPE, Constants.SectionType.UPCOMING)
+                    }
+                )
+            }
         }
     }
 
@@ -135,94 +147,122 @@ class MovieFragment : Fragment() {
                 setHasFixedSize(true)
             }
             rvPopular.apply {
-                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+                layoutManager =
+                    LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
                 adapter = popularAdapter
                 setHasFixedSize(true)
             }
             rvNowPlaying.apply {
-                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+                layoutManager =
+                    LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
                 adapter = nowPlayingAdapter
                 setHasFixedSize(true)
             }
 
             rvTopRated.apply {
-                layoutManager = GridLayoutManager(requireContext(), 2, GridLayoutManager.HORIZONTAL, false)
+                layoutManager =
+                    GridLayoutManager(requireContext(), 2, GridLayoutManager.HORIZONTAL, false)
                 adapter = topRatedAdapter
                 setHasFixedSize(true)
             }
             rvUpcoming.apply {
-                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+                layoutManager =
+                    LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
                 adapter = upcomingAdapter
                 setHasFixedSize(true)
             }
         }
     }
-    private fun observeViewModel() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.moviePageData.collect { state ->
-                    binding.mainContentContainer.visibility = View.GONE
-                    if (state != null) {
-                        when (state) {
-                            is NetworkRequest.Loading -> {
-                                showLoading()
-                            }
 
-                            is NetworkRequest.Success -> {
-                                showSuccess()
-                                state.data?.let { data ->
-                                    // Update adapters with the new data
-                                    trendingAdapter.differ.submitList(data.trending.data?.results)
-                                    popularAdapter.differ.submitList(data.popular.data?.results)
-                                    nowPlayingAdapter.differ.submitList(data.nowPlaying.data?.results)
-                                    topRatedAdapter.differ.submitList(data.topRated.data?.results)
-                                    upcomingAdapter.differ.submitList(data.upcoming.data?.results)
+    private var dataJob: kotlinx.coroutines.Job? = null
 
-                                    data.movieGenres.data?.genres?.let { genres ->
-                                        trendingAdapter.submitGenres(genres)
-                                        popularAdapter.submitGenres(genres)
-                                        nowPlayingAdapter.submitGenres(genres)
-                                        topRatedAdapter.submitGenres(genres)
-                                        upcomingAdapter.submitGenres(genres)
-                                    }
+    private fun collectData() {
+        dataJob?.cancel()
+        dataJob = viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.moviePageData.collect { state ->
+                if (state != null) {
+                    when (state) {
+                        is NetworkRequest.Loading -> {
+                            showLoading()
+                        }
+
+                        is NetworkRequest.Success -> {
+                            showSuccess()
+                            isFirstLoad = false
+                            state.data?.let { data ->
+                                // Update adapters with the new data
+                                trendingAdapter.differ.submitList(data.trending.data?.results)
+                                popularAdapter.differ.submitList(data.popular.data?.results)
+                                nowPlayingAdapter.differ.submitList(data.nowPlaying.data?.results)
+                                topRatedAdapter.differ.submitList(data.topRated.data?.results)
+                                upcomingAdapter.differ.submitList(data.upcoming.data?.results)
+
+                                data.movieGenres.data?.genres?.let { genres ->
+                                    trendingAdapter.submitGenres(genres)
+                                    popularAdapter.submitGenres(genres)
+                                    nowPlayingAdapter.submitGenres(genres)
+                                    topRatedAdapter.submitGenres(genres)
+                                    upcomingAdapter.submitGenres(genres)
                                 }
                             }
+                        }
 
-                            is NetworkRequest.Error -> {
-                                showError()
-                                if (state.message == Constants.Message.NO_INTERNET_CONNECTION) {
-                                    binding.internetLay.visibility = View.VISIBLE
-                                }
-                                showErrorSnackbar(binding.root, state.message.toString())
+                        is NetworkRequest.Error -> {
+                            showError()
+                            if (state.message == Constants.Message.NO_INTERNET_CONNECTION) {
+                                binding.internetLay.visibility = View.VISIBLE
                             }
+                            showErrorSnackbar(binding.root, state.message.toString())
                         }
                     }
                 }
             }
         }
+    }
 
-        // Observing random movie
+    private fun observeViewModel() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.randomMoviePoster.collect { url ->
-                    loadImage(url, binding.imgMoviePoster)
+                if (!isHidden) {
+                    collectData()
+                    launch {
+                        viewModel.randomMoviePoster.collect { url ->
+                            loadImage(url, binding.imgMoviePoster)
+                        }
+                    }
                 }
-
             }
         }
-
     }
+
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (!hidden && _binding != null) {
+            if (isFirstLoad) {
+                viewLifecycleOwner.lifecycleScope.launch {
+                    showLoading()
+                    kotlinx.coroutines.delay(220)
+                    collectData()
+                }
+            }
+        }
+    }
+
+
     //Click media
     private val clickTrending = { movie: ResponseTrendingMovie.Result ->
-        val action = MovieFragmentDirections.actionToMovieDetail(Constants.MediaType.MOVIE,movie.id)
+        val action =
+            MovieFragmentDirections.actionToMovieDetail(Constants.MediaType.MOVIE, movie.id)
         findNavController().navigate(action)
 
     }
 
     private val clickMovie = { movie: ResponseMoviesList.Result ->
-        val action = MovieFragmentDirections.actionToMovieDetail(Constants.MediaType.MOVIE,movie.id)
+        val action =
+            MovieFragmentDirections.actionToMovieDetail(Constants.MediaType.MOVIE, movie.id)
         findNavController().navigate(action)
     }
+
     private fun loadImage(url: String?, imageView: ImageView) {
         imageView.load(url) {
             crossfade(true)
@@ -240,7 +280,7 @@ class MovieFragment : Fragment() {
     private fun showLoading() {
         binding.progressBar.visibility = View.VISIBLE
         binding.mainContentContainer.visibility = View.GONE
-        binding.internetLay.visibility  =View.GONE
+        binding.internetLay.visibility = View.GONE
 
 
     }
@@ -257,9 +297,15 @@ class MovieFragment : Fragment() {
         binding.mainContentContainer.visibility = View.GONE
 
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
+        // Do NOT clear _binding here because we are caching rootView
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
+        rootView = null
+    }
 }

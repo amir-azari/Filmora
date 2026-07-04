@@ -162,7 +162,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/_12mdp"
                     android:gravity="center_vertical"
-                    android:orientation="horizontal"
+                    android:orientation="vertical"
                     app:layout_constraintBottom_toBottomOf="@id/txt_recommended_popular"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@id/txt_recommended_popular">

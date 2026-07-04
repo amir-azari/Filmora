@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -40,7 +40,7 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding!!
 
     // ViewModel
-    private val viewModel: HomeViewModel by viewModels()
+    private val viewModel: HomeViewModel by activityViewModels()
 
     // Adapters
     @Inject
@@ -52,28 +52,41 @@ class HomeFragment : Fragment() {
     @Inject
     lateinit var trendingAdapter: TrendingAllAdapter
 
+    // Caching the root view to prevent layout inflation lag
+    private var rootView: View? = null
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
-        return binding.root
+        if (rootView == null) {
+            _binding = FragmentHomeBinding.inflate(inflater, container, false)
+            rootView = binding.root
+        } else {
+            // Remove view from parent before returning it
+            (rootView?.parent as? ViewGroup)?.removeView(rootView)
+        }
+        return rootView!!
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupRecyclerViews()
-        observeViewModel()
-        mayLikeMovieAdapter.setOnItemClickListener(clickMovie)
-        mayLikeTvAdapter.setOnItemClickListener(clickTv)
-        trendingAdapter.setOnItemClickListener(clickTrending)
+        
+        // Setup only once if adapters are not set up yet
+        if (binding.rvMovies.adapter == null) {
+            setupRecyclerViews()
+            observeViewModel()
+            mayLikeMovieAdapter.setOnItemClickListener(clickMovie)
+            mayLikeTvAdapter.setOnItemClickListener(clickTv)
+            trendingAdapter.setOnItemClickListener(clickTrending)
 
-        binding.layoutSeeAllMovies.setClickAnimation {
-            findNavController().navigate(R.id.actionHomeToMayLikeMovies)
-        }
-        binding.layoutSeeAllTVSeries.setClickAnimation {
-            findNavController().navigate(R.id.actionHomeToMayLikeTvs)
+            binding.layoutSeeAllMovies.setClickAnimation {
+                findNavController().navigate(R.id.actionHomeToMayLikeMovies)
+            }
+            binding.layoutSeeAllTVSeries.setClickAnimation {
+                findNavController().navigate(R.id.actionHomeToMayLikeTvs)
+            }
         }
     }
 
@@ -108,62 +121,57 @@ class HomeFragment : Fragment() {
     private fun observeViewModel() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.homePageData.collect { state ->
-                    binding.mainContentContainer.visibility = View.GONE
-                    if (state != null) {
-                        when (state) {
-                            is NetworkRequest.Loading -> {
-                                showLoading()
-                            }
+                launch {
+                    viewModel.homePageData.collect { state ->
+                        binding.mainContentContainer.visibility = View.GONE
+                        if (state != null) {
+                            when (state) {
+                                is NetworkRequest.Loading -> {
+                                    showLoading()
+                                }
 
-                            is NetworkRequest.Success -> {
-                                showSuccess()
-                                state.data?.let { data ->
-                                    // Update adapters with the new data
-                                    trendingAdapter.differ.submitList(data.trending.data?.results)
-                                    mayLikeMovieAdapter.differ.submitList(data.recommendedMovies.data?.results)
-                                    mayLikeTvAdapter.differ.submitList(data.recommendedTvs.data?.results)
+                                is NetworkRequest.Success -> {
+                                    showSuccess()
+                                    state.data?.let { data ->
+                                        // Update adapters with the new data
+                                        trendingAdapter.differ.submitList(data.trending.data?.results)
+                                        mayLikeMovieAdapter.differ.submitList(data.recommendedMovies.data?.results)
+                                        mayLikeTvAdapter.differ.submitList(data.recommendedTvs.data?.results)
 
-                                    data.tvGenres.data?.genres?.let { genres ->
-                                        mayLikeTvAdapter.submitGenres(genres)
-                                    }
-                                    data.movieGenres.data?.genres?.let { genres ->
-                                        mayLikeMovieAdapter.submitGenres(genres)
+                                        data.tvGenres.data?.genres?.let { genres ->
+                                            mayLikeTvAdapter.submitGenres(genres)
+                                        }
+                                        data.movieGenres.data?.genres?.let { genres ->
+                                            mayLikeMovieAdapter.submitGenres(genres)
+                                        }
                                     }
                                 }
-                            }
 
-                            is NetworkRequest.Error -> {
-                                showError()
-                                if (state.message == Constants.Message.NO_INTERNET_CONNECTION) {
-                                    binding.internetLay.visibility = View.VISIBLE
+                                is NetworkRequest.Error -> {
+                                    showError()
+                                    if (state.message == Constants.Message.NO_INTERNET_CONNECTION) {
+                                        binding.internetLay.visibility = View.VISIBLE
+                                    }
+                                    showErrorSnackbar(binding.root, state.message.toString())
                                 }
-                                showErrorSnackbar(binding.root, state.message.toString())
                             }
                         }
                     }
                 }
-            }
-        }
 
-        // Observing random movie
-        viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.randomMoviePoster.collect { url ->
-                    loadImage(url, binding.imgMoviePoster)
+                // Observing random movie poster
+                launch {
+                    viewModel.randomMoviePoster.collect { url ->
+                        loadImage(url, binding.imgMoviePoster)
+                    }
                 }
 
-
-            }
-        }
-
-        // Observing random Tv
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.randomTvPoster.collect { url ->
-                    loadImage(url, binding.imgTvPoster)
+                // Observing random Tv poster
+                launch {
+                    viewModel.randomTvPoster.collect { url ->
+                        loadImage(url, binding.imgTvPoster)
+                    }
                 }
-
             }
         }
     }
@@ -228,6 +236,12 @@ class HomeFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
+        // Do NOT clear _binding here because we are caching rootView
     }
-}
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
+        rootView = null
+    }
+}

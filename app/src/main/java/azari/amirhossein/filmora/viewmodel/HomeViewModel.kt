@@ -50,6 +50,7 @@ class HomeViewModel @Inject constructor(
     }
     //-----Api-----
     private fun handleOnlineState() {
+        if (_homePageData.value is NetworkRequest.Success) return
         repository.getRemoteData()
             .catch { error ->
                 _homePageData.value = NetworkRequest.Error(error.message ?: Constants.Message.NO_INTERNET_CONNECTION)
@@ -75,9 +76,10 @@ class HomeViewModel @Inject constructor(
             ?.let { "$baseUrl${Constants.ImageSize.ORIGINAL}$it" }
     }
 
-    private fun filterTrendingMovies(data: HomePageData?) {
-        data?.trending?.data?.results = data?.trending?.data?.results.orEmpty()
-            .filter { it.mediaType == "movie" || it.mediaType == "tv" }
+    private fun filterTrendingMovies(data: HomePageData) {
+        val filtered = data.trending.data?.results
+            ?.filter { it.mediaType == Constants.MediaType.MOVIE || it.mediaType == Constants.MediaType.TV }
+        data.trending.data?.results = filtered ?: emptyList()
     }
 
     // Update data

@@ -45,9 +45,9 @@ class MovieDetailViewModel @Inject constructor(
         monitorNetworkChanges()
     }
     private val cleanupJob = viewModelScope.launch {
-        while(true) {
-            cleanExpiredRecords()
-            delay(30 * 60 * 1000)
+        while (true) {
+            kotlinx.coroutines.delay(Constants.Database.DETAIL_EXPIRATION_TIME)
+            runCatching { cleanExpiredRecords() }
         }
     }
     private suspend fun cleanExpiredRecords() {

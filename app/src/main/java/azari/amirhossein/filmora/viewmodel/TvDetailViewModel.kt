@@ -45,9 +45,9 @@ class TvDetailViewModel @Inject constructor(
     }
 
     private val cleanupJob = viewModelScope.launch {
-        while(true) {
-            cleanExpiredRecords()
-            delay(30 * 60 * 1000)
+        while (true) {
+            kotlinx.coroutines.delay(Constants.Database.DETAIL_EXPIRATION_TIME)
+            runCatching { cleanExpiredRecords() }
         }
     }
 

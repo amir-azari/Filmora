@@ -49,6 +49,7 @@ class MovieViewModel @Inject constructor(
 
     //-----Api-----
     private fun handleOnlineState() {
+        if (_moviePageData.value is NetworkRequest.Success) return
         repository.getRemoteData()
             .catch { error ->
                 _moviePageData.value =

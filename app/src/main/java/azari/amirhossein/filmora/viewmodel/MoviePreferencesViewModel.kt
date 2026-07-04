@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import azari.amirhossein.filmora.BuildConfig
 import azari.amirhossein.filmora.data.SessionManager
 import azari.amirhossein.filmora.data.repository.MoviePreferencesRepository
 import azari.amirhossein.filmora.models.prefences.ResponseGenresList
@@ -197,7 +198,9 @@ class MoviePreferencesViewModel @Inject constructor(
 
         } catch (e: Exception) {
             _savePreferencesResult.value = NetworkRequest.Error(e.message ?: Constants.Message.UNKNOWN_ERROR)
-            Log.e("Keywords", "Error saving preferences: ${e.message}")
+            if (BuildConfig.DEBUG) {
+                Log.e("MoviePreferences", "Error saving preferences: ${e.message}")
+            }
         }
     }
 
