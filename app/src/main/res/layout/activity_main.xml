@@ -64,6 +64,14 @@
         android:background="@color/line"
         app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
+    <FrameLayout
+        android:id="@+id/tab_container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_nav"
+        app:layout_constraintTop_toBottomOf="@id/toolbar" />
+
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/nav_host_fragment"
         android:name="androidx.navigation.fragment.NavHostFragment"
@@ -71,8 +79,10 @@
         android:layout_height="0dp"
         app:defaultNavHost="true"
         app:layout_constraintBottom_toTopOf="@+id/bottom_nav"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
-        app:navGraph="@navigation/nav_main" />
+        app:layout_constraintTop_toBottomOf="@id/toolbar" />
+
+
+
 
     <View
         android:layout_width="match_parent"

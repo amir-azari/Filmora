@@ -8,7 +8,6 @@
     <application
         android:name=".utils.MyApp"
         android:allowBackup="true"
-        android:largeHeap="true"
         android:hardwareAccelerated="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"

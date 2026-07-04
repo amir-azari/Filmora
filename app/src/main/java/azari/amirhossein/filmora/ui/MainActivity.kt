@@ -23,6 +23,12 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import azari.amirhossein.filmora.R
 import azari.amirhossein.filmora.databinding.ActivityMainBinding
+import azari.amirhossein.filmora.ui.home.HomeFragment
+import azari.amirhossein.filmora.ui.movies.MovieFragment
+import azari.amirhossein.filmora.ui.tvs.TvFragment
+import azari.amirhossein.filmora.ui.people.PeopleFragment
+import androidx.fragment.app.Fragment
+import azari.amirhossein.filmora.ui.MainFragmentFactory
 import azari.amirhossein.filmora.utils.NetworkRequest
 import azari.amirhossein.filmora.utils.setClickAnimation
 import azari.amirhossein.filmora.viewmodel.SharedAccountViewModel
@@ -37,6 +43,14 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var navController: NavController
     private lateinit var navHost: NavHostFragment
+
+    // Real fragment instances for show/hide tab caching
+    private val homeFragment by lazy { HomeFragment() }
+    private val movieFragment by lazy { MovieFragment() }
+    private val tvFragment by lazy { TvFragment() }
+    private val peopleFragment by lazy { PeopleFragment() }
+    private var activeFragment: Fragment = homeFragment
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -56,15 +70,29 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        navHost =
-            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as? NavHostFragment
-                ?: NavHostFragment.create(R.navigation.nav_main).also {
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.nav_host_fragment, it)
-                        .setReorderingAllowed(true)
-                        .commitNow()
-                }
+
+        navHost = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        navHost.childFragmentManager.fragmentFactory = MainFragmentFactory()
         navController = navHost.navController
+        navController.setGraph(R.navigation.nav_main)
+
+        // Set NavController on tab_container so that findNavController() inside child fragments works
+        androidx.navigation.Navigation.setViewNavController(binding.tabContainer, navController)
+
+        // Initialize real fragments inside tab_container
+        if (savedInstanceState == null) {
+            supportFragmentManager.beginTransaction().apply {
+                add(R.id.tab_container, homeFragment, "home").show(homeFragment)
+                add(R.id.tab_container, movieFragment, "movie").hide(movieFragment)
+                add(R.id.tab_container, tvFragment, "tv").hide(tvFragment)
+                add(R.id.tab_container, peopleFragment, "people").hide(peopleFragment)
+                commit()
+            }
+            activeFragment = homeFragment
+        } else {
+            activeFragment = supportFragmentManager.findFragmentByTag("home") ?: homeFragment
+        }
+
         val appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.homeFragment,
@@ -76,15 +104,87 @@ class MainActivity : AppCompatActivity() {
         // Setup ActionBar with NavController
         setupActionBarWithNavController(navController, appBarConfiguration)
 
-        // Setup Bottom Navigation
-        binding.bottomNav.setupWithNavController(navController)
+        // Setup Bottom Navigation Listener manually to sync with custom show/hide caching
+        binding.bottomNav.setOnItemSelectedListener { item ->
+            val targetFragment = when (item.itemId) {
+                R.id.homeFragment -> supportFragmentManager.findFragmentByTag("home") ?: homeFragment
+                R.id.movieFragment -> supportFragmentManager.findFragmentByTag("movie") ?: movieFragment
+                R.id.tvFragment -> supportFragmentManager.findFragmentByTag("tv") ?: tvFragment
+                R.id.peopleFragment -> supportFragmentManager.findFragmentByTag("people") ?: peopleFragment
+                else -> null
+            }
+            if (targetFragment != null) {
+                // If we are currently showing a detail/sub screen in nav_host_fragment, pop back to start destination
+                if (navController.currentDestination?.id != navController.graph.startDestinationId &&
+                    navController.currentDestination?.id != R.id.homeFragment &&
+                    navController.currentDestination?.id != R.id.movieFragment &&
+                    navController.currentDestination?.id != R.id.tvFragment &&
+                    navController.currentDestination?.id != R.id.peopleFragment) {
+                    navController.popBackStack(navController.graph.startDestinationId, false)
+                }
+
+                // Navigate in NavController to keep state in sync
+                if (navController.currentDestination?.id != item.itemId) {
+                    navController.navigate(item.itemId)
+                }
+
+                // Toggle visibilities
+                binding.tabContainer.visibility = View.VISIBLE
+                binding.navHostFragment.visibility = View.INVISIBLE
+
+                if (activeFragment != targetFragment) {
+                    supportFragmentManager.beginTransaction()
+                        .hide(activeFragment)
+                        .show(targetFragment)
+                        .commit()
+                    activeFragment = targetFragment
+                }
+                handleDestinationChanges(item.itemId)
+                true
+            } else {
+                false
+            }
+        }
 
         observeAccountDetails()
         setupProfileClickListener()
-        // Handle destination changes
+
+        // Handle destination changes to manage dual-container visibility
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            handleDestinationChanges(destination.id)
+            val tabId = destination.id
+            if (tabId in setOf(R.id.homeFragment, R.id.movieFragment, R.id.tvFragment, R.id.peopleFragment)) {
+                binding.tabContainer.visibility = View.VISIBLE
+                binding.navHostFragment.visibility = View.INVISIBLE
+                showBottomNavWithFade()
+
+                // Synchronize bottom_nav selection without triggering infinite loops
+                if (binding.bottomNav.selectedItemId != tabId) {
+                    binding.bottomNav.selectedItemId = tabId
+                }
+
+                val targetFragment = when (tabId) {
+                    R.id.homeFragment -> supportFragmentManager.findFragmentByTag("home") ?: homeFragment
+                    R.id.movieFragment -> supportFragmentManager.findFragmentByTag("movie") ?: movieFragment
+                    R.id.tvFragment -> supportFragmentManager.findFragmentByTag("tv") ?: tvFragment
+                    R.id.peopleFragment -> supportFragmentManager.findFragmentByTag("people") ?: peopleFragment
+                    else -> homeFragment
+                }
+                if (activeFragment != targetFragment) {
+                    supportFragmentManager.beginTransaction()
+                        .hide(activeFragment)
+                        .show(targetFragment)
+                        .commit()
+                    activeFragment = targetFragment
+                }
+                handleDestinationChanges(tabId)
+            } else {
+                // If navigating to detail screens, hide the tab container and show the nav host fragment
+                binding.tabContainer.visibility = View.GONE
+                binding.navHostFragment.visibility = View.VISIBLE
+                handleDestinationChanges(tabId)
+            }
         }
+
     }
 
     private fun handleDestinationChanges(destinationId: Int) {
