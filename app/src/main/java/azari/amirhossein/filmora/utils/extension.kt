@@ -108,7 +108,7 @@ fun Snackbar.customize(
 fun Int.dp(context: Context): Int = (this * context.resources.displayMetrics.density).toInt()
 
 fun String.toFormattedDate(): String {
-    return if (this.isNullOrEmpty()) {
+    return if (this.isEmpty()) {
         Constants.Message.INVALID_DATE
     } else {
         runCatching {

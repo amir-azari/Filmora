@@ -16,17 +16,28 @@ class NetworkChecker @Inject constructor(
     private val _isNetworkAvailable = MutableStateFlow(false)
     val isNetworkAvailable: StateFlow<Boolean> get() = _isNetworkAvailable
 
+    // Reference counter: چند ViewModel در حال استفاده از این NetworkChecker هستند
+    @Volatile
+    private var registrationCount = 0
 
     fun startMonitoring(): StateFlow<Boolean> {
-        val capabilities = connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
-        _isNetworkAvailable.value = capabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) == true
-        connectivityManager.registerNetworkCallback(request, this)
+        if (registrationCount == 0) {
+            // بررسی اولیه وضعیت شبکه
+            val capabilities = connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+            _isNetworkAvailable.value = capabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) == true
+            runCatching { connectivityManager.registerNetworkCallback(request, this) }
+        }
+        registrationCount++
         return isNetworkAvailable
     }
 
-    // Stop monitoring
     fun stopMonitoring() {
-        connectivityManager.unregisterNetworkCallback(this)
+        registrationCount--
+        if (registrationCount <= 0) {
+            registrationCount = 0
+            // از runCatching استفاده می‌کنیم تا در صورتی که قبلاً unregister شده، crash نکند
+            runCatching { connectivityManager.unregisterNetworkCallback(this) }
+        }
     }
 
     override fun onAvailable(network: Network) {
@@ -39,5 +50,3 @@ class NetworkChecker @Inject constructor(
         _isNetworkAvailable.value = false
     }
 }
-
-
