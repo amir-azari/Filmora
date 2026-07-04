@@ -7,6 +7,7 @@ import azari.amirhossein.filmora.data.source.RemoteDataSource
 import azari.amirhossein.filmora.models.HomePageData
 import azari.amirhossein.filmora.models.prefences.TvAndMoviePreferences
 import azari.amirhossein.filmora.utils.Constants
+import azari.amirhossein.filmora.utils.MediaParamsBuilder
 import azari.amirhossein.filmora.utils.NetworkRequest
 import azari.amirhossein.filmora.utils.NetworkResponse
 import kotlinx.coroutines.Dispatchers
@@ -49,12 +50,11 @@ class HomeRepository @Inject constructor(
             // Fetch remote data based on user preferences
             val remoteData = fetchRemoteData(moviePreferences, tvPreferences)
             // Save the fetched data locally
-            local.saveHomeData(remoteData.toEntity())
+            remoteData.toEntity()?.let { local.saveHomeData(it) }
             // Emit the remote data
             emit(NetworkRequest.Success(remoteData))
         } catch (e: Exception) {
             emit(NetworkRequest.Error(e.localizedMessage ?: Constants.Message.UNKNOWN_ERROR))
-
         }
     }.flowOn(Dispatchers.IO)
 
@@ -79,41 +79,20 @@ class HomeRepository @Inject constructor(
         )
     }
 
-    // Build parameters for API requests
-    private fun buildMediaParams(preferences: TvAndMoviePreferences) = mutableMapOf<String, String>().apply {
-        val favoriteGenres = preferences.favoriteGenres.joinToString("|")
-        val selectedGenres = preferences.selectedGenres
-            .filterNot { it in preferences.dislikedGenres }
-            .joinToString("|")
-
-        // Combine selected and favorite genres
-        val combinedGenresSet = (selectedGenres.split("|") + favoriteGenres.split("|"))
-            .toSet()
-            .joinToString("|")
-
-        if (combinedGenresSet.isNotEmpty()) {
-            put(Constants.Discover.WITH_GENRES, combinedGenresSet)
-        }
-
-        val dislikedGenres = preferences.dislikedGenres.joinToString("|")
-        if (dislikedGenres.isNotEmpty()) {
-            put(Constants.Discover.WITHOUT_GENRES, dislikedGenres)
-        }
-
-        val selectedKeywords = preferences.selectedKeywords.joinToString("|")
-        if (selectedKeywords.isNotEmpty()) {
-            put(Constants.Discover.WITH_KEYWORDS, selectedKeywords)
-        }
-    }
+    // Build parameters for API requests using shared MediaParamsBuilder
+    private fun buildMediaParams(preferences: TvAndMoviePreferences) =
+        MediaParamsBuilder.build(preferences)
     //-----Local-----
 
-    private fun HomePageData.toEntity() = HomeEntity(
-        trending = trending.data!!,
-        movieGenres = movieGenres.data!!,
-        tvGenres = tvGenres.data!!,
-        recommendedMovies = recommendedMovies.data!!,
-        recommendedTvs = recommendedTvs.data!!
-    )
+    private fun HomePageData.toEntity(): HomeEntity? {
+        return HomeEntity(
+            trending = trending.data ?: return null,
+            movieGenres = movieGenres.data ?: return null,
+            tvGenres = tvGenres.data ?: return null,
+            recommendedMovies = recommendedMovies.data ?: return null,
+            recommendedTvs = recommendedTvs.data ?: return null
+        )
+    }
 
 
     private fun HomeEntity.toCombinedData() = HomePageData(

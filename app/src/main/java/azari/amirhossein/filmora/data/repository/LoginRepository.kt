@@ -47,14 +47,17 @@ class LoginRepository @Inject constructor(
                             emit(NetworkRequest.Success(sessionId))
                         } ?: emit(NetworkRequest.Error(Constants.Message.SESSION_NULL))
                     } else {
-                        emit(NetworkRequest.Error((sessionNetworkResponse as NetworkRequest.Error).message!!))
+                        val error = sessionNetworkResponse as? NetworkRequest.Error
+                        emit(NetworkRequest.Error(error?.message ?: Constants.Message.UNKNOWN_ERROR))
                     }
                 } else {
-                    emit(NetworkRequest.Error((loginNetworkResponse as NetworkRequest.Error).message!!))
+                    val error = loginNetworkResponse as? NetworkRequest.Error
+                    emit(NetworkRequest.Error(error?.message ?: Constants.Message.UNKNOWN_ERROR))
                 }
             } ?: emit(NetworkRequest.Error(Constants.Message.TOKEN_NULL))
         } else {
-            emit(NetworkRequest.Error((tokenNetworkResponse as NetworkRequest.Error).message!!))
+            val error = tokenNetworkResponse as? NetworkRequest.Error
+            emit(NetworkRequest.Error(error?.message ?: Constants.Message.UNKNOWN_ERROR))
         }
     }.flowOn(Dispatchers.IO)
 
@@ -74,7 +77,8 @@ class LoginRepository @Inject constructor(
                     emit(NetworkRequest.Success(guestSessionId))
                 } ?: emit(NetworkRequest.Error(Constants.Message.SESSION_NULL))
             } else {
-                emit(NetworkRequest.Error((networkResponse as NetworkRequest.Error).message!!))
+                val error = networkResponse as? NetworkRequest.Error
+                emit(NetworkRequest.Error(error?.message ?: Constants.Message.UNKNOWN_ERROR))
             }
         } catch (e: Exception) {
             emit(NetworkRequest.Error(e.message.toString()))
