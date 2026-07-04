@@ -1,18 +1,39 @@
+# Built-in Gradle/Android Studio ignores
+.gradle/
+build/
+**/build/
 *.iml
-.gradle
-/local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
-.DS_Store
-/build
-/captures
-.externalNativeBuild
-.cxx
+.idea/
+
+# Local configuration files (SDK paths, local properties, secrets)
 local.properties
-/.idea/deploymentTargetSelector.xml
-/.idea/misc.xml
-.idea/studiobot.xml
+secrets.properties
+*.jks
+*.keystore
+*.pepk
+
+# Android Studio Captures
+captures/
+
+# NDK / C++ build artifacts
+.externalNativeBuild/
+.cxx/
+cmake_install.cmake
+CMakeCache.txt
+CMakeFiles/
+cmake-build-*/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Log files
+*.log
+
+# Crashlytics / Firebase artifacts
+app-measurement.properties
