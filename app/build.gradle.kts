@@ -4,9 +4,14 @@ plugins {
     alias(libs.plugins.navigation.serialization)
     alias(libs.plugins.navigation.safeargs)
     alias(libs.plugins.ksp)
-    alias(libs.plugins.kapt)
     alias(libs.plugins.dagger.hilt.android)
     id("kotlin-parcelize")
+}
+
+// Suppress warning from Hilt KSP options not recognized after kapt→ksp migration
+ksp {
+    arg("dagger.hilt.internal.useAggregatingRootProcessor", "true")
+    arg("dagger.fastInit", "enabled")
 }
 
 android {
@@ -26,11 +31,13 @@ android {
     buildTypes {
         debug {
             buildConfigField("Boolean", "DEBUG", "true")
+            isMinifyEnabled = false
         }
 
         release {
             buildConfigField("Boolean", "DEBUG", "false")
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -81,7 +88,7 @@ dependencies {
     implementation(libs.kotlinx.coroutines.core)
     // Hilt
     implementation(libs.hilt.android)
-    kapt(libs.hilt.android.compiler)
+    ksp(libs.hilt.android.compiler)
     // Lifecycle
     implementation(libs.lifecycle.viewmodel.ktx)
     implementation(libs.lifecycle.livedata.ktx)
@@ -103,7 +110,4 @@ dependencies {
 
     implementation("com.google.android.flexbox:flexbox:3.0.0")
     implementation("com.github.ome450901:SimpleRatingBar:1.5.1")
-}
-kapt {
-    correctErrorTypes = true
-}
+}

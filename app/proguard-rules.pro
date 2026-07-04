@@ -1,21 +1,93 @@
-# Add project specific ProGuard rules here.
-# You can control the set of applied configuration files using the
-# proguardFiles setting in build.gradle.
-#
-# For more details, see
-#   http://developer.android.com/guide/developing/tools/proguard.html
+# ─────────────────────────────────────────────────────────────
+# Filmora ProGuard Rules
+# ─────────────────────────────────────────────────────────────
 
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
+# Preserve line numbers for crash reporting
+-keepattributes SourceFile,LineNumberTable
+-renamesourcefileattribute SourceFile
 
-# Uncomment this to preserve the line number information for
-# debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
+# ─── Retrofit ────────────────────────────────────────────────
+-keepattributes Signature
+-keepattributes Exceptions
+-keep class retrofit2.** { *; }
+-keepclasseswithmembers class * {
+    @retrofit2.http.* <methods>;
+}
+-dontwarn retrofit2.**
+-dontwarn okhttp3.**
+-dontwarn okio.**
 
-# If you keep the line number information, uncomment this to
-# hide the original source file name.
-#-renamesourcefileattribute SourceFile
+# ─── OkHttp ──────────────────────────────────────────────────
+-keep class okhttp3.** { *; }
+-keep interface okhttp3.** { *; }
+
+# ─── Gson ────────────────────────────────────────────────────
+-keepattributes *Annotation*
+-keep class com.google.gson.** { *; }
+-keep class * implements com.google.gson.TypeAdapterFactory
+-keep class * implements com.google.gson.JsonSerializer
+-keep class * implements com.google.gson.JsonDeserializer
+-keepclassmembers,allowobfuscation class * {
+    @com.google.gson.annotations.SerializedName <fields>;
+}
+
+# ─── Data Models (Keep all model classes for Gson/Retrofit) ──
+-keep class azari.amirhossein.filmora.models.** { *; }
+-keepclassmembers class azari.amirhossein.filmora.models.** { *; }
+
+# ─── Room ────────────────────────────────────────────────────
+-keep class * extends androidx.room.RoomDatabase { *; }
+-keep @androidx.room.Entity class * { *; }
+-keep @androidx.room.Dao class * { *; }
+-dontwarn androidx.room.**
+
+# ─── Hilt / Dagger ───────────────────────────────────────────
+-keep class dagger.hilt.** { *; }
+-keep class javax.inject.** { *; }
+-keep class * extends dagger.hilt.android.HiltAndroidApp { *; }
+-keepclasseswithmembers class * {
+    @dagger.hilt.android.AndroidEntryPoint *;
+}
+-dontwarn dagger.hilt.**
+
+# ─── Coroutines ──────────────────────────────────────────────
+-keepnames class kotlinx.coroutines.internal.MainDispatcherFactory {}
+-keepnames class kotlinx.coroutines.CoroutineExceptionHandler {}
+-keepclassmembernames class kotlinx.** {
+    volatile <fields>;
+}
+
+# ─── DataStore ───────────────────────────────────────────────
+-keep class androidx.datastore.** { *; }
+
+# ─── Navigation (SafeArgs) ───────────────────────────────────
+-keep class * extends androidx.navigation.NavArgs { *; }
+-keepnames class * extends androidx.navigation.NavDirections { *; }
+
+# ─── Coil ────────────────────────────────────────────────────
+-dontwarn coil.**
+
+# ─── Lottie ──────────────────────────────────────────────────
+-dontwarn com.airbnb.lottie.**
+-keep class com.airbnb.lottie.** { *; }
+
+# ─── Shimmer ─────────────────────────────────────────────────
+-keep class com.facebook.shimmer.** { *; }
+
+# ─── Flexbox ─────────────────────────────────────────────────
+-dontwarn com.google.android.flexbox.**
+
+# ─── SimpleRatingBar ─────────────────────────────────────────
+-dontwarn com.ome450901.simplratingbar.**
+
+# ─── Paging ──────────────────────────────────────────────────
+-keep class androidx.paging.** { *; }
+
+# ─── Parcelize ───────────────────────────────────────────────
+-keep class * implements android.os.Parcelable {
+    public static final android.os.Parcelable$Creator *;
+}
+
+# ─── ViewBinding / DataBinding ───────────────────────────────
+-keep class * extends androidx.viewbinding.ViewBinding { *; }
+-dontwarn androidx.databinding.**
