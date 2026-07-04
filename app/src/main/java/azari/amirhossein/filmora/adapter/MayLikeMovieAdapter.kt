@@ -26,10 +26,23 @@ class MayLikeMovieAdapter @Inject constructor() :
         onItemClickListener = listener
     }
 
-
     inner class ViewHolder(private val binding: ItemMediaBinding) :
         RecyclerView.ViewHolder(binding.root) {
         private val originalScaleType: ImageView.ScaleType = binding.imgPoster.scaleType
+
+        // GenresAdapter یک بار در init ساخته می‌شود، نه در هر bind
+        private val genreAdapter = GenresAdapter()
+
+        init {
+            binding.rvGenres.apply {
+                adapter = genreAdapter
+                layoutManager = LinearLayoutManager(
+                    itemView.context,
+                    LinearLayoutManager.HORIZONTAL,
+                    false
+                )
+            }
+        }
 
         fun bind(item: ResponseMoviesList.Result) {
             binding.apply {
@@ -49,28 +62,24 @@ class MayLikeMovieAdapter @Inject constructor() :
                     imgShimmerContainer
                 )
 
-
                 txtTitle.text = item.title
                 txtYear.text = item.releaseDate?.split("-")?.get(0) ?: "N/A"
                 txtRating.text = String.format("%.1f", item.voteAverage)
 
-                val genreAdapter = GenresAdapter()
-                rvGenres.adapter = genreAdapter
-                rvGenres.layoutManager = LinearLayoutManager(itemView.context, LinearLayoutManager.HORIZONTAL, false)
-
-                val genres = getGenresByIds(item.genreIds)
-                genreAdapter.differ.submitList(genres)
+                // فقط داده‌ها submit می‌شوند، adapter دیگر ساخته نمی‌شود
+                genreAdapter.differ.submitList(getGenresByIds(item.genreIds))
             }
             // Click
             binding.root.setClickAnimation {
-
-            onItemClickListener?.let { it(item) }
+                onItemClickListener?.let { it(item) }
             }
         }
     }
+
     fun submitGenres(genres: List<ResponseGenresList.Genre>) {
         this.allGenres = genres
     }
+
     private fun getGenresByIds(genreIds: List<Int?>?): List<ResponseGenresList.Genre> {
         if (genreIds.isNullOrEmpty()) {
             return emptyList()
@@ -87,7 +96,6 @@ class MayLikeMovieAdapter @Inject constructor() :
     override fun getItemCount(): Int {
         return differ.currentList.size
     }
-
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         if (position in differ.currentList.indices) {
@@ -106,4 +114,4 @@ class MayLikeMovieAdapter @Inject constructor() :
     }
 
     val differ = AsyncListDiffer(this, diffCallback)
-}
+}

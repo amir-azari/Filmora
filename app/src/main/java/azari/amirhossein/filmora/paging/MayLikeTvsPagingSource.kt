@@ -3,50 +3,21 @@ package azari.amirhossein.filmora.paging
 import azari.amirhossein.filmora.data.SessionManager
 import azari.amirhossein.filmora.data.source.RemoteDataSource
 import azari.amirhossein.filmora.models.prefences.TvAndMoviePreferences
-import azari.amirhossein.filmora.models.prefences.tv.ResponseTvsList
 import azari.amirhossein.filmora.models.tv.ResponseTvType
-import azari.amirhossein.filmora.utils.Constants
+import azari.amirhossein.filmora.utils.MediaParamsBuilder
 import javax.inject.Inject
 
 class MayLikeTvsPagingSource @Inject constructor(
     private val remote: RemoteDataSource,
     sessionManager: SessionManager
-) : BasePagingSource<ResponseTvType>(sessionManager,MediaType.TV) {
+) : BasePagingSource<ResponseTvType>(sessionManager, MediaType.TV) {
 
     override suspend fun fetchData(page: Int, preferences: TvAndMoviePreferences): List<ResponseTvType>? {
-        val response = remote.discoverTvShows(buildMediaParams(preferences, page))
+        val response = remote.discoverTvShows(MediaParamsBuilder.build(preferences, page))
         return if (response.isSuccessful) {
             response.body()?.results?.map { ResponseTvType.Tvs(it) }
         } else {
             null
         }
     }
-
-    private fun buildMediaParams(preferences: TvAndMoviePreferences, page: Int) =
-        mutableMapOf<String, String>().apply {
-            val favoriteGenres = preferences.favoriteGenres.joinToString("|")
-            val selectedGenres = preferences.selectedGenres
-                .filterNot { it in preferences.dislikedGenres }
-                .joinToString("|")
-
-            val combinedGenresSet = (selectedGenres.split("|") + favoriteGenres.split("|"))
-                .toSet()
-                .joinToString("|")
-
-            if (combinedGenresSet.isNotEmpty()) {
-                put(Constants.Discover.WITH_GENRES, combinedGenresSet)
-            }
-
-            val dislikedGenres = preferences.dislikedGenres.joinToString("|")
-            if (dislikedGenres.isNotEmpty()) {
-                put(Constants.Discover.WITHOUT_GENRES, dislikedGenres)
-            }
-
-            val selectedKeywords = preferences.selectedKeywords.joinToString("|")
-            if (selectedKeywords.isNotEmpty()) {
-                put(Constants.Discover.WITH_KEYWORDS, selectedKeywords)
-            }
-
-            put("page", page.toString())
-        }
-}
+}

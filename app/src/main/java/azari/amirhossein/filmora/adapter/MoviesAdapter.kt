@@ -92,9 +92,8 @@ class MoviesAdapter @Inject constructor() :
                 txtRating.text = String.format("%.1f", item.voteAverage)
 
 
-                root.setOnClickListener {
+                root.setClickAnimation {
                     onItemClickListener?.invoke(item.id)
-
                 }
 
             }
