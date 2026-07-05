@@ -25,9 +25,6 @@ import azari.amirhossein.filmora.models.celebtiry.ResponsePopularCelebrity
 import azari.amirhossein.filmora.models.movie.ResponseMovieType
 import azari.amirhossein.filmora.models.prefences.movie.ResponseMoviesList
 import azari.amirhossein.filmora.ui.people.PeopleSectionFragmentDirections
-import azari.amirhossein.filmora.utils.Constants
-import azari.amirhossein.filmora.utils.NetworkRequest
-import azari.amirhossein.filmora.utils.createFlexboxLayoutManager
 import azari.amirhossein.filmora.utils.customize
 import azari.amirhossein.filmora.viewmodel.SearchViewModel
 import com.google.android.material.snackbar.Snackbar
@@ -61,9 +58,9 @@ class SearchPeopleFragment : Fragment() {
         peopleAdapter.setOnItemClickListener(click)
 
 
-        val flexboxLayoutManager = requireContext().createFlexboxLayoutManager()
-
-        binding.rvPeople.layoutManager = flexboxLayoutManager
+        binding.rvPeople.layoutManager = GridLayoutManager(requireContext(), 3)
+        binding.rvPeople.setHasFixedSize(true)
+        binding.rvPeople.setItemViewCacheSize(20)
 
         val concatAdapter = peopleAdapter.withLoadStateFooter(
             footer = DataLoadStateAdapter { peopleAdapter.retry() }

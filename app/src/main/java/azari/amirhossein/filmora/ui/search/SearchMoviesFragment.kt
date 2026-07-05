@@ -19,7 +19,6 @@ import azari.amirhossein.filmora.models.movie.ResponseMovieType
 import azari.amirhossein.filmora.models.prefences.movie.ResponseMoviesList
 import azari.amirhossein.filmora.ui.movies.MovieSectionFragmentDirections
 import azari.amirhossein.filmora.utils.Constants
-import azari.amirhossein.filmora.utils.createFlexboxLayoutManager
 import azari.amirhossein.filmora.viewmodel.SearchViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -49,9 +48,9 @@ class SearchMoviesFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         moviesAdapter.setOnItemClickListener(clickMovie)
 
-        val flexboxLayoutManager = requireContext().createFlexboxLayoutManager()
-
-        binding.rvMovies.layoutManager = flexboxLayoutManager
+        binding.rvMovies.layoutManager = GridLayoutManager(requireContext(), 3)
+        binding.rvMovies.setHasFixedSize(true)
+        binding.rvMovies.setItemViewCacheSize(20)
 
         val concatAdapter = moviesAdapter.withLoadStateFooter(
             footer = DataLoadStateAdapter { moviesAdapter.retry() }

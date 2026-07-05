@@ -37,7 +37,7 @@ class PopularCelebrityAdapter @Inject constructor() :
                 val fullPosterPath = if (item.profilePath.isNullOrEmpty()) {
                     null
                 } else {
-                    baseUrl + Constants.ImageSize.ORIGINAL + item.profilePath
+                    baseUrl + Constants.ImageSize.W500 + item.profilePath
                 }
 
                 ivProfile.loadImageWithShimmer(

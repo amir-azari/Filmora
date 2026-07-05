@@ -265,8 +265,13 @@ fun ImageView.loadImageWithShimmer(
     originalScaleType: ImageView.ScaleType,
     hasStroke: Boolean,
     shimmerFrameLayout: ShimmerFrameLayout,
+) {
+    val lastPath = this.tag as? String
+    if (lastPath == path && this.visibility == View.VISIBLE && shimmerFrameLayout.visibility == View.GONE) {
+        return
+    }
+    this.tag = path
 
-    ) {
     shimmerFrameLayout.startShimmer()
     shimmerFrameLayout.visibility = View.VISIBLE
     this.visibility = View.INVISIBLE
@@ -282,23 +287,18 @@ fun ImageView.loadImageWithShimmer(
                 shimmerFrameLayout.visibility = View.GONE
                 this@loadImageWithShimmer.visibility = View.VISIBLE
                 scaleType = originalScaleType
-
             },
             onError = { _, _ ->
                 shimmerFrameLayout.stopShimmer()
                 shimmerFrameLayout.visibility = View.GONE
                 this@loadImageWithShimmer.visibility = View.VISIBLE
 
-                if (hasStroke) {
-                    if (this@loadImageWithShimmer is ShapeableImageView && hasStroke) {
-                        this@loadImageWithShimmer.strokeWidth = 2.0f
-                    }
+                if (this@loadImageWithShimmer is ShapeableImageView && hasStroke) {
+                    this@loadImageWithShimmer.strokeWidth = 2.0f
                 }
                 scaleType = ImageView.ScaleType.CENTER
-            },
-
-            )
-
+            }
+        )
     }
 }
 

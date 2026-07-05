@@ -33,7 +33,7 @@ class SearchTvPreferencesAdapter @Inject constructor() :
                 val fullPosterPath = if (item.posterPath.isNullOrEmpty()) {
                     null
                 } else {
-                    baseUrl + Constants.ImageSize.ORIGINAL + item.posterPath
+                    baseUrl + Constants.ImageSize.W500 + item.posterPath
                 }
 
                 imgPoster.loadImageWithShimmer(

@@ -46,7 +46,7 @@ class TvsAdapter @Inject constructor() :
                 val fullPosterPath = if (item.posterPath.isNullOrEmpty()) {
                     null
                 } else {
-                    baseUrl + Constants.ImageSize.ORIGINAL + item.posterPath
+                    baseUrl + Constants.ImageSize.W500 + item.posterPath
                 }
 
                 imgPoster.loadImageWithShimmer(
@@ -74,7 +74,7 @@ class TvsAdapter @Inject constructor() :
                 val fullPosterPath = if (item.posterPath.isNullOrEmpty()) {
                     null
                 } else {
-                    baseUrl + Constants.ImageSize.ORIGINAL + item.posterPath
+                    baseUrl + Constants.ImageSize.W500 + item.posterPath
                 }
 
                 imgPoster.loadImageWithShimmer(
@@ -101,7 +101,9 @@ class TvsAdapter @Inject constructor() :
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemSimilarRemommendationBinding.inflate(
             LayoutInflater.from(parent.context), parent, false
-        )
+        ).apply {
+            root.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
+        }
         return ViewHolder(binding)
     }
 

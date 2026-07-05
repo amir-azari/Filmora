@@ -28,8 +28,6 @@ import azari.amirhossein.filmora.models.prefences.tv.ResponseTvsList
 import azari.amirhossein.filmora.models.tv.ResponseTvType
 import azari.amirhossein.filmora.ui.movies.MovieSectionFragmentDirections
 import azari.amirhossein.filmora.utils.Constants
-import azari.amirhossein.filmora.utils.NetworkRequest
-import azari.amirhossein.filmora.utils.createFlexboxLayoutManager
 import azari.amirhossein.filmora.utils.customize
 import azari.amirhossein.filmora.viewmodel.SearchViewModel
 import com.google.android.material.snackbar.Snackbar
@@ -61,9 +59,9 @@ class SearchTvShowsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         tvShowsAdapter.setOnItemClickListener(clickTv)
 
-        val flexboxLayoutManager = requireContext().createFlexboxLayoutManager()
-
-        binding.rvTvShows.layoutManager = flexboxLayoutManager
+        binding.rvTvShows.layoutManager = GridLayoutManager(requireContext(), 3)
+        binding.rvTvShows.setHasFixedSize(true)
+        binding.rvTvShows.setItemViewCacheSize(20)
 
         val concatAdapter = tvShowsAdapter.withLoadStateFooter(
             footer = DataLoadStateAdapter { tvShowsAdapter.retry() }
