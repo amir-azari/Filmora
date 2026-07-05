@@ -6,7 +6,7 @@
     android:layout_height="wrap_content">
 
     <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/_4mdp"
         app:cardBackgroundColor="@color/cardBackgroundColor"
@@ -18,7 +18,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingBottom="@dimen/_5mdp"
             android:paddingTop="@dimen/_4mdp"
@@ -44,19 +44,18 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:visibility="visible"
-                app:layout_constraintDimensionRatio="2:3"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="@id/iv_profile"
+                app:layout_constraintEnd_toEndOf="@id/iv_profile"
+                app:layout_constraintTop_toTopOf="@id/iv_profile"
+                app:layout_constraintBottom_toBottomOf="@id/iv_profile"
                 app:shimmer_auto_start="true"
                 app:shimmer_duration="1000">
 
                 <View
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:background="@drawable/bg_shimmer_rounded_corners"
-                    android:contentDescription="@string/poster_image"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    android:contentDescription="@string/poster_image" />
 
             </com.facebook.shimmer.ShimmerFrameLayout>
 

@@ -42,19 +42,18 @@
                 android:id="@+id/img_shimmer_container"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                app:layout_constraintDimensionRatio="2:3"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="@id/img_poster"
+                app:layout_constraintEnd_toEndOf="@id/img_poster"
+                app:layout_constraintTop_toTopOf="@id/img_poster"
+                app:layout_constraintBottom_toBottomOf="@id/img_poster"
                 app:shimmer_auto_start="true"
                 app:shimmer_duration="1000">
 
                 <View
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:background="@drawable/bg_shimmer_rounded_corners"
-                    android:contentDescription="@string/poster_image"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    android:contentDescription="@string/poster_image" />
 
             </com.facebook.shimmer.ShimmerFrameLayout>
 
