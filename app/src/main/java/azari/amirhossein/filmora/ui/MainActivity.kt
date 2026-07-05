@@ -34,6 +34,11 @@ import azari.amirhossein.filmora.utils.setClickAnimation
 import azari.amirhossein.filmora.viewmodel.SharedAccountViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import coil3.load
+import coil3.request.crossfade
+import coil3.request.error
+import coil3.request.placeholder
+import azari.amirhossein.filmora.utils.Constants
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -352,6 +357,26 @@ class MainActivity : AppCompatActivity() {
                                 binding.toolbar.findViewById<TextView>(R.id.tv_name).text =
                                     account.username
 
+                                val avatar = account.avatar
+                                val avatarUrl = when {
+                                    !avatar?.tmdb?.avatarPath.isNullOrEmpty() -> {
+                                        Constants.Network.IMAGE_BASE_URL + Constants.ImageSize.W500 + avatar.tmdb.avatarPath
+                                    }
+                                    !avatar?.gravatar?.hash.isNullOrEmpty() -> {
+                                        "https://secure.gravatar.com/avatar/${avatar.gravatar?.hash}?s=200"
+                                    }
+                                    else -> null
+                                }
+
+                                if (!avatarUrl.isNullOrEmpty()) {
+                                    binding.imgProfile.load(avatarUrl) {
+                                        crossfade(true)
+                                        placeholder(R.drawable.profile)
+                                        error(R.drawable.profile)
+                                    }
+                                } else {
+                                    binding.imgProfile.setImageResource(R.drawable.profile)
+                                }
                             }
                         }
 
