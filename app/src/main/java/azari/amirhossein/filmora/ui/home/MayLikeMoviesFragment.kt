@@ -55,9 +55,12 @@ class MayLikeMoviesFragment : Fragment() {
         setActionBarTitle("Movies you may like")
         adapterMovie.setOnItemClickListener(clickMovie)
 
-        val flexboxLayoutManager = requireContext().createFlexboxLayoutManager()
-
-        binding.rvMovies.layoutManager = flexboxLayoutManager
+        val gridLayoutManager = androidx.recyclerview.widget.GridLayoutManager(requireContext(), 3)
+        binding.rvMovies.apply {
+            layoutManager = gridLayoutManager
+            setHasFixedSize(true)
+            setItemViewCacheSize(20)
+        }
 
         val concatAdapter = adapterMovie.withLoadStateFooter(
             footer = DataLoadStateAdapter { adapterMovie.retry() }

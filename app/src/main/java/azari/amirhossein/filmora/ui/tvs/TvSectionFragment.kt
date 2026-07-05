@@ -65,9 +65,12 @@ class TvSectionFragment : Fragment() {
         }
         adapter.setOnItemClickListener(clickTv)
 
-        val flexboxLayoutManager = requireContext().createFlexboxLayoutManager()
-
-        binding.rvTvs.layoutManager = flexboxLayoutManager
+        val gridLayoutManager = androidx.recyclerview.widget.GridLayoutManager(requireContext(), 3)
+        binding.rvTvs.apply {
+            layoutManager = gridLayoutManager
+            setHasFixedSize(true)
+            setItemViewCacheSize(20)
+        }
         val concatAdapter = adapter.withLoadStateFooter(
             footer = DataLoadStateAdapter { adapter.retry() }
         )

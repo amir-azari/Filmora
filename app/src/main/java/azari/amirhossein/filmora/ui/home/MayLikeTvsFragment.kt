@@ -56,9 +56,12 @@ class MayLikeTvsFragment : Fragment() {
         adapterTv.setOnItemClickListener(clickTv)
 
 
-        val flexboxLayoutManager = requireContext().createFlexboxLayoutManager()
-
-        binding.rvTvs.layoutManager = flexboxLayoutManager
+        val gridLayoutManager = androidx.recyclerview.widget.GridLayoutManager(requireContext(), 3)
+        binding.rvTvs.apply {
+            layoutManager = gridLayoutManager
+            setHasFixedSize(true)
+            setItemViewCacheSize(20)
+        }
 
         val concatAdapter = adapterTv.withLoadStateFooter(
             footer = DataLoadStateAdapter { adapterTv.retry() }

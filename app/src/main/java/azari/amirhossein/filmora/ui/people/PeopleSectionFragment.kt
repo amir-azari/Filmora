@@ -62,9 +62,12 @@ class PeopleSectionFragment : Fragment() {
         val sectionType = arguments?.getString(Constants.SectionType.SECTION_TYPE) ?: return
         setActionBarTitle(sectionType)
 
-        val flexboxLayoutManager = requireContext().createFlexboxLayoutManager()
-
-        binding.rvPeoples.layoutManager = flexboxLayoutManager
+        val gridLayoutManager = androidx.recyclerview.widget.GridLayoutManager(requireContext(), 3)
+        binding.rvPeoples.apply {
+            layoutManager = gridLayoutManager
+            setHasFixedSize(true)
+            setItemViewCacheSize(20)
+        }
 
         val concatAdapter = adapter.withLoadStateFooter(
             footer = DataLoadStateAdapter { adapter.retry() }
