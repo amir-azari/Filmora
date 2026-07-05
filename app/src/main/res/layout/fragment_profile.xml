@@ -364,6 +364,58 @@
 
     </androidx.cardview.widget.CardView>
 
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cv_logout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_6mdp"
+        android:layout_marginTop="@dimen/_8mdp"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="@drawable/ripple_effect"
+        android:visibility="gone"
+        app:cardBackgroundColor="@color/cardBackgroundColor"
+        app:cardCornerRadius="@dimen/_8mdp"
+        app:cardElevation="@dimen/_2mdp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cv_lists">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="@dimen/_8mdp">
+
+            <ImageView
+                android:id="@+id/img_logout"
+                android:layout_width="@dimen/_25mdp"
+                android:layout_height="@dimen/_25mdp"
+                android:layout_marginVertical="@dimen/_16mdp"
+                android:src="@drawable/ic_logout"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="#E53935" />
+
+            <TextView
+                android:id="@+id/tv_logoutHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_8mdp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="@string/logout"
+                android:textColor="#E53935"
+                android:textSize="@dimen/_12mdp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/img_logout"
+                app:layout_constraintStart_toEndOf="@+id/img_logout"
+                app:layout_constraintTop_toTopOf="@+id/img_logout" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_login"
         android:layout_width="0dp"
@@ -383,5 +435,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cv_lists" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        app:layout_constraintTop_toBottomOf="@+id/cv_logout" />
+</androidx.constraintlayout.widget.ConstraintLayout>

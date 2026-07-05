@@ -32,4 +32,13 @@ class SharedAccountViewModel @Inject constructor(
         }
     }
 
-}
+    fun logout(onComplete: () -> Unit) {
+        viewModelScope.launch {
+            repository.logout()
+            // Reset state immediately so all observers stop showing old data
+            _accountDetails.value = NetworkRequest.Loading()
+            onComplete()
+        }
+    }
+
+}

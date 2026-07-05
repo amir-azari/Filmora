@@ -44,6 +44,19 @@ class AccountDataStore @Inject constructor(@ApplicationContext private val conte
         }
     }
 
+    suspend fun clearAccountDetails() {
+        context.accountDataStore.edit { prefs ->
+            prefs.remove(Keys.ID)
+            prefs.remove(Keys.USERNAME)
+            prefs.remove(Keys.NAME)
+            prefs.remove(Keys.INCLUDE_ADULT)
+            prefs.remove(Keys.ISO_3166_1)
+            prefs.remove(Keys.ISO_639_1)
+            prefs.remove(Keys.AVATAR_PATH)
+            prefs.remove(Keys.GRAVATAR_HASH)
+        }
+    }
+
     fun getCachedAccountDetails(): Flow<ResponseAccountDetails?> =
         context.accountDataStore.data.map { preferences ->
             val id = preferences[Keys.ID]

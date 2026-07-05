@@ -93,8 +93,8 @@ class SessionManager @Inject constructor(@ApplicationContext private val context
     }
     suspend fun clearSession() {
         context.dataStore.edit { preferences ->
-            preferences.remove(StoredKey.SESSION_ID)
-            preferences.remove(StoredKey.IS_GUEST)
+            preferences[StoredKey.SESSION_ID] = ""
+            preferences[StoredKey.IS_GUEST] = true
         }
     }
 }

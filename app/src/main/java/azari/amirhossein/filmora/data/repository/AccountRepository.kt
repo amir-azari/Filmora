@@ -56,4 +56,9 @@ class AccountRepository @Inject constructor(
             emit(NetworkRequest.Error(e.message ?: Constants.Message.UNKNOWN_ERROR))
         }
     }.flowOn(Dispatchers.IO)
+
+    suspend fun logout() {
+        sessionManager.clearSession()
+        accountDataStore.clearAccountDetails()
+    }
 }

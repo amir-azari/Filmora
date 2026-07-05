@@ -52,25 +52,32 @@ class SplashFragment : Fragment() {
 
                     try {
                         val sessionId = viewModel.getSessionId()
+                        val isGuest = sessionManager.isGuest().firstOrNull() ?: false
 
-                        if (sessionId.isNullOrEmpty()) {
-                            findNavController().navigate(R.id.splashToLogin)
-                        } else {
-                            val moviePrefs = sessionManager.getMoviePreferences().firstOrNull()
-                            val tvPrefs = sessionManager.getTvPreferences().firstOrNull()
+                        when {
+                            isGuest -> {
+                                findNavController().navigate(R.id.actionSplashToHome)
+                            }
+                            sessionId.isNullOrEmpty() -> {
+                                findNavController().navigate(R.id.splashToLogin)
+                            }
+                            else -> {
+                                val moviePrefs = sessionManager.getMoviePreferences().firstOrNull()
+                                val tvPrefs = sessionManager.getTvPreferences().firstOrNull()
 
-                            Log.d("Preferences", "Movie preferences: ${moviePrefs?.isEmpty()}")
-                            Log.d("Preferences", "TV preferences: ${tvPrefs?.isEmpty()}")
+                                Log.d("Preferences", "Movie preferences: ${moviePrefs?.isEmpty()}")
+                                Log.d("Preferences", "TV preferences: ${tvPrefs?.isEmpty()}")
 
-                            when {
-                                moviePrefs == null || moviePrefs.isEmpty() -> {
-                                    findNavController().navigate(R.id.actionSplashToMoviePreferences)
-                                }
-                                tvPrefs == null || tvPrefs.isEmpty() -> {
-                                    findNavController().navigate(R.id.actionSplashToMoviePreferences)
-                                }
-                                else -> {
-                                    findNavController().navigate(R.id.actionSplashToHome)
+                                when {
+                                    moviePrefs == null || moviePrefs.isEmpty() -> {
+                                        findNavController().navigate(R.id.actionSplashToMoviePreferences)
+                                    }
+                                    tvPrefs == null || tvPrefs.isEmpty() -> {
+                                        findNavController().navigate(R.id.actionSplashToMoviePreferences)
+                                    }
+                                    else -> {
+                                        findNavController().navigate(R.id.actionSplashToHome)
+                                    }
                                 }
                             }
                         }

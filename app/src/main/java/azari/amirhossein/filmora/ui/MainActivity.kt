@@ -389,6 +389,12 @@ class MainActivity : AppCompatActivity() {
                             }
                         }
 
+                        is NetworkRequest.Loading -> {
+                            // After logout, reset to default guest UI
+                            binding.toolbar.findViewById<TextView>(R.id.tv_name).text = ""
+                            binding.imgProfile.setImageResource(R.drawable.profile)
+                        }
+
                         else -> Unit
                     }
                 }

@@ -5,16 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import azari.amirhossein.filmora.R
 import azari.amirhossein.filmora.data.SessionManager
 import azari.amirhossein.filmora.databinding.FragmentProfileBinding
-import azari.amirhossein.filmora.models.detail.RateRequest
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.NetworkRequest
 import azari.amirhossein.filmora.viewmodel.SharedAccountViewModel
@@ -36,7 +34,7 @@ class ProfileFragment : Fragment() {
     @Inject
     lateinit var sessionManager: SessionManager
 
-    private val accountViewModel: SharedAccountViewModel by viewModels()
+    private val accountViewModel: SharedAccountViewModel by activityViewModels()
     private var isGuestUser: Boolean = true
 
     override fun onCreateView(
@@ -56,10 +54,12 @@ class ProfileFragment : Fragment() {
                 if (isGuest) {
                     binding.tvUsername.visibility = View.GONE
                     binding.btnLogin.visibility = View.VISIBLE
+                    binding.cvLogout.visibility = View.GONE
                 } else {
                     binding.tvName.visibility = View.VISIBLE
                     binding.tvUsername.visibility = View.VISIBLE
                     binding.btnLogin.visibility = View.GONE
+                    binding.cvLogout.visibility = View.VISIBLE
 
                     accountViewModel.accountDetails.collect { state ->
                         if (state is NetworkRequest.Success) {
@@ -101,6 +101,10 @@ class ProfileFragment : Fragment() {
             findNavController().navigate(action)
         }
 
+        binding.cvLogout.setOnClickListener {
+            showLogoutConfirmationDialog()
+        }
+
         binding.cvFavorite.setOnClickListener { handleNavigationOrShowDialog {
             val action = ProfileFragmentDirections.actionProfileFragmentToFavoriteFragment()
             findNavController().navigate(action)
@@ -137,6 +141,23 @@ class ProfileFragment : Fragment() {
 
         dialog.show()
 
+    }
+
+    private fun showLogoutConfirmationDialog() {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(getString(R.string.logout_confirmation_title))
+            .setMessage(getString(R.string.logout_confirmation_message))
+            .setNegativeButton(getString(R.string.cancel)) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .setPositiveButton(getString(R.string.logout)) { _, _ ->
+                accountViewModel.logout {
+                    findNavController().navigate(
+                        R.id.action_profileFragment_to_homeFragment
+                    )
+                }
+            }
+            .show()
     }
 
     override fun onDestroyView() {
