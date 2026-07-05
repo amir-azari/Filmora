@@ -30,6 +30,8 @@ import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.Job
 
 @AndroidEntryPoint
 class SearchFragment : Fragment() {
@@ -40,6 +42,7 @@ class SearchFragment : Fragment() {
     private var searchAdapter: SearchPagerAdapter? = null
     private var isSearchCompleted = false
     private var currentTabsList: List<Int>? = null
+    private var searchDebounceJob: Job? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -54,7 +57,6 @@ class SearchFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initializeViews()
         observeTabState()
-        setupMenu()
     }
 
     private fun initializeViews() {
@@ -70,34 +72,27 @@ class SearchFragment : Fragment() {
                     viewModel.updateTabPosition(position)
                 }
             })
+
+            setupSearchView(searchView)
         }
-    }
-
-    private fun setupMenu() {
-        requireActivity().addMenuProvider(object : MenuProvider {
-            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                menu.clear()
-                menuInflater.inflate(R.menu.search_menu, menu)
-                setupSearchMenuItem(menu)
-            }
-
-            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                return true
-            }
-        }, viewLifecycleOwner)
-    }
-
-    private fun setupSearchMenuItem(menu: Menu) {
-        val searchItem = menu.findItem(R.id.action_search_view)
-        val searchView = searchItem.actionView as SearchView
-        setupSearchView(searchView)
     }
 
     private fun setupSearchView(searchView: SearchView) {
         searchView.apply {
-            queryHint = getString(R.string.search_hint)
+            isIconified = false
+            setIconifiedByDefault(false)
+
+            postDelayed({
+                if (isAdded) {
+                    requestFocus()
+                    val imm = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+                    imm?.showSoftInput(this, InputMethodManager.SHOW_IMPLICIT)
+                }
+            }, 150)
+
             setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String?): Boolean {
+                    searchDebounceJob?.cancel()
                     handleSearchQuery(query)
 
                     // Close the keyboard
@@ -107,10 +102,31 @@ class SearchFragment : Fragment() {
                 }
 
                 override fun onQueryTextChange(newText: String?): Boolean {
+                    searchDebounceJob?.cancel()
+                    if (!newText.isNullOrBlank()) {
+                        searchDebounceJob = viewLifecycleOwner.lifecycleScope.launch {
+                            delay(400)
+                            handleSearchQuery(newText)
+                        }
+                    } else {
+                        clearSearch()
+                    }
                     return true
                 }
             })
         }
+    }
+
+    private fun clearSearch() {
+        searchDebounceJob?.cancel()
+        with(binding) {
+            viewPager.visibility = View.GONE
+            tlSearch.visibility = View.GONE
+            txtNotFound.visibility = View.GONE
+            txtHint.visibility = View.VISIBLE
+            progressBar.visibility = View.INVISIBLE
+        }
+        viewModel.clearSearch()
     }
 
     private fun handleSearchQuery(query: String?) {

@@ -106,6 +106,15 @@ class SearchViewModel @Inject constructor(
 
     }
 
+    fun clearSearch() {
+        _query.value = ""
+        _searchAllResults.value = null
+        _searchMoviesResults.value = PagingData.empty()
+        _searchTvResults.value = PagingData.empty()
+        _searchPeopleResults.value = PagingData.empty()
+        _visibleTabs.value = emptyList()
+    }
+
     fun updateTabPosition(position: Int) {
         _currentTabPosition.value = position
     }

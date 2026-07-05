@@ -210,6 +210,7 @@ class MainActivity : AppCompatActivity() {
             R.id.favoriteFragment,
             R.id.watchlistFragment,
             R.id.ratedFragment,
+            R.id.searchFragment,
         )
         val isMenuHidden = destinationId in hiddenFragments
         for (i in 0 until binding.toolbar.menu.size()) {
@@ -284,6 +285,7 @@ class MainActivity : AppCompatActivity() {
             R.id.favoriteFragment,
             R.id.watchlistFragment,
             R.id.ratedFragment,
+            R.id.searchFragment,
         )
         val currentDestinationId = navController.currentDestination?.id
 
