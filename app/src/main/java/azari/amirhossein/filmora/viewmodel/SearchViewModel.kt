@@ -16,6 +16,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -49,6 +50,11 @@ class SearchViewModel @Inject constructor(
     private val _currentTabPosition = MutableStateFlow(0)
     val currentTabPosition: StateFlow<Int> = _currentTabPosition.asStateFlow()
 
+    private var searchAllJob: Job? = null
+    private var searchMoviesJob: Job? = null
+    private var searchTvJob: Job? = null
+    private var searchPeopleJob: Job? = null
+
     init {
         networkChecker.startMonitoring()
     }
@@ -61,7 +67,12 @@ class SearchViewModel @Inject constructor(
             _query.value = query
             _searchAllResults.value = NetworkRequest.Loading()
 
-            viewModelScope.launch {
+            searchAllJob?.cancel()
+            searchMoviesJob?.cancel()
+            searchTvJob?.cancel()
+            searchPeopleJob?.cancel()
+
+            searchAllJob = viewModelScope.launch {
                 searchRepository.searchAll(query).collect { result ->
                     when (result) {
                         is NetworkRequest.Success -> {
@@ -71,21 +82,21 @@ class SearchViewModel @Inject constructor(
                         else -> Unit
                     }
                 }
-
             }
-            viewModelScope.launch {
+
+            searchMoviesJob = viewModelScope.launch {
                 searchRepository.searchMovies(query)
                     .cachedIn(viewModelScope)
                     .collectLatest { _searchMoviesResults.value = it }
             }
 
-            viewModelScope.launch {
+            searchTvJob = viewModelScope.launch {
                 searchRepository.searchTvShows(query)
                     .cachedIn(viewModelScope)
                     .collectLatest { _searchTvResults.value = it }
             }
 
-            viewModelScope.launch {
+            searchPeopleJob = viewModelScope.launch {
                 searchRepository.searchPeople(query)
                     .cachedIn(viewModelScope)
                     .collectLatest { _searchPeopleResults.value = it }

@@ -39,6 +39,7 @@ class SearchFragment : Fragment() {
     private val viewModel: SearchViewModel by viewModels()
     private var searchAdapter: SearchPagerAdapter? = null
     private var isSearchCompleted = false
+    private var currentTabsList: List<Int>? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -62,6 +63,13 @@ class SearchFragment : Fragment() {
             tlSearch.visibility = View.GONE
             txtNotFound.visibility = View.GONE
             txtHint.visibility = View.VISIBLE
+
+            viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+                override fun onPageSelected(position: Int) {
+                    super.onPageSelected(position)
+                    viewModel.updateTabPosition(position)
+                }
+            })
         }
     }
 
@@ -123,10 +131,14 @@ class SearchFragment : Fragment() {
     }
 
     private fun setupViewPagerWithTabs(visibleTabs: List<Int>) {
+        if (currentTabsList == visibleTabs && searchAdapter != null) {
+            return
+        }
+        currentTabsList = visibleTabs
         searchAdapter = SearchPagerAdapter(this, visibleTabs).also { adapter ->
             binding.viewPager.apply {
                 this.adapter = adapter
-                offscreenPageLimit = 1
+                offscreenPageLimit = ViewPager2.OFFSCREEN_PAGE_LIMIT_DEFAULT
                 setPageTransformer { page, position ->
                     page.alpha = 1 - kotlin.math.abs(position)
                 }
@@ -137,13 +149,6 @@ class SearchFragment : Fragment() {
             TabLayoutMediator(binding.tlSearch, binding.viewPager) { tab, position ->
                 tab.text = getTabTitle(visibleTabs[position])
             }.attach()
-
-            binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-                override fun onPageSelected(position: Int) {
-                    super.onPageSelected(position)
-                    viewModel.updateTabPosition(position)
-                }
-            })
         }
     }
 
