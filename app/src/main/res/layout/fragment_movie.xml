@@ -18,7 +18,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <!--Internet Error-->
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <FrameLayout
         android:id="@+id/internetLay"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -29,13 +29,9 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <include
-            layout="@layout/internet_error"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:layout_editor_absoluteX="0dp" />
+        <include layout="@layout/internet_error" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </FrameLayout>
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -49,333 +45,276 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <!-- Trending Section Container -->
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/trendingSection"
+            <!-- Trending Section (Flattened) -->
+            <ImageView
+                android:id="@+id/img_movie_poster"
                 android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="@dimen/_3mdp"
+                android:layout_marginBottom="@dimen/_20mdp"
+                android:scaleType="centerCrop"
+                app:layout_constraintBottom_toBottomOf="@id/rv_trending"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/txt_trending"
+                tools:src="@tools:sample/backgrounds/scenic" />
+
+            <View
+                android:id="@+id/view_trending_shadow"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+
+                android:background="@drawable/background_shadow"
+                app:layout_constraintBottom_toBottomOf="@id/img_movie_poster"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/img_movie_poster" />
+
+            <TextView
+                android:id="@+id/txt_trending"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_12mdp"
                 android:layout_marginTop="@dimen/_12mdp"
-                app:layout_constraintTop_toTopOf="parent">
-                <!-- Movie Poster Image -->
+                android:text="@string/trending"
+                android:textSize="@dimen/_13mdp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <LinearLayout
+                android:id="@+id/layoutSeeAllTrending"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/_12mdp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="@id/txt_trending"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/txt_trending">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/_4mdp"
+                    android:text="@string/see_all"
+                    android:textSize="@dimen/_10mdp" />
+
                 <ImageView
-                    android:id="@+id/img_movie_poster"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_marginTop="@dimen/_3mdp"
-                    android:layout_marginBottom="@dimen/_20mdp"
-                    android:scaleType="centerCrop"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:src="@tools:sample/backgrounds/scenic" />
+                    android:layout_width="@dimen/_12mdp"
+                    android:layout_height="@dimen/_12mdp"
+                    android:src="@drawable/angle_right"
+                    app:tint="@color/white" />
+            </LinearLayout>
 
-                <!-- Shadow for the movie poster -->
-
-                <!-- Movies Header -->
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_marginTop="@dimen/_3mdp"
-                    android:layout_marginBottom="@dimen/_20mdp"
-                    android:background="@drawable/background_shadow"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.0" />
-
-                <TextView
-                    android:id="@+id/txt_trending"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/_12mdp"
-                    android:text="@string/trending"
-                    android:textSize="@dimen/_13mdp"
-                    android:textStyle="bold"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <!-- Movies See All Button -->
-                <LinearLayout
-                    android:id="@+id/layoutSeeAllTrending"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/_12mdp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    app:layout_constraintBottom_toBottomOf="@id/txt_trending"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/txt_trending">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/_4mdp"
-                        android:text="@string/see_all"
-                        android:textSize="@dimen/_10mdp" />
-
-                    <ImageView
-                        android:layout_width="@dimen/_12mdp"
-                        android:layout_height="@dimen/_12mdp"
-                        android:src="@drawable/angle_right"
-                        app:tint="@color/white" />
-                </LinearLayout>
-
-                <!-- Movies List -->
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_trending"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:clipToPadding="false"
-                    android:orientation="horizontal"
-                    android:padding="@dimen/_8mdp"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    app:layout_constraintTop_toBottomOf="@id/txt_trending"
-                    tools:listitem="@layout/item_media_large" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-            <!-- Popular Section Container -->
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/PopularSection"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_trending"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:clipToPadding="false"
+                android:orientation="horizontal"
+                android:padding="@dimen/_8mdp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintTop_toBottomOf="@id/txt_trending"
+                tools:listitem="@layout/item_media_large" />
+
+            <!-- Popular Section (Flattened) -->
+            <TextView
+                android:id="@+id/txt_recommended_popular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_12mdp"
                 android:layout_marginTop="@dimen/_12mdp"
-                app:layout_constraintTop_toBottomOf="@id/trendingSection">
+                android:text="@string/popular"
+                android:textSize="@dimen/_13mdp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/rv_trending" />
 
-                <!-- Movies Header -->
+            <LinearLayout
+                android:id="@+id/layoutSeeAllPopular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/_12mdp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="@id/txt_recommended_popular"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/txt_recommended_popular">
+
                 <TextView
-                    android:id="@+id/txt_recommended_popular"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/_12mdp"
-                    android:text="@string/popular"
-                    android:textSize="@dimen/_13mdp"
-                    android:textStyle="bold"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    android:layout_marginEnd="@dimen/_4mdp"
+                    android:text="@string/see_all"
+                    android:textSize="@dimen/_10mdp" />
 
-                <!-- Movies See All Button -->
-                <LinearLayout
-                    android:id="@+id/layoutSeeAllPopular"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/_12mdp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    app:layout_constraintBottom_toBottomOf="@id/txt_recommended_popular"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/txt_recommended_popular">
+                <ImageView
+                    android:layout_width="@dimen/_12mdp"
+                    android:layout_height="@dimen/_12mdp"
+                    android:src="@drawable/angle_right"
+                    app:tint="@color/white" />
+            </LinearLayout>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/_4mdp"
-                        android:text="@string/see_all"
-                        android:textSize="@dimen/_10mdp" />
-
-                    <ImageView
-                        android:layout_width="@dimen/_12mdp"
-                        android:layout_height="@dimen/_12mdp"
-                        android:src="@drawable/angle_right"
-                        app:tint="@color/white" />
-                </LinearLayout>
-
-                <!-- Movies List -->
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_popular"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:clipToPadding="false"
-                    android:orientation="horizontal"
-                    android:padding="@dimen/_8mdp"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    app:layout_constraintTop_toBottomOf="@id/txt_recommended_popular"
-                    tools:listitem="@layout/item_media" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <!-- NowPlaying Section Container -->
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/NowPlayingSection"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_popular"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:clipToPadding="false"
+                android:orientation="horizontal"
+                android:padding="@dimen/_8mdp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintTop_toBottomOf="@id/txt_recommended_popular"
+                tools:listitem="@layout/item_media" />
+
+            <!-- NowPlaying Section (Flattened) -->
+            <TextView
+                android:id="@+id/txt_recommended_nowPlaying"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_12mdp"
                 android:layout_marginTop="@dimen/_12mdp"
-                app:layout_constraintTop_toBottomOf="@id/PopularSection">
+                android:text="@string/playing_in_theatres"
+                android:textSize="@dimen/_13mdp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/rv_popular" />
 
-                <!-- Movies Header -->
+            <LinearLayout
+                android:id="@+id/layoutSeeAllNowPlaying"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/_12mdp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="@id/txt_recommended_nowPlaying"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/txt_recommended_nowPlaying">
+
                 <TextView
-                    android:id="@+id/txt_recommended_nowPlaying"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/_12mdp"
-                    android:text="@string/playing_in_theatres"
-                    android:textSize="@dimen/_13mdp"
-                    android:textStyle="bold"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    android:layout_marginEnd="@dimen/_4mdp"
+                    android:text="@string/see_all"
+                    android:textSize="@dimen/_10mdp" />
 
-                <!-- Movies See All Button -->
-                <LinearLayout
-                    android:id="@+id/layoutSeeAllNowPlaying"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/_12mdp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    app:layout_constraintBottom_toBottomOf="@id/txt_recommended_nowPlaying"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/txt_recommended_nowPlaying">
+                <ImageView
+                    android:layout_width="@dimen/_12mdp"
+                    android:layout_height="@dimen/_12mdp"
+                    android:src="@drawable/angle_right"
+                    app:tint="@color/white" />
+            </LinearLayout>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/_4mdp"
-                        android:text="@string/see_all"
-                        android:textSize="@dimen/_10mdp" />
-
-                    <ImageView
-                        android:layout_width="@dimen/_12mdp"
-                        android:layout_height="@dimen/_12mdp"
-                        android:src="@drawable/angle_right"
-                        app:tint="@color/white" />
-                </LinearLayout>
-
-                <!-- Movies List -->
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_NowPlaying"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:clipToPadding="false"
-                    android:orientation="horizontal"
-                    android:padding="@dimen/_8mdp"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    app:layout_constraintTop_toBottomOf="@id/txt_recommended_nowPlaying"
-                    tools:listitem="@layout/item_media" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-            <!-- TopRated Section Container -->
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/TopRatedSection"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_NowPlaying"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:clipToPadding="false"
+                android:orientation="horizontal"
+                android:padding="@dimen/_8mdp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintTop_toBottomOf="@id/txt_recommended_nowPlaying"
+                tools:listitem="@layout/item_media" />
+
+            <!-- TopRated Section (Flattened) -->
+            <TextView
+                android:id="@+id/txt_recommended_topRated"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_12mdp"
                 android:layout_marginTop="@dimen/_12mdp"
-                app:layout_constraintTop_toBottomOf="@id/NowPlayingSection">
+                android:text="Top Rated"
+                android:textSize="@dimen/_13mdp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/rv_NowPlaying" />
 
-                <!-- Movies Header -->
+            <LinearLayout
+                android:id="@+id/layoutSeeAllTopRated"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/_12mdp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="@id/txt_recommended_topRated"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/txt_recommended_topRated">
+
                 <TextView
-                    android:id="@+id/txt_recommended_topRated"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/_12mdp"
-                    android:text="Top Rated"
-                    android:textSize="@dimen/_13mdp"
-                    android:textStyle="bold"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    android:layout_marginEnd="@dimen/_4mdp"
+                    android:text="See all"
+                    android:textSize="@dimen/_10mdp" />
 
-                <!-- Movies See All Button -->
-                <LinearLayout
-                    android:id="@+id/layoutSeeAllTopRated"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/_12mdp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    app:layout_constraintBottom_toBottomOf="@id/txt_recommended_topRated"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/txt_recommended_topRated">
+                <ImageView
+                    android:layout_width="@dimen/_12mdp"
+                    android:layout_height="@dimen/_12mdp"
+                    android:src="@drawable/angle_right"
+                    app:tint="@color/white" />
+            </LinearLayout>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/_4mdp"
-                        android:text="See all"
-                        android:textSize="@dimen/_10mdp" />
-
-                    <ImageView
-                        android:layout_width="@dimen/_12mdp"
-                        android:layout_height="@dimen/_12mdp"
-                        android:src="@drawable/angle_right"
-                        app:tint="@color/white" />
-                </LinearLayout>
-
-                <!-- Movies List -->
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_TopRated"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:clipToPadding="false"
-                    android:orientation="horizontal"
-                    android:padding="@dimen/_8mdp"
-                    tools:itemCount="20"
-                    app:spanCount="2"
-                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                    app:layout_constraintTop_toBottomOf="@id/txt_recommended_topRated"
-                    tools:listitem="@layout/item_media_small" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-            <!-- Upcoming Section Container -->
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/upcomingSection"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_TopRated"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:clipToPadding="false"
+                android:orientation="horizontal"
+                android:padding="@dimen/_8mdp"
+                tools:itemCount="20"
+                app:spanCount="2"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                app:layout_constraintTop_toBottomOf="@id/txt_recommended_topRated"
+                tools:listitem="@layout/item_media_small" />
+
+            <!-- Upcoming Section (Flattened) -->
+            <TextView
+                android:id="@+id/txt_recommended_upcoming"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_12mdp"
                 android:layout_marginTop="@dimen/_12mdp"
-                app:layout_constraintTop_toBottomOf="@id/TopRatedSection">
+                android:text="Upcoming"
+                android:textSize="@dimen/_13mdp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/rv_TopRated" />
 
-                <!-- Movies Header -->
+            <LinearLayout
+                android:id="@+id/layoutSeeAllUpcoming"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/_12mdp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="@id/txt_recommended_upcoming"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/txt_recommended_upcoming">
+
                 <TextView
-                    android:id="@+id/txt_recommended_upcoming"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/_12mdp"
-                    android:text="Upcoming"
-                    android:textSize="@dimen/_13mdp"
-                    android:textStyle="bold"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    android:layout_marginEnd="@dimen/_4mdp"
+                    android:text="@string/see_all"
+                    android:textSize="@dimen/_10mdp" />
 
-                <!-- Movies See All Button -->
-                <LinearLayout
-                    android:id="@+id/layoutSeeAllUpcoming"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/_12mdp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    app:layout_constraintBottom_toBottomOf="@id/txt_recommended_upcoming"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/txt_recommended_upcoming">
+                <ImageView
+                    android:layout_width="@dimen/_12mdp"
+                    android:layout_height="@dimen/_12mdp"
+                    android:src="@drawable/angle_right"
+                    app:tint="@color/white" />
+            </LinearLayout>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/_4mdp"
-                        android:text="@string/see_all"
-                        android:textSize="@dimen/_10mdp" />
-
-                    <ImageView
-                        android:layout_width="@dimen/_12mdp"
-                        android:layout_height="@dimen/_12mdp"
-                        android:src="@drawable/angle_right"
-                        app:tint="@color/white" />
-                </LinearLayout>
-
-                <!-- Movies List -->
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_upcoming"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:clipToPadding="false"
-                    android:orientation="horizontal"
-                    android:padding="@dimen/_8mdp"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    app:layout_constraintTop_toBottomOf="@id/txt_recommended_upcoming"
-                    tools:listitem="@layout/item_media" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_upcoming"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clipToPadding="false"
+                android:orientation="horizontal"
+                android:padding="@dimen/_8mdp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintTop_toBottomOf="@id/txt_recommended_upcoming"
+                tools:listitem="@layout/item_media" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

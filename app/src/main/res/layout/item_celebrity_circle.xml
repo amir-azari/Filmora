@@ -59,37 +59,37 @@
 
             </com.facebook.shimmer.ShimmerFrameLayout>
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="@dimen/_100mdp"
+            <TextView
+                android:id="@+id/tv_characterName"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_4mdp"
-                app:layout_constraintBottom_toBottomOf="@+id/iv_profile"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="@string/character_name"
+                android:textColor="@color/textColor"
+                android:textSize="@dimen/_10font_mdp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/tv_characterDescription"
+                app:layout_constraintEnd_toStartOf="@+id/img_arrow_movies"
                 app:layout_constraintStart_toEndOf="@+id/iv_profile"
-                app:layout_constraintTop_toTopOf="@+id/iv_profile">
+                app:layout_constraintTop_toTopOf="@+id/iv_profile"
+                app:layout_constraintVertical_chainStyle="packed" />
 
-                <TextView
-                    android:id="@+id/tv_characterName"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:text="@string/character_name"
-                    android:textColor="@color/textColor"
-                    android:textSize="@dimen/_10font_mdp"
-                    android:textStyle="bold"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/tv_characterDescription"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:text="@string/description"
-                    android:textColor="@color/textColor_secondary"
-                    android:textSize="@dimen/_8font_mdp"
-                    app:layout_constraintTop_toBottomOf="@id/tv_characterName" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                android:id="@+id/tv_characterDescription"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_4mdp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="@string/description"
+                android:textColor="@color/textColor_secondary"
+                android:textSize="@dimen/_8font_mdp"
+                app:layout_constraintBottom_toBottomOf="@+id/iv_profile"
+                app:layout_constraintEnd_toStartOf="@+id/img_arrow_movies"
+                app:layout_constraintStart_toEndOf="@+id/iv_profile"
+                app:layout_constraintTop_toBottomOf="@+id/tv_characterName" />
 
             <ImageView
                 android:id="@+id/img_arrow_movies"

@@ -18,7 +18,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <!--Internet Error-->
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <FrameLayout
         android:id="@+id/internetLay"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -29,13 +29,9 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <include
-            layout="@layout/internet_error"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:layout_editor_absoluteX="0dp" />
+        <include layout="@layout/internet_error" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </FrameLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_Tvs"

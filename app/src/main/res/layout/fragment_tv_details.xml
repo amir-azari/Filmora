@@ -18,7 +18,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <!--Internet Error-->
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <FrameLayout
         android:id="@+id/internetLay"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -29,13 +29,9 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <include
-            layout="@layout/internet_error"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:layout_editor_absoluteX="0dp" />
+        <include layout="@layout/internet_error" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </FrameLayout>
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -50,33 +46,26 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <!-- Backdrop Section -->
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/backdrop_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toTopOf="parent">
+            <!-- Backdrop Section (Flattened) -->
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/img_backdrop"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:contentDescription="@string/poster_image"
+                app:layout_constraintDimensionRatio="16:9"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:src="@drawable/image_slash_large" />
 
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:id="@+id/img_backdrop"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:contentDescription="@string/poster_image"
-                    app:layout_constraintDimensionRatio="16:9"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:src="@drawable/image_slash_large" />
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/_72mdp"
-                    android:background="@drawable/background_shadow_bottom"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            <View
+                android:id="@+id/view_backdrop_shadow"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_72mdp"
+                android:background="@drawable/background_shadow_bottom"
+                app:layout_constraintBottom_toBottomOf="@id/img_backdrop"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
 
             <!-- Poster and Title Section -->
             <com.google.android.material.imageview.ShapeableImageView
@@ -87,7 +76,7 @@
                 android:layout_marginTop="@dimen/mines45mdp"
                 app:layout_constraintDimensionRatio="2:3"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/backdrop_container"
+                app:layout_constraintTop_toBottomOf="@+id/img_backdrop"
                 app:shapeAppearanceOverlay="@style/RoundedCorners"
                 tools:src="@drawable/image_slash_medium" />
 
