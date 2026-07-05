@@ -32,7 +32,7 @@ data class ResponseAccountDetails(
 
         data class Tmdb(
             @SerializedName("avatar_path")
-            val avatarPath: Any? // null
+            val avatarPath: String? // null
         )
     }
 }

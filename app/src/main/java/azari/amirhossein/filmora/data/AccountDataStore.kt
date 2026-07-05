@@ -27,6 +27,8 @@ class AccountDataStore @Inject constructor(@ApplicationContext private val conte
         val INCLUDE_ADULT = booleanPreferencesKey("include_adult")
         val ISO_3166_1 = stringPreferencesKey("iso_3166_1")
         val ISO_639_1 = stringPreferencesKey("iso_639_1")
+        val AVATAR_PATH = stringPreferencesKey("avatar_path")
+        val GRAVATAR_HASH = stringPreferencesKey("gravatar_hash")
     }
 
     suspend fun saveAccountDetails(account: ResponseAccountDetails) {
@@ -37,6 +39,8 @@ class AccountDataStore @Inject constructor(@ApplicationContext private val conte
             account.includeAdult?.let { prefs[Keys.INCLUDE_ADULT] = it }
             prefs[Keys.ISO_3166_1] = account.iso31661 ?: ""
             prefs[Keys.ISO_639_1] = account.iso6391 ?: ""
+            prefs[Keys.AVATAR_PATH] = account.avatar?.tmdb?.avatarPath ?: ""
+            prefs[Keys.GRAVATAR_HASH] = account.avatar?.gravatar?.hash ?: ""
         }
     }
 
@@ -48,6 +52,8 @@ class AccountDataStore @Inject constructor(@ApplicationContext private val conte
             val includeAdult = preferences[Keys.INCLUDE_ADULT]
             val iso31661 = preferences[Keys.ISO_3166_1]
             val iso6391 = preferences[Keys.ISO_639_1]
+            val avatarPath = preferences[Keys.AVATAR_PATH]
+            val gravatarHash = preferences[Keys.GRAVATAR_HASH]
             if (id != null && !username.isNullOrEmpty()) {
                 ResponseAccountDetails(
                     id = id,
@@ -56,7 +62,10 @@ class AccountDataStore @Inject constructor(@ApplicationContext private val conte
                     includeAdult = includeAdult,
                     iso31661 = iso31661,
                     iso6391 = iso6391,
-                    avatar = null
+                    avatar = ResponseAccountDetails.Avatar(
+                        gravatar = ResponseAccountDetails.Avatar.Gravatar(hash = gravatarHash),
+                        tmdb = ResponseAccountDetails.Avatar.Tmdb(avatarPath = avatarPath)
+                    )
                 )
             } else {
                 null

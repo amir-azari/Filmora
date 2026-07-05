@@ -22,6 +22,11 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import coil3.load
+import coil3.request.crossfade
+import coil3.request.error
+import coil3.request.placeholder
+
 @AndroidEntryPoint
 class ProfileFragment : Fragment() {
     // Binding
@@ -61,6 +66,27 @@ class ProfileFragment : Fragment() {
                             state.data?.let { account ->
                                 binding.tvName.text = account.name
                                 binding.tvUsername.text = account.username
+
+                                val avatar = account.avatar
+                                val avatarUrl = when {
+                                    !avatar?.tmdb?.avatarPath.isNullOrEmpty() -> {
+                                        Constants.Network.IMAGE_BASE_URL + Constants.ImageSize.W500 + avatar.tmdb.avatarPath
+                                    }
+                                    !avatar?.gravatar?.hash.isNullOrEmpty() -> {
+                                        "https://secure.gravatar.com/avatar/${avatar.gravatar?.hash}?s=200"
+                                    }
+                                    else -> null
+                                }
+
+                                if (!avatarUrl.isNullOrEmpty()) {
+                                    binding.imgProfile.load(avatarUrl) {
+                                        crossfade(true)
+                                        placeholder(R.drawable.profile)
+                                        error(R.drawable.profile)
+                                    }
+                                } else {
+                                    binding.imgProfile.setImageResource(R.drawable.profile)
+                                }
                             }
                         }
                     }
