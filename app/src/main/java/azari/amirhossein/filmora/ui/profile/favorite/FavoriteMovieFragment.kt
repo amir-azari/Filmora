@@ -12,6 +12,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.map
@@ -22,7 +23,6 @@ import azari.amirhossein.filmora.databinding.FragmentFavoriteMovieBinding
 import azari.amirhossein.filmora.models.movie.ResponseMovieType
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.NetworkRequest
-import azari.amirhossein.filmora.utils.createFlexboxLayoutManager
 import azari.amirhossein.filmora.utils.customize
 import azari.amirhossein.filmora.viewmodel.FavoriteViewModel
 import com.google.android.material.snackbar.Snackbar
@@ -61,8 +61,9 @@ class FavoriteMovieFragment : Fragment() {
 
     }
     private fun setupRecyclerView() {
-        val flexboxLayoutManager = requireContext().createFlexboxLayoutManager()
-        binding.rvMovies.layoutManager = flexboxLayoutManager
+        binding.rvMovies.layoutManager = GridLayoutManager(requireContext(), 3)
+        binding.rvMovies.setHasFixedSize(true)
+        binding.rvMovies.setItemViewCacheSize(20)
 
         val concatAdapter = moviesAdapter.withLoadStateFooter(
             footer = DataLoadStateAdapter { moviesAdapter.retry() }

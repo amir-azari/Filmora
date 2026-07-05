@@ -24,7 +24,7 @@ import azari.amirhossein.filmora.models.movie.ResponseMovieType
 import azari.amirhossein.filmora.ui.profile.favorite.FavoriteFragmentDirections
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.NetworkRequest
-import azari.amirhossein.filmora.utils.createFlexboxLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import azari.amirhossein.filmora.utils.customize
 import azari.amirhossein.filmora.viewmodel.FavoriteViewModel
 import azari.amirhossein.filmora.viewmodel.RatedViewModel
@@ -64,8 +64,9 @@ class RatedMovieFragment : Fragment() {
 
     }
     private fun setupRecyclerView() {
-        val flexboxLayoutManager = requireContext().createFlexboxLayoutManager()
-        binding.rvMovies.layoutManager = flexboxLayoutManager
+        binding.rvMovies.layoutManager = GridLayoutManager(requireContext(), 3)
+        binding.rvMovies.setHasFixedSize(true)
+        binding.rvMovies.setItemViewCacheSize(20)
 
         val concatAdapter = moviesAdapter.withLoadStateFooter(
             footer = DataLoadStateAdapter { moviesAdapter.retry() }

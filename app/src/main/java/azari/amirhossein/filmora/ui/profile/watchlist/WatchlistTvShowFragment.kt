@@ -23,7 +23,7 @@ import azari.amirhossein.filmora.models.tv.ResponseTvType
 import azari.amirhossein.filmora.ui.profile.favorite.FavoriteFragmentDirections
 import azari.amirhossein.filmora.utils.Constants
 import azari.amirhossein.filmora.utils.NetworkRequest
-import azari.amirhossein.filmora.utils.createFlexboxLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import azari.amirhossein.filmora.utils.customize
 import azari.amirhossein.filmora.viewmodel.WatchlistViewModel
 import com.google.android.material.snackbar.Snackbar
@@ -63,8 +63,9 @@ class WatchlistTvShowFragment : Fragment() {
 
     }
     private fun setupRecyclerView() {
-        val flexboxLayoutManager = requireContext().createFlexboxLayoutManager()
-        binding.rvTvShows.layoutManager = flexboxLayoutManager
+        binding.rvTvShows.layoutManager = GridLayoutManager(requireContext(), 3)
+        binding.rvTvShows.setHasFixedSize(true)
+        binding.rvTvShows.setItemViewCacheSize(20)
 
         val concatAdapter = tvsAdapter.withLoadStateFooter(
             footer = DataLoadStateAdapter { tvsAdapter.retry() }
