@@ -9,7 +9,7 @@ class SearchCelebritiesPagingSource(
     private val remote: RemoteDataSource,
     sessionManager: SessionManager,
     private val query: String
-) : BasePagingSource<ResponsePopularCelebrity.Result>(sessionManager ,MediaType.PEOPLE) {
+) : BasePagingSource<ResponsePopularCelebrity.Result>(sessionManager ,MediaType.PEOPLE, false) {
 
     override suspend fun fetchData(page: Int, preferences: TvAndMoviePreferences): List<ResponsePopularCelebrity.Result>? {
         return try {

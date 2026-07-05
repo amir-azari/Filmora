@@ -10,7 +10,7 @@ class SearchMoviesPagingSource(
     private val remote: RemoteDataSource,
     sessionManager: SessionManager,
     private val query: String
-) : BasePagingSource<ResponseMoviesList.Result>(sessionManager, MediaType.MOVIE) {
+) : BasePagingSource<ResponseMoviesList.Result>(sessionManager, MediaType.MOVIE, false) {
 
     override suspend fun fetchData(page: Int, preferences: TvAndMoviePreferences): List<ResponseMoviesList.Result>? {
         return try {

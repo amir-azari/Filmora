@@ -64,7 +64,9 @@ class SearchRepository @Inject constructor(private val remote: RemoteDataSource,
     fun searchMovies(query: String): Flow<PagingData<ResponseMoviesList.Result>> {
         return Pager(
             config = PagingConfig(
-                pageSize = 1,
+                pageSize = 20,
+                initialLoadSize = 20,
+                prefetchDistance = 5,
                 enablePlaceholders = false
             ),
             pagingSourceFactory = { SearchMoviesPagingSource(remote, sessionManager, query) }
@@ -74,7 +76,9 @@ class SearchRepository @Inject constructor(private val remote: RemoteDataSource,
     fun searchTvShows(query: String): Flow<PagingData<ResponseTvsList.Result>> {
         return Pager(
             config = PagingConfig(
-                pageSize = 1,
+                pageSize = 20,
+                initialLoadSize = 20,
+                prefetchDistance = 5,
                 enablePlaceholders = false
             ),
             pagingSourceFactory = { SearchTvShowsPagingSource(remote, sessionManager, query) }
@@ -84,7 +88,9 @@ class SearchRepository @Inject constructor(private val remote: RemoteDataSource,
     fun searchPeople(query: String): Flow<PagingData<ResponsePopularCelebrity.Result>> {
         return Pager(
             config = PagingConfig(
-                pageSize = 1,
+                pageSize = 20,
+                initialLoadSize = 20,
+                prefetchDistance = 5,
                 enablePlaceholders = false
             ),
             pagingSourceFactory = { SearchCelebritiesPagingSource(remote, sessionManager, query) }
