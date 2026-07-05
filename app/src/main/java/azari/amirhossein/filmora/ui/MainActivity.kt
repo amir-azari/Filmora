@@ -193,6 +193,29 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun handleDestinationChanges(destinationId: Int) {
+        val hiddenFragments = listOf(
+            R.id.movieDetailFragment,
+            R.id.tvDetailsFragment,
+            R.id.mayLikeMoviesFragment,
+            R.id.mayLikeTvsFragment,
+            R.id.movieSectionFragment,
+            R.id.tvSectionFragment,
+            R.id.peopleSectionFragment,
+            R.id.peopleDetailFragment,
+            R.id.creditsFragment,
+            R.id.collectionFragment,
+            R.id.castAndCrewFragment,
+            R.id.reviewsFragment,
+            R.id.profileFragment,
+            R.id.favoriteFragment,
+            R.id.watchlistFragment,
+            R.id.ratedFragment,
+        )
+        val isMenuHidden = destinationId in hiddenFragments
+        for (i in 0 until binding.toolbar.menu.size()) {
+            binding.toolbar.menu.getItem(i).isVisible = !isMenuHidden
+        }
+
         when (destinationId) {
             R.id.homeFragment -> {
                 showBottomNavWithFade()
@@ -321,30 +344,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun hideBottomNavWithFade() {
-        if (binding.bottomNav.visibility != View.GONE && binding.bottomNav.alpha == 1f) {
-            ObjectAnimator.ofFloat(binding.bottomNav, "alpha", 1f, 0f).apply {
-                duration = 150
-                addListener(object : AnimatorListenerAdapter() {
-                    override fun onAnimationEnd(animation: Animator) {
-                        binding.bottomNav.visibility = View.GONE
-                        binding.bottomNav.alpha = 1f
-                    }
-                })
-                start()
-            }
-        }
+        binding.bottomNav.visibility = View.GONE
+        binding.bottomNav.alpha = 1f
     }
 
 
     private fun showBottomNavWithFade() {
-        if (binding.bottomNav.visibility != View.VISIBLE) {
-
-            binding.bottomNav.visibility = View.VISIBLE
-            ObjectAnimator.ofFloat(binding.bottomNav, "alpha", 0f, 1f).apply {
-                duration = 150
-                start()
-            }
-        }
+        binding.bottomNav.visibility = View.VISIBLE
+        binding.bottomNav.alpha = 1f
     }
 
     private fun observeAccountDetails() {

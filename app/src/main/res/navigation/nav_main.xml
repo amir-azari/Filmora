@@ -213,6 +213,7 @@
     <fragment
         android:id="@+id/movieDetailFragment"
         android:name="azari.amirhossein.filmora.ui.detail.movie.MovieDetailFragment"
+        android:label=""
         tools:layout="@layout/fragment_movie_detail" >
         <argument
             android:name="mediaType"
@@ -254,6 +255,7 @@
     <fragment
         android:id="@+id/tvDetailsFragment"
         android:name="azari.amirhossein.filmora.ui.detail.tv.TvDetailsFragment"
+        android:label=""
         tools:layout="@layout/fragment_tv_details">
 
         <argument
@@ -307,6 +309,7 @@
     <fragment
         android:id="@+id/movieSectionFragment"
         android:name="azari.amirhossein.filmora.ui.movies.MovieSectionFragment"
+        android:label=""
         tools:layout="@layout/fragment_movie_section">
         <argument
             android:name="sectionType"
@@ -316,6 +319,7 @@
     <fragment
         android:id="@+id/tvSectionFragment"
         android:name="azari.amirhossein.filmora.ui.tvs.TvSectionFragment"
+        android:label=""
         tools:layout="@layout/fragment_tv_section" >
         <argument
             android:name="sectionType"
@@ -324,6 +328,7 @@
     <fragment
         android:id="@+id/peopleSectionFragment"
         android:name="azari.amirhossein.filmora.ui.people.PeopleSectionFragment"
+        android:label=""
         tools:layout="@layout/fragment_people_section" >
         <argument
             android:name="sectionType"
@@ -332,6 +337,7 @@
     <fragment
         android:id="@+id/peopleDetailFragment"
         android:name="azari.amirhossein.filmora.ui.detail.people.PeopleDetailFragment"
+        android:label=""
         tools:layout="@layout/fragment_people_detail" >
         <argument
             android:name="id"
@@ -380,6 +386,7 @@
     <fragment
         android:id="@+id/collectionFragment"
         android:name="azari.amirhossein.filmora.ui.detail.movie.CollectionFragment"
+        android:label=""
         tools:layout="@layout/fragment_collection" >
         <argument android:name="collection_id"
             app:argType="integer" />
@@ -387,6 +394,7 @@
     <fragment
         android:id="@+id/castAndCrewFragment"
         android:name="azari.amirhossein.filmora.ui.detail.CastAndCrewFragment"
+        android:label=""
         tools:layout="@layout/fragment_cast_and_crew" >
         <argument
             android:name="castAndCrew"
@@ -404,6 +412,7 @@
     <fragment
         android:id="@+id/reviewsFragment"
         android:name="azari.amirhossein.filmora.ui.detail.ReviewsFragment"
+        android:label=""
         tools:layout="@layout/fragment_reviews" >
         <argument
             android:name="review"
@@ -412,6 +421,7 @@
     <fragment
         android:id="@+id/mediaGalleryFragment"
         android:name="azari.amirhossein.filmora.ui.detail.MediaGalleryFragment"
+        android:label=""
         tools:layout="@layout/fragment_media_gallery" >
         <argument
             android:name="media"
