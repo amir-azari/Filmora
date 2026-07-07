@@ -48,14 +48,12 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var navController: NavController
     private lateinit var navHost: NavHostFragment
-
     // Real fragment instances for show/hide tab caching
     private val homeFragment by lazy { HomeFragment() }
     private val movieFragment by lazy { MovieFragment() }
     private val tvFragment by lazy { TvFragment() }
     private val peopleFragment by lazy { PeopleFragment() }
     private var activeFragment: Fragment = homeFragment
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -87,16 +85,30 @@ class MainActivity : AppCompatActivity() {
         // Initialize real fragments inside tab_container
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction().apply {
-                add(R.id.tab_container, homeFragment, "home").show(homeFragment)
-                add(R.id.tab_container, movieFragment, "movie").hide(movieFragment)
-                add(R.id.tab_container, tvFragment, "tv").hide(tvFragment)
-                add(R.id.tab_container, peopleFragment, "people").hide(peopleFragment)
+                add(R.id.tab_container, homeFragment, "home").show(homeFragment).setMaxLifecycle(homeFragment, Lifecycle.State.RESUMED)
+                add(R.id.tab_container, movieFragment, "movie").hide(movieFragment).setMaxLifecycle(movieFragment, Lifecycle.State.CREATED)
+                add(R.id.tab_container, tvFragment, "tv").hide(tvFragment).setMaxLifecycle(tvFragment, Lifecycle.State.CREATED)
+                add(R.id.tab_container, peopleFragment, "people").hide(peopleFragment).setMaxLifecycle(peopleFragment, Lifecycle.State.CREATED)
                 commit()
             }
             activeFragment = homeFragment
         } else {
-            activeFragment = supportFragmentManager.findFragmentByTag("home") ?: homeFragment
+            val home = supportFragmentManager.findFragmentByTag("home") ?: homeFragment
+            val movie = supportFragmentManager.findFragmentByTag("movie") ?: movieFragment
+            val tv = supportFragmentManager.findFragmentByTag("tv") ?: tvFragment
+            val people = supportFragmentManager.findFragmentByTag("people") ?: peopleFragment
+            
+            val tabId = navController.currentDestination?.id
+            activeFragment = when (tabId) {
+                R.id.homeFragment -> home
+                R.id.movieFragment -> movie
+                R.id.tvFragment -> tv
+                R.id.peopleFragment -> people
+                else -> home
+            }
         }
+
+
 
         val appBarConfiguration = AppBarConfiguration(
             setOf(
@@ -111,44 +123,16 @@ class MainActivity : AppCompatActivity() {
 
         // Setup Bottom Navigation Listener manually to sync with custom show/hide caching
         binding.bottomNav.setOnItemSelectedListener { item ->
-            val targetFragment = when (item.itemId) {
-                R.id.homeFragment -> supportFragmentManager.findFragmentByTag("home") ?: homeFragment
-                R.id.movieFragment -> supportFragmentManager.findFragmentByTag("movie") ?: movieFragment
-                R.id.tvFragment -> supportFragmentManager.findFragmentByTag("tv") ?: tvFragment
-                R.id.peopleFragment -> supportFragmentManager.findFragmentByTag("people") ?: peopleFragment
-                else -> null
+            val tabId = item.itemId
+            if (navController.currentDestination?.id != tabId) {
+                val navOptions = androidx.navigation.NavOptions.Builder()
+                    .setLaunchSingleTop(true)
+                    .setRestoreState(true)
+                    .setPopUpTo(R.id.homeFragment, false, true)
+                    .build()
+                navController.navigate(tabId, null, navOptions)
             }
-            if (targetFragment != null) {
-                // If we are currently showing a detail/sub screen in nav_host_fragment, pop back to start destination
-                if (navController.currentDestination?.id != navController.graph.startDestinationId &&
-                    navController.currentDestination?.id != R.id.homeFragment &&
-                    navController.currentDestination?.id != R.id.movieFragment &&
-                    navController.currentDestination?.id != R.id.tvFragment &&
-                    navController.currentDestination?.id != R.id.peopleFragment) {
-                    navController.popBackStack(navController.graph.startDestinationId, false)
-                }
-
-                // Navigate in NavController to keep state in sync
-                if (navController.currentDestination?.id != item.itemId) {
-                    navController.navigate(item.itemId)
-                }
-
-                // Toggle visibilities
-                binding.tabContainer.visibility = View.VISIBLE
-                binding.navHostFragment.visibility = View.INVISIBLE
-
-                if (activeFragment != targetFragment) {
-                    supportFragmentManager.beginTransaction()
-                        .hide(activeFragment)
-                        .show(targetFragment)
-                        .commit()
-                    activeFragment = targetFragment
-                }
-                handleDestinationChanges(item.itemId)
-                true
-            } else {
-                false
-            }
+            true
         }
 
         observeAccountDetails()
@@ -177,7 +161,9 @@ class MainActivity : AppCompatActivity() {
                 if (activeFragment != targetFragment) {
                     supportFragmentManager.beginTransaction()
                         .hide(activeFragment)
+                        .setMaxLifecycle(activeFragment, Lifecycle.State.CREATED)
                         .show(targetFragment)
+                        .setMaxLifecycle(targetFragment, Lifecycle.State.RESUMED)
                         .commit()
                     activeFragment = targetFragment
                 }
