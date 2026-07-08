@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="wrap_content">
+<!-- Popular Section -->
+<TextView
+    android:id="@+id/txt_recommended_popular"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/_12mdp"
+    android:layout_marginTop="@dimen/_12mdp"
+    android:text="@string/popular"
+    android:textSize="@dimen/_13mdp"
+    android:textStyle="bold"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent" />
+
+<LinearLayout
+    android:id="@+id/layoutSeeAllPopular"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="@dimen/_12mdp"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    app:layout_constraintBottom_toBottomOf="@id/txt_recommended_popular"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintTop_toTopOf="@id/txt_recommended_popular">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/_4mdp"
+        android:text="@string/see_all"
+        android:textSize="@dimen/_10mdp" />
+
+    <ImageView
+        android:layout_width="@dimen/_12mdp"
+        android:layout_height="@dimen/_12mdp"
+        android:src="@drawable/angle_right"
+        app:tint="@color/white" />
+</LinearLayout>
+
+<androidx.recyclerview.widget.RecyclerView
+    android:id="@+id/rv_popular"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clipToPadding="false"
+    android:orientation="horizontal"
+    android:padding="@dimen/_8mdp"
+    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+    app:layout_constraintTop_toBottomOf="@id/txt_recommended_popular"
+    tools:listitem="@layout/item_media" />
+<!-- NowPlaying Section -->
+<TextView
+    android:id="@+id/txt_recommended_nowPlaying"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/_12mdp"
+    android:layout_marginTop="@dimen/_12mdp"
+    android:text="@string/playing_in_theatres"
+    android:textSize="@dimen/_13mdp"
+    android:textStyle="bold"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/rv_popular" />
+
+<LinearLayout
+    android:id="@+id/layoutSeeAllNowPlaying"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="@dimen/_12mdp"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    app:layout_constraintBottom_toBottomOf="@id/txt_recommended_nowPlaying"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintTop_toTopOf="@id/txt_recommended_nowPlaying">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/_4mdp"
+        android:text="@string/see_all"
+        android:textSize="@dimen/_10mdp" />
+
+    <ImageView
+        android:layout_width="@dimen/_12mdp"
+        android:layout_height="@dimen/_12mdp"
+        android:src="@drawable/angle_right"
+        app:tint="@color/white" />
+</LinearLayout>
+
+<androidx.recyclerview.widget.RecyclerView
+    android:id="@+id/rv_NowPlaying"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clipToPadding="false"
+    android:orientation="horizontal"
+    android:padding="@dimen/_8mdp"
+    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+    app:layout_constraintTop_toBottomOf="@id/txt_recommended_nowPlaying"
+    tools:listitem="@layout/item_media" />
+<!-- TopRated Section -->
+<TextView
+    android:id="@+id/txt_recommended_topRated"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/_12mdp"
+    android:layout_marginTop="@dimen/_12mdp"
+    android:text="Top Rated"
+    android:textSize="@dimen/_13mdp"
+    android:textStyle="bold"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/rv_NowPlaying" />
+
+<LinearLayout
+    android:id="@+id/layoutSeeAllTopRated"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="@dimen/_12mdp"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    app:layout_constraintBottom_toBottomOf="@id/txt_recommended_topRated"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintTop_toTopOf="@id/txt_recommended_topRated">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/_4mdp"
+        android:text="@string/see_all"
+        android:textSize="@dimen/_10mdp" />
+
+    <ImageView
+        android:layout_width="@dimen/_12mdp"
+        android:layout_height="@dimen/_12mdp"
+        android:src="@drawable/angle_right"
+        app:tint="@color/white" />
+</LinearLayout>
+
+<androidx.recyclerview.widget.RecyclerView
+    android:id="@+id/rv_TopRated"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clipToPadding="false"
+    android:orientation="horizontal"
+    android:padding="@dimen/_8mdp"
+    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+    app:layout_constraintTop_toBottomOf="@id/txt_recommended_topRated"
+    app:spanCount="2"
+    tools:itemCount="20"
+    tools:listitem="@layout/item_media_small" />
+<!-- Upcoming Section -->
+<TextView
+    android:id="@+id/txt_recommended_upcoming"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/_12mdp"
+    android:layout_marginTop="@dimen/_12mdp"
+    android:text="Upcoming"
+    android:textSize="@dimen/_13mdp"
+    android:textStyle="bold"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/rv_TopRated" />
+
+<LinearLayout
+    android:id="@+id/layoutSeeAllUpcoming"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="@dimen/_12mdp"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    app:layout_constraintBottom_toBottomOf="@id/txt_recommended_upcoming"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintTop_toTopOf="@id/txt_recommended_upcoming">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/_4mdp"
+        android:text="@string/see_all"
+        android:textSize="@dimen/_10mdp" />
+
+    <ImageView
+        android:layout_width="@dimen/_12mdp"
+        android:layout_height="@dimen/_12mdp"
+        android:src="@drawable/angle_right"
+        app:tint="@color/white" />
+</LinearLayout>
+
+<androidx.recyclerview.widget.RecyclerView
+    android:id="@+id/rv_upcoming"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clipToPadding="false"
+    android:orientation="horizontal"
+    android:padding="@dimen/_8mdp"
+    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+    app:layout_constraintTop_toBottomOf="@id/txt_recommended_upcoming"
+    tools:listitem="@layout/item_media" />
+</androidx.constraintlayout.widget.ConstraintLayout>

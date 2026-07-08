@@ -5,7 +5,9 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewStub
 import android.widget.ImageView
+import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
@@ -14,6 +16,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import azari.amirhossein.filmora.R
 import azari.amirhossein.filmora.adapter.MayLikeTvAdapter
 import azari.amirhossein.filmora.adapter.TopRatedTvAdapter
@@ -30,8 +33,10 @@ import coil3.load
 import coil3.request.crossfade
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.milliseconds
 
 @AndroidEntryPoint
 class TvFragment : Fragment() {
@@ -57,194 +62,195 @@ class TvFragment : Fragment() {
     @Inject
     lateinit var onTheAirAdapter : MayLikeTvAdapter
 
-    // Caching the root view to prevent layout inflation lag
-    private var rootView: View? = null
-    private var isFirstLoad = true
+    // SharedRecycledViewPool for horizontal RecyclerViews using similar item layouts
+    private val sharedViewPool = RecyclerView.RecycledViewPool()
+
+    // Below-fold views (inflated lazily via ViewStub)
+    private var belowFoldInflated = false
+    private var rvPopular: RecyclerView? = null
+    private var rvAiringToday: RecyclerView? = null
+    private var rvTopRated: RecyclerView? = null
+    private var rvOnTheAir: RecyclerView? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        if (rootView == null) {
-            _binding = FragmentTvBinding.inflate(inflater, container, false)
-            rootView = binding.root
-        } else {
-            // Remove view from parent before returning it
-            (rootView?.parent as? ViewGroup)?.removeView(rootView)
-        }
-        return rootView!!
+        _binding = FragmentTvBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        
-        // Setup only once if adapters are not set up yet
-        if (binding.rvTrending.adapter == null) {
-            setupRecyclerViews()
-            observeViewModel()
 
-            trendingAdapter.setOnItemClickListener(clickTrending)
-            popularAdapter.setOnItemClickListener(clickTv)
-            airingTodayAdapter.setOnItemClickListener(clickTv)
-            topRatedAdapter.setOnItemClickListener(clickTv)
-            onTheAirAdapter.setOnItemClickListener(clickTv)
+        setupTrendingRecyclerView()
+        observeViewModel()
 
-            binding.layoutSeeAllTrending.setClickAnimation {
-                findNavController().navigate(
-                    R.id.actionToTvSectionFragment,
-                    Bundle().apply {
-                        putString(Constants.SectionType.SECTION_TYPE, Constants.SectionType.TRENDING_TV)
-                    }
-                )
-            }
+        trendingAdapter.setOnItemClickListener(clickTrending)
 
-            binding.layoutSeeAllPopular.setClickAnimation {
-                findNavController().navigate(
-                    R.id.actionToTvSectionFragment,
-                    Bundle().apply {
-                        putString(Constants.SectionType.SECTION_TYPE, Constants.SectionType.POPULAR_TV)
-                    }
-                )
-            }
-
-            binding.layoutSeeAllAiringToday.setClickAnimation {
-                findNavController().navigate(
-                    R.id.actionToTvSectionFragment,
-                    Bundle().apply {
-                        putString(Constants.SectionType.SECTION_TYPE, Constants.SectionType.AIRING_TODAY)
-                    }
-                )
-            }
-
-            binding.layoutSeeAllTopRated.setClickAnimation {
-                findNavController().navigate(
-                    R.id.actionToTvSectionFragment,
-                    Bundle().apply {
-                        putString(Constants.SectionType.SECTION_TYPE, Constants.SectionType.TOP_RATED_TV)
-                    }
-                )
-            }
-
-            binding.layoutSeeAllOnTheAir.setClickAnimation {
-                findNavController().navigate(
-                    R.id.actionToTvSectionFragment,
-                    Bundle().apply {
-                        putString(Constants.SectionType.SECTION_TYPE, Constants.SectionType.ON_THE_AIR)
-                    }
-                )
-            }
-        }
-    }
-    // Setup recyclerView
-    private fun setupRecyclerViews() {
-        binding.apply {
-            rvTrending.apply {
-                layoutManager =
-                    LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-                adapter = trendingAdapter
-                setHasFixedSize(true)
-            }
-            rvPopular.apply {
-                layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-                adapter = popularAdapter
-                setHasFixedSize(true)
-            }
-
-            rvTopRated.apply {
-                layoutManager = GridLayoutManager(requireContext(), 2, GridLayoutManager.HORIZONTAL, false)
-                adapter = topRatedAdapter
-                setHasFixedSize(true)
-            }
-            rvAiringToday.apply {
-                layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-                adapter = airingTodayAdapter
-                setHasFixedSize(true)
-            }
-            rvOnTheAir.apply {
-                layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-                adapter = onTheAirAdapter
-                setHasFixedSize(true)
-            }
-
-        }
-
-    }
-
-    private var dataJob: kotlinx.coroutines.Job? = null
-
-    private fun collectData() {
-        dataJob?.cancel()
-        dataJob = viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.tvPageData.collect { state ->
-                if (state != null) {
-                    when (state) {
-                        is NetworkRequest.Loading -> {
-                            showLoading()
-                        }
-
-                        is NetworkRequest.Success -> {
-                            showSuccess()
-                            isFirstLoad = false
-                            state.data?.let { data ->
-                                // Update adapters with the new data
-                                trendingAdapter.differ.submitList(data.trending.data?.results)
-                                popularAdapter.differ.submitList(data.popular.data?.results)
-                                topRatedAdapter.differ.submitList(data.topRated.data?.results)
-                                airingTodayAdapter.differ.submitList(data.airingToday.data?.results)
-                                onTheAirAdapter.differ.submitList(data.onTheAir.data?.results)
-
-                                data.tvGenres.data?.genres?.let { genres ->
-                                    trendingAdapter.submitGenres(genres)
-                                    popularAdapter.submitGenres(genres)
-                                    topRatedAdapter.submitGenres(genres)
-                                    airingTodayAdapter.submitGenres(genres)
-                                    onTheAirAdapter.submitGenres(genres)
-                                }
-                            }
-                        }
-
-                        is NetworkRequest.Error -> {
-                            showError()
-                            if (state.message == Constants.Message.NO_INTERNET_CONNECTION) {
-                                binding.internetLay.visibility = View.VISIBLE
-                            }
-                            showErrorSnackbar(binding.root, state.message.toString())
-                        }
-                    }
+        binding.layoutSeeAllTrending.setClickAnimation {
+            findNavController().navigate(
+                R.id.actionToTvSectionFragment,
+                Bundle().apply {
+                    putString(Constants.SectionType.SECTION_TYPE, Constants.SectionType.TRENDING_TV)
                 }
+            )
+        }
+
+        // Inflate below-fold sections lazily after a short delay
+        inflateBelowFold()
+    }
+
+    private fun setupTrendingRecyclerView() {
+        binding.rvTrending.apply {
+            layoutManager =
+                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            adapter = trendingAdapter
+            setRecycledViewPool(sharedViewPool)
+            setHasFixedSize(true)
+        }
+    }
+
+    private fun inflateBelowFold() {
+        if (belowFoldInflated) return
+        viewLifecycleOwner.lifecycleScope.launch {
+            delay(300.milliseconds) // Wait for fragment enter animation to finish
+            val viewStub = binding.viewStubBelowFold
+            if (viewStub.parent != null) {
+                viewStub.inflate()
+                belowFoldInflated = true
+                setupBelowFoldViews()
             }
+        }
+    }
+
+    private fun setupBelowFoldViews() {
+        val root = binding.root
+
+        rvPopular = root.findViewById(R.id.rv_popular)
+        rvAiringToday = root.findViewById(R.id.rv_airingToday)
+        rvTopRated = root.findViewById(R.id.rv_TopRated)
+        rvOnTheAir = root.findViewById(R.id.rv_onTheAir)
+
+        rvPopular?.apply {
+            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            adapter = popularAdapter
+            setRecycledViewPool(sharedViewPool)
+            setHasFixedSize(true)
+        }
+        rvAiringToday?.apply {
+            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            adapter = airingTodayAdapter
+            setRecycledViewPool(sharedViewPool)
+            setHasFixedSize(true)
+        }
+        rvTopRated?.apply {
+            layoutManager = GridLayoutManager(requireContext(), 2, GridLayoutManager.HORIZONTAL, false)
+            adapter = topRatedAdapter
+            setHasFixedSize(true)
+        }
+        rvOnTheAir?.apply {
+            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            adapter = onTheAirAdapter
+            setRecycledViewPool(sharedViewPool)
+            setHasFixedSize(true)
+        }
+
+        // Set click listeners for below-fold sections
+        popularAdapter.setOnItemClickListener(clickTv)
+        airingTodayAdapter.setOnItemClickListener(clickTv)
+        topRatedAdapter.setOnItemClickListener(clickTv)
+        onTheAirAdapter.setOnItemClickListener(clickTv)
+
+        root.findViewById<LinearLayout>(R.id.layoutSeeAllPopular)?.setClickAnimation {
+            findNavController().navigate(
+                R.id.actionToTvSectionFragment,
+                Bundle().apply {
+                    putString(Constants.SectionType.SECTION_TYPE, Constants.SectionType.POPULAR_TV)
+                }
+            )
+        }
+
+        root.findViewById<LinearLayout>(R.id.layoutSeeAllAiringToday)?.setClickAnimation {
+            findNavController().navigate(
+                R.id.actionToTvSectionFragment,
+                Bundle().apply {
+                    putString(Constants.SectionType.SECTION_TYPE, Constants.SectionType.AIRING_TODAY)
+                }
+            )
+        }
+
+        root.findViewById<LinearLayout>(R.id.layoutSeeAllTopRated)?.setClickAnimation {
+            findNavController().navigate(
+                R.id.actionToTvSectionFragment,
+                Bundle().apply {
+                    putString(Constants.SectionType.SECTION_TYPE, Constants.SectionType.TOP_RATED_TV)
+                }
+            )
+        }
+
+        root.findViewById<LinearLayout>(R.id.layoutSeeAllOnTheAir)?.setClickAnimation {
+            findNavController().navigate(
+                R.id.actionToTvSectionFragment,
+                Bundle().apply {
+                    putString(Constants.SectionType.SECTION_TYPE, Constants.SectionType.ON_THE_AIR)
+                }
+            )
         }
     }
 
     private fun observeViewModel() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                if (!isHidden) {
-                    collectData()
-                    launch {
-                        viewModel.randomMoviePoster.collect { url ->
-                            loadImage(url, binding.imgMoviePoster)
+                launch {
+                    viewModel.tvPageData.collect { state ->
+                        if (state != null) {
+                            when (state) {
+                                is NetworkRequest.Loading -> {
+                                    showLoading()
+                                }
+
+                                is NetworkRequest.Success -> {
+                                    showSuccess()
+                                    state.data?.let { data ->
+                                        // Update adapters with the new data
+                                        trendingAdapter.differ.submitList(data.trending.data?.results)
+                                        popularAdapter.differ.submitList(data.popular.data?.results)
+                                        topRatedAdapter.differ.submitList(data.topRated.data?.results)
+                                        airingTodayAdapter.differ.submitList(data.airingToday.data?.results)
+                                        onTheAirAdapter.differ.submitList(data.onTheAir.data?.results)
+
+                                        data.tvGenres.data?.genres?.let { genres ->
+                                            trendingAdapter.submitGenres(genres)
+                                            popularAdapter.submitGenres(genres)
+                                            topRatedAdapter.submitGenres(genres)
+                                            airingTodayAdapter.submitGenres(genres)
+                                            onTheAirAdapter.submitGenres(genres)
+                                        }
+                                    }
+                                }
+
+                                is NetworkRequest.Error -> {
+                                    showError()
+                                    if (state.message == Constants.Message.NO_INTERNET_CONNECTION) {
+                                        binding.internetLay.visibility = View.VISIBLE
+                                    }
+                                    showErrorSnackbar(binding.root, state.message.toString())
+                                }
+                            }
                         }
+                    }
+                }
+
+                launch {
+                    viewModel.randomMoviePoster.collect { url ->
+                        loadImage(url, binding.imgMoviePoster)
                     }
                 }
             }
         }
     }
-
-    override fun onHiddenChanged(hidden: Boolean) {
-        super.onHiddenChanged(hidden)
-        if (!hidden && _binding != null) {
-            if (isFirstLoad) {
-                viewLifecycleOwner.lifecycleScope.launch {
-                    showLoading()
-                    kotlinx.coroutines.delay(220)
-                    collectData()
-                }
-            }
-        }
-    }
-
 
     private fun loadImage(url: String?, imageView: ImageView) {
         imageView.load(url) {
@@ -263,23 +269,19 @@ class TvFragment : Fragment() {
     private fun showLoading() {
         binding.progressBar.visibility = View.VISIBLE
         binding.mainContentContainer.visibility = View.GONE
-        binding.internetLay.visibility  =View.GONE
-
-
+        binding.internetLay.visibility = View.GONE
     }
 
     private fun showSuccess() {
         binding.progressBar.visibility = View.GONE
         binding.mainContentContainer.visibility = View.VISIBLE
-
-
     }
 
     private fun showError() {
         binding.progressBar.visibility = View.GONE
         binding.mainContentContainer.visibility = View.GONE
-
     }
+
     //Click media
     private val clickTrending = { tv: ResponseTrendingTv.Result ->
         val action = TvFragmentDirections.actionToTvDetail(Constants.MediaType.TV,tv.id)
@@ -291,14 +293,15 @@ class TvFragment : Fragment() {
         val action = TvFragmentDirections.actionToTvDetail(Constants.MediaType.TV,tv.id)
         findNavController().navigate(action)
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
-        // Do NOT clear _binding here because we are caching rootView
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
+        // Clear references to below-fold views
+        rvPopular = null
+        rvAiringToday = null
+        rvTopRated = null
+        rvOnTheAir = null
+        belowFoldInflated = false
         _binding = null
-        rootView = null
     }
 }

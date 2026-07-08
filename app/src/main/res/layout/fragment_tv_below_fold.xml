@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <!-- Popular Section -->
+    <TextView
+        android:id="@+id/txt_recommended_popular"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_12mdp"
+        android:text="@string/popular"
+        android:textSize="@dimen/_13mdp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/layoutSeeAllPopular"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/_12mdp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="@id/txt_recommended_popular"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/txt_recommended_popular">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/_4mdp"
+            android:text="@string/see_all"
+            android:textSize="@dimen/_10mdp" />
+
+        <ImageView
+            android:layout_width="@dimen/_12mdp"
+            android:layout_height="@dimen/_12mdp"
+            android:src="@drawable/angle_right"
+            app:tint="@color/white" />
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_popular"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:orientation="horizontal"
+        android:padding="@dimen/_8mdp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintTop_toBottomOf="@id/txt_recommended_popular"
+        tools:listitem="@layout/item_media" />
+    <!-- Airing Today Section -->
+    <TextView
+        android:id="@+id/txt_airingToday"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_12mdp"
+        android:text="@string/airing_today"
+        android:textSize="@dimen/_13mdp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/rv_popular" />
+
+    <LinearLayout
+        android:id="@+id/layoutSeeAllAiringToday"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/_12mdp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="@id/txt_airingToday"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/txt_airingToday">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/_4mdp"
+            android:text="@string/see_all"
+            android:textSize="@dimen/_10mdp" />
+
+        <ImageView
+            android:layout_width="@dimen/_12mdp"
+            android:layout_height="@dimen/_12mdp"
+            android:src="@drawable/angle_right"
+            app:tint="@color/white" />
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_airingToday"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:orientation="horizontal"
+        android:padding="@dimen/_8mdp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintTop_toBottomOf="@id/txt_airingToday"
+        tools:listitem="@layout/item_media" />
+    <!-- TopRated Section -->
+    <TextView
+        android:id="@+id/txt_recommended_topRated"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_12mdp"
+        android:text="@string/top_rated"
+        android:textSize="@dimen/_13mdp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/rv_airingToday" />
+
+    <LinearLayout
+        android:id="@+id/layoutSeeAllTopRated"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/_12mdp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="@id/txt_recommended_topRated"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/txt_recommended_topRated">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/_4mdp"
+            android:text="See all"
+            android:textSize="@dimen/_10mdp" />
+
+        <ImageView
+            android:layout_width="@dimen/_12mdp"
+            android:layout_height="@dimen/_12mdp"
+            android:src="@drawable/angle_right"
+            app:tint="@color/white" />
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_TopRated"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:orientation="horizontal"
+        android:padding="@dimen/_8mdp"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:layout_constraintTop_toBottomOf="@id/txt_recommended_topRated"
+        app:spanCount="2"
+        tools:itemCount="20"
+        tools:listitem="@layout/item_media_small" />
+    <!-- On The Air Section -->
+    <TextView
+        android:id="@+id/txt_onTheAir"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_12mdp"
+        android:text="@string/on_tv"
+        android:textSize="@dimen/_13mdp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/rv_TopRated" />
+
+    <LinearLayout
+        android:id="@+id/layoutSeeAllOnTheAir"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/_12mdp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="@id/txt_onTheAir"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/txt_onTheAir">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/_4mdp"
+            android:text="@string/see_all"
+            android:textSize="@dimen/_10mdp" />
+
+        <ImageView
+            android:layout_width="@dimen/_12mdp"
+            android:layout_height="@dimen/_12mdp"
+            android:src="@drawable/angle_right"
+            app:tint="@color/white" />
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_onTheAir"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:orientation="horizontal"
+        android:padding="@dimen/_8mdp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintTop_toBottomOf="@id/txt_onTheAir"
+        tools:listitem="@layout/item_media" />
+</androidx.constraintlayout.widget.ConstraintLayout>
